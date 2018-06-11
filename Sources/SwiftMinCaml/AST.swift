@@ -5,7 +5,7 @@
 //  Created by Yuki Takahashi on 2018/06/11.
 //
 
-import Foundation
+import Tagged
 
 protocol Node: AutoEquatable, AutoHashable { }
 
@@ -24,9 +24,15 @@ enum ArithOps {
     case div // /
 }
 
+/// Var
+enum VarTag {}
+
+typealias Var = Tagged<VarTag, String>
+
 /// Expressions
 indirect enum Expr: Node {
     case const(Const)
     case arithOps(ArithOps, [Expr])
     case `if`(Expr, Expr, Expr)
+    case `let`(Var, Expr, Expr)
 }

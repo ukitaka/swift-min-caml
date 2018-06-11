@@ -55,6 +55,11 @@ func == (lhs: Expr, rhs: Expr) -> Bool {
         if lhs.1 != rhs.1 { return false }
         if lhs.2 != rhs.2 { return false }
         return true
+    case (.`let`(let lhs), .`let`(let rhs)):
+        if lhs.0 != rhs.0 { return false }
+        if lhs.1 != rhs.1 { return false }
+        if lhs.2 != rhs.2 { return false }
+        return true
     default: return false
     }
 }
@@ -150,6 +155,8 @@ extension Expr: Hashable {
             return combineHashes([2, data.0.hashValue, data.1.hashValue])
         case .`if`(let data):
             return combineHashes([3, data.0.hashValue, data.1.hashValue, data.2.hashValue])
+        case .`let`(let data):
+            return combineHashes([4, data.0.hashValue, data.1.hashValue, data.2.hashValue])
         }
     }
 }
