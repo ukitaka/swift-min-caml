@@ -12,7 +12,7 @@ protocol Node: AutoEquatable, AutoHashable, AutoEnumIs { }
 /// Constants
 enum Const: Node {
     case integer(Int)
-    case float(Float)
+    case float(Double)
     case bool(Bool)
 }
 
