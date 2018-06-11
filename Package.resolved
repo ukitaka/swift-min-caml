@@ -2,6 +2,15 @@
   "object": {
     "pins": [
       {
+        "package": "Tagged",
+        "repositoryURL": "git@github.com:pointfreeco/swift-tagged.git",
+        "state": {
+          "branch": null,
+          "revision": "17c4ad4a687a5250313bb668fedce614891f03c4",
+          "version": "0.1.0"
+        }
+      },
+      {
         "package": "SwiftParsec",
         "repositoryURL": "git@github.com:davedufresne/SwiftParsec.git",
         "state": {
