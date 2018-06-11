@@ -36,6 +36,11 @@ indirect enum Expr: Node {
     case `if`(Expr, Expr, Expr)
     case `let`(Var, Expr, Expr)
     case `var`(Var)
-    case `letRec`(Var, [Var], Expr, Expr)
-    case `call`(Expr, [Expr])
+    case letRec(Var, [Var], Expr, Expr)
+    case apply(Expr, [Expr])
+    case tuple([Expr])
+    case readTuple([Var], Expr, Expr)
+    case createArray(Expr, Expr)
+    case readArray(Expr, Expr)
+    case writeArray(Expr, Expr, Expr)
 }
