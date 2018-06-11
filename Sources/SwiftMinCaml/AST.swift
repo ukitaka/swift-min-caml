@@ -44,3 +44,15 @@ indirect enum Expr: Node {
     case readArray(Expr, Expr)
     case writeArray(Expr, Expr, Expr)
 }
+
+// Type
+indirect enum Type: Node {
+    // primitives
+    case int
+    case float
+    case bool
+    
+    case `func`([Type], Type)
+    case tuple([Type])
+    case array(Type)
+}

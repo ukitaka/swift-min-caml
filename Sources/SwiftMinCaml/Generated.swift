@@ -95,6 +95,27 @@ func == (lhs: Expr, rhs: Expr) -> Bool {
     default: return false
     }
 }
+// MARK: - Type AutoEquatable
+extension Type: Equatable {}
+func == (lhs: Type, rhs: Type) -> Bool {
+    switch (lhs, rhs) {
+    case (.int, .int):
+        return true
+    case (.float, .float):
+        return true
+    case (.bool, .bool):
+        return true
+    case (.`func`(let lhs), .`func`(let rhs)):
+        if lhs.0 != rhs.0 { return false }
+        if lhs.1 != rhs.1 { return false }
+        return true
+    case (.tuple(let lhs), .tuple(let rhs)):
+        return lhs == rhs
+    case (.array(let lhs), .array(let rhs)):
+        return lhs == rhs
+    default: return false
+    }
+}
 
 // swiftlint:disable file_length
 // swiftlint:disable line_length
@@ -205,6 +226,26 @@ extension Expr: Hashable {
             return combineHashes([11, data.0.hashValue, data.1.hashValue])
         case .writeArray(let data):
             return combineHashes([12, data.0.hashValue, data.1.hashValue, data.2.hashValue])
+        }
+    }
+}
+
+// MARK: - Type AutoHashable
+extension Type: Hashable {
+    internal var hashValue: Int {
+        switch self {
+        case .int:
+            return 1.hashValue
+        case .float:
+            return 2.hashValue
+        case .bool:
+            return 3.hashValue
+        case .`func`(let data):
+            return combineHashes([4, data.0.hashValue, data.1.hashValue])
+        case .tuple(let data):
+            return combineHashes([5, data.hashValue])
+        case .array(let data):
+            return combineHashes([6, data.hashValue])
         }
     }
 }
