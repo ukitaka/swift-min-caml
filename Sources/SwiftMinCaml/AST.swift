@@ -35,4 +35,5 @@ indirect enum Expr: Node {
     case arithOps(ArithOps, [Expr])
     case `if`(Expr, Expr, Expr)
     case `let`(Var, Expr, Expr)
+    case `var`(Var)
 }
