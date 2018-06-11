@@ -46,6 +46,11 @@ func == (lhs: Expr, rhs: Expr) -> Bool {
     switch (lhs, rhs) {
     case (.const(let lhs), .const(let rhs)):
         return lhs == rhs
+    case (.arithOps(let lhs), .arithOps(let rhs)):
+        if lhs.0 != rhs.0 { return false }
+        if lhs.1 != rhs.1 { return false }
+        return true
+    default: return false
     }
 }
 
@@ -136,6 +141,17 @@ extension Expr: Hashable {
         switch self {
         case .const(let data):
             return combineHashes([1, data.hashValue])
+        case .arithOps(let data):
+            return combineHashes([2, data.0.hashValue, data.1.hashValue])
+        }
+    }
+}
+
+// MARK: - AutoHashable for Array
+extension Array: Hashable where Element: Hashable {
+    public var hashValue: Int {
+        return self.reduce(5381) {
+            ($0 << 5) &+ $0 &+ $1.hashValue
         }
     }
 }

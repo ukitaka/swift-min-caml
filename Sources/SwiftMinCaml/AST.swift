@@ -16,7 +16,16 @@ enum Const: Node {
     case bool(Bool)
 }
 
+/// ArithmeticOperations
+enum ArithOps {
+    case add // +
+    case sub // -
+    case mul // *
+    case div // /
+}
+
 /// Expressions
-enum Expr: Node {
+indirect enum Expr: Node {
     case const(Const)
+    case arithOps(ArithOps, [Expr])
 }

@@ -169,3 +169,12 @@ extension {{ type.name }}: Hashable {
     }
 }
 {% endfor %}
+
+// MARK: - AutoHashable for Array
+extension Array: Hashable where Element: Hashable {
+    public var hashValue: Int {
+        return self.reduce(5381) {
+            ($0 << 5) &+ $0 &+ $1.hashValue
+        }
+    }
+}
