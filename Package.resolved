@@ -1,0 +1,16 @@
+{
+  "object": {
+    "pins": [
+      {
+        "package": "SwiftParsec",
+        "repositoryURL": "git@github.com:davedufresne/SwiftParsec.git",
+        "state": {
+          "branch": null,
+          "revision": "5ab615f5179dd21a1d997cca3c09ca359a6818b7",
+          "version": "3.0.0"
+        }
+      }
+    ]
+  },
+  "version": 1
+}
