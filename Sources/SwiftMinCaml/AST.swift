@@ -7,11 +7,16 @@
 
 import Foundation
 
+protocol Node: AutoEquatable, AutoHashable { }
+
 /// Constants
-protocol Const {
+enum Const: Node {
+    case integer(Int)
+    case float(Float)
+    case bool(Bool)
 }
 
 /// Expressions
-protocol Expr {
-    
+enum Expr: Node {
+    case const(Const)
 }

@@ -27,6 +27,27 @@ fileprivate func compareArrays<T>(lhs: [T], rhs: [T], compare: (_ lhs: T, _ rhs:
 // MARK: - AutoEquatable for classes, protocols, structs
 
 // MARK: - AutoEquatable for Enums
+// MARK: - Const AutoEquatable
+extension Const: Equatable {}
+func == (lhs: Const, rhs: Const) -> Bool {
+    switch (lhs, rhs) {
+    case (.integer(let lhs), .integer(let rhs)):
+        return lhs == rhs
+    case (.float(let lhs), .float(let rhs)):
+        return lhs == rhs
+    case (.bool(let lhs), .bool(let rhs)):
+        return lhs == rhs
+    default: return false
+    }
+}
+// MARK: - Expr AutoEquatable
+extension Expr: Equatable {}
+func == (lhs: Expr, rhs: Expr) -> Bool {
+    switch (lhs, rhs) {
+    case (.const(let lhs), .const(let rhs)):
+        return lhs == rhs
+    }
+}
 
 // swiftlint:disable file_length
 // swiftlint:disable line_length
@@ -84,5 +105,37 @@ fileprivate func hashDictionary<T: Hashable, U: Hashable>(_ dictionary: [T: U]?)
 
 
 // MARK: - AutoHashable for classes, protocols, structs
+// MARK: - Node AutoHashable
+extension Node {
+    internal var hashValue: Int {
+
+        return combineHashes([
+            0])
+    }
+}
 
 // MARK: - AutoHashable for Enums
+
+// MARK: - Const AutoHashable
+extension Const: Hashable {
+    internal var hashValue: Int {
+        switch self {
+        case .integer(let data):
+            return combineHashes([1, data.hashValue])
+        case .float(let data):
+            return combineHashes([2, data.hashValue])
+        case .bool(let data):
+            return combineHashes([3, data.hashValue])
+        }
+    }
+}
+
+// MARK: - Expr AutoHashable
+extension Expr: Hashable {
+    internal var hashValue: Int {
+        switch self {
+        case .const(let data):
+            return combineHashes([1, data.hashValue])
+        }
+    }
+}
