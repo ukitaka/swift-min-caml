@@ -28,4 +28,5 @@ enum ArithOps {
 indirect enum Expr: Node {
     case const(Const)
     case arithOps(ArithOps, [Expr])
+    case `if`(Expr, Expr, Expr)
 }
