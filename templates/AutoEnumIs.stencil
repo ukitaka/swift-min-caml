@@ -1,0 +1,12 @@
+{% for enum in types.implementing.AutoEnumIs|enum %}
+extension {{ enum.name }} {
+  {% for case in enum.cases %} 
+  var is{{ case.name|replace:"`",""|upperFirstLetter }}: Bool {
+    switch self {
+      case .{{ case.name }}: return true
+      default: return false
+    }
+  }
+  {% endfor %}
+}
+{% endfor %}

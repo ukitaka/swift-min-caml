@@ -2,6 +2,140 @@
 // DO NOT EDIT
 
 
+
+extension Const {
+  var isInteger: Bool {
+    switch self {
+      case .integer: return true
+      default: return false
+    }
+  }
+  var isFloat: Bool {
+    switch self {
+      case .float: return true
+      default: return false
+    }
+  }
+  var isBool: Bool {
+    switch self {
+      case .bool: return true
+      default: return false
+    }
+  }
+}
+extension Expr {
+  var isConst: Bool {
+    switch self {
+      case .const: return true
+      default: return false
+    }
+  }
+  var isArithOps: Bool {
+    switch self {
+      case .arithOps: return true
+      default: return false
+    }
+  }
+  var isIf: Bool {
+    switch self {
+      case .`if`: return true
+      default: return false
+    }
+  }
+  var isLet: Bool {
+    switch self {
+      case .`let`: return true
+      default: return false
+    }
+  }
+  var isVar: Bool {
+    switch self {
+      case .`var`: return true
+      default: return false
+    }
+  }
+  var isLetRec: Bool {
+    switch self {
+      case .letRec: return true
+      default: return false
+    }
+  }
+  var isApply: Bool {
+    switch self {
+      case .apply: return true
+      default: return false
+    }
+  }
+  var isTuple: Bool {
+    switch self {
+      case .tuple: return true
+      default: return false
+    }
+  }
+  var isReadTuple: Bool {
+    switch self {
+      case .readTuple: return true
+      default: return false
+    }
+  }
+  var isCreateArray: Bool {
+    switch self {
+      case .createArray: return true
+      default: return false
+    }
+  }
+  var isReadArray: Bool {
+    switch self {
+      case .readArray: return true
+      default: return false
+    }
+  }
+  var isWriteArray: Bool {
+    switch self {
+      case .writeArray: return true
+      default: return false
+    }
+  }
+}
+extension Type {
+  var isInt: Bool {
+    switch self {
+      case .int: return true
+      default: return false
+    }
+  }
+  var isFloat: Bool {
+    switch self {
+      case .float: return true
+      default: return false
+    }
+  }
+  var isBool: Bool {
+    switch self {
+      case .bool: return true
+      default: return false
+    }
+  }
+  var isFunc: Bool {
+    switch self {
+      case .`func`: return true
+      default: return false
+    }
+  }
+  var isTuple: Bool {
+    switch self {
+      case .tuple: return true
+      default: return false
+    }
+  }
+  var isArray: Bool {
+    switch self {
+      case .array: return true
+      default: return false
+    }
+  }
+}
+
 // swiftlint:disable file_length
 fileprivate func compareOptionals<T>(lhs: T?, rhs: T?, compare: (_ lhs: T, _ rhs: T) -> Bool) -> Bool {
     switch (lhs, rhs) {

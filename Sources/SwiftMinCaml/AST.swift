@@ -7,7 +7,7 @@
 
 import Tagged
 
-protocol Node: AutoEquatable, AutoHashable { }
+protocol Node: AutoEquatable, AutoHashable, AutoEnumIs { }
 
 /// Constants
 enum Const: Node {
