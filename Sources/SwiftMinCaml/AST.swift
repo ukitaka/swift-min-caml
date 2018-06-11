@@ -37,4 +37,5 @@ indirect enum Expr: Node {
     case `let`(Var, Expr, Expr)
     case `var`(Var)
     case `letRec`(Var, [Var], Expr, Expr)
+    case `call`(Expr, [Expr])
 }
