@@ -7,7 +7,7 @@
 
 import Foundation
 
-// Constants
+/// Constants
 protocol Const {
 }
 
