@@ -5,8 +5,6 @@
 //  Created by Yuki Takahashi on 2018/06/11.
 //
 
-import Foundation
-
 /// AutoEquatable
 protocol AutoEquatable { }
 
