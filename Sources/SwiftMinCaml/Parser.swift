@@ -29,7 +29,8 @@ extension Expr {
         
         let const = Expr.const <^> (bool <|> integer <|> float)
 
-        fatalError("Not implemented yet")
+        return const
+//        fatalError("Not implemented yet")
         
     }()
 }
