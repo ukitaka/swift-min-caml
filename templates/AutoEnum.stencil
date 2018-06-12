@@ -7,6 +7,26 @@ extension {{ enum.name }} {
       default: return false
     }
   }
+
+  {% if case.associatedValues.count == 0 %}
+
+  {% elif case.associatedValues.count == 1 %}
+  var as{{ case.name|replace:"`",""|upperFirstLetter }}: {{case.associatedValues.first.typeName}}? {
+    switch self {
+    case let .{{ case.name }}({{case.associatedValues.first.localName|default:case.name}}):
+      return {{case.associatedValues.first.localName|default:case.name}}
+    default:
+      return nil
+    }
+  }
+  {% else %}
+  struct {{ case.name|replace:"`",""|upperFirstLetter }}{{enum.name}} {
+    {% for associatedValue in case.associatedValues %}
+    let {{associatedValue.localName|default:case.name}}: {{associatedValue.typeName}}
+    {% endfor %}
+  }
+  {% endif %}
+
   {% endfor %}
 }
 {% endfor %}

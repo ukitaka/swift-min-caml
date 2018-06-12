@@ -10,18 +10,48 @@ extension Const {
       default: return false
     }
   }
+
+  var asInteger: Int? {
+    switch self {
+    case let .integer(integer):
+      return integer
+    default:
+      return nil
+    }
+  }
+
   var isFloat: Bool {
     switch self {
       case .float: return true
       default: return false
     }
   }
+
+  var asFloat: Double? {
+    switch self {
+    case let .float(float):
+      return float
+    default:
+      return nil
+    }
+  }
+
   var isBool: Bool {
     switch self {
       case .bool: return true
       default: return false
     }
   }
+
+  var asBool: Bool? {
+    switch self {
+    case let .bool(bool):
+      return bool
+    default:
+      return nil
+    }
+  }
+
 }
 extension Expr {
   var isConst: Bool {
@@ -30,72 +60,162 @@ extension Expr {
       default: return false
     }
   }
+
+  var asConst: Const? {
+    switch self {
+    case let .const(const):
+      return const
+    default:
+      return nil
+    }
+  }
+
   var isArithOps: Bool {
     switch self {
       case .arithOps: return true
       default: return false
     }
   }
+
+  struct ArithOpsExpr {
+    let ops: ArithOps
+    let args: [Expr]
+  }
+
   var isIf: Bool {
     switch self {
       case .`if`: return true
       default: return false
     }
   }
+
+  struct IfExpr {
+    let cond: Expr
+    let ifTrue: Expr
+    let ifFalse: Expr
+  }
+
   var isLet: Bool {
     switch self {
       case .`let`: return true
       default: return false
     }
   }
+
+  struct LetExpr {
+    let varName: Var
+    let bind: Expr
+    let body: Expr
+  }
+
   var isVar: Bool {
     switch self {
       case .`var`: return true
       default: return false
     }
   }
+
+  var asVar: Var? {
+    switch self {
+    case let .`var`(variable):
+      return variable
+    default:
+      return nil
+    }
+  }
+
   var isLetRec: Bool {
     switch self {
       case .letRec: return true
       default: return false
     }
   }
+
+  struct LetRecExpr {
+    let name: Var
+    let args: [Var]
+    let bind: Expr
+    let body: Expr
+  }
+
   var isApply: Bool {
     switch self {
       case .apply: return true
       default: return false
     }
   }
+
+  struct ApplyExpr {
+    let function: Expr
+    let args: [Expr]
+  }
+
   var isTuple: Bool {
     switch self {
       case .tuple: return true
       default: return false
     }
   }
+
+  var asTuple: [Expr]? {
+    switch self {
+    case let .tuple(elements):
+      return elements
+    default:
+      return nil
+    }
+  }
+
   var isReadTuple: Bool {
     switch self {
       case .readTuple: return true
       default: return false
     }
   }
+
+  struct ReadTupleExpr {
+    let vars: [Var]
+    let bindings: Expr
+    let body: Expr
+  }
+
   var isCreateArray: Bool {
     switch self {
       case .createArray: return true
       default: return false
     }
   }
+
+  struct CreateArrayExpr {
+    let size: Expr
+    let element: Expr
+  }
+
   var isReadArray: Bool {
     switch self {
       case .readArray: return true
       default: return false
     }
   }
+
+  struct ReadArrayExpr {
+    let array: Expr
+    let index: Expr
+  }
+
   var isWriteArray: Bool {
     switch self {
       case .writeArray: return true
       default: return false
     }
   }
+
+  struct WriteArrayExpr {
+    let array: Expr
+    let index: Expr
+    let value: Expr
+  }
+
 }
 extension Type {
   var isInt: Bool {
@@ -104,36 +224,71 @@ extension Type {
       default: return false
     }
   }
+
+
+
   var isFloat: Bool {
     switch self {
       case .float: return true
       default: return false
     }
   }
+
+
+
   var isBool: Bool {
     switch self {
       case .bool: return true
       default: return false
     }
   }
+
+
+
   var isFunc: Bool {
     switch self {
       case .`func`: return true
       default: return false
     }
   }
+
+  struct FuncType {
+    let args: [Type]
+    let ret: Type
+  }
+
   var isTuple: Bool {
     switch self {
       case .tuple: return true
       default: return false
     }
   }
+
+  var asTuple: [Type]? {
+    switch self {
+    case let .tuple(elements):
+      return elements
+    default:
+      return nil
+    }
+  }
+
   var isArray: Bool {
     switch self {
       case .array: return true
       default: return false
     }
   }
+
+  var asArray: Type? {
+    switch self {
+    case let .array(element):
+      return element
+    default:
+      return nil
+    }
+  }
+
 }
 
 // swiftlint:disable file_length
