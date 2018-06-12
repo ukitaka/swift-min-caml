@@ -82,6 +82,18 @@ extension Expr {
     let args: [Expr]
   }
 
+  var asArithOps: ArithOpsExpr? {
+    switch self {
+    case let .arithOps(ops, args):
+      return ArithOpsExpr (
+        ops: ops , 
+        args: args 
+      )
+    default:
+      return nil
+    }
+  }
+
   var isIf: Bool {
     switch self {
       case .`if`: return true
@@ -95,6 +107,19 @@ extension Expr {
     let ifFalse: Expr
   }
 
+  var asIf: IfExpr? {
+    switch self {
+    case let .`if`(cond, ifTrue, ifFalse):
+      return IfExpr (
+        cond: cond , 
+        ifTrue: ifTrue , 
+        ifFalse: ifFalse 
+      )
+    default:
+      return nil
+    }
+  }
+
   var isLet: Bool {
     switch self {
       case .`let`: return true
@@ -106,6 +131,19 @@ extension Expr {
     let varName: Var
     let bind: Expr
     let body: Expr
+  }
+
+  var asLet: LetExpr? {
+    switch self {
+    case let .`let`(varName, bind, body):
+      return LetExpr (
+        varName: varName , 
+        bind: bind , 
+        body: body 
+      )
+    default:
+      return nil
+    }
   }
 
   var isVar: Bool {
@@ -138,6 +176,20 @@ extension Expr {
     let body: Expr
   }
 
+  var asLetRec: LetRecExpr? {
+    switch self {
+    case let .letRec(name, args, bind, body):
+      return LetRecExpr (
+        name: name , 
+        args: args , 
+        bind: bind , 
+        body: body 
+      )
+    default:
+      return nil
+    }
+  }
+
   var isApply: Bool {
     switch self {
       case .apply: return true
@@ -148,6 +200,18 @@ extension Expr {
   struct ApplyExpr {
     let function: Expr
     let args: [Expr]
+  }
+
+  var asApply: ApplyExpr? {
+    switch self {
+    case let .apply(function, args):
+      return ApplyExpr (
+        function: function , 
+        args: args 
+      )
+    default:
+      return nil
+    }
   }
 
   var isTuple: Bool {
@@ -179,6 +243,19 @@ extension Expr {
     let body: Expr
   }
 
+  var asReadTuple: ReadTupleExpr? {
+    switch self {
+    case let .readTuple(vars, bindings, body):
+      return ReadTupleExpr (
+        vars: vars , 
+        bindings: bindings , 
+        body: body 
+      )
+    default:
+      return nil
+    }
+  }
+
   var isCreateArray: Bool {
     switch self {
       case .createArray: return true
@@ -189,6 +266,18 @@ extension Expr {
   struct CreateArrayExpr {
     let size: Expr
     let element: Expr
+  }
+
+  var asCreateArray: CreateArrayExpr? {
+    switch self {
+    case let .createArray(size, element):
+      return CreateArrayExpr (
+        size: size , 
+        element: element 
+      )
+    default:
+      return nil
+    }
   }
 
   var isReadArray: Bool {
@@ -203,6 +292,18 @@ extension Expr {
     let index: Expr
   }
 
+  var asReadArray: ReadArrayExpr? {
+    switch self {
+    case let .readArray(array, index):
+      return ReadArrayExpr (
+        array: array , 
+        index: index 
+      )
+    default:
+      return nil
+    }
+  }
+
   var isWriteArray: Bool {
     switch self {
       case .writeArray: return true
@@ -214,6 +315,19 @@ extension Expr {
     let array: Expr
     let index: Expr
     let value: Expr
+  }
+
+  var asWriteArray: WriteArrayExpr? {
+    switch self {
+    case let .writeArray(array, index, value):
+      return WriteArrayExpr (
+        array: array , 
+        index: index , 
+        value: value 
+      )
+    default:
+      return nil
+    }
   }
 
 }
@@ -255,6 +369,18 @@ extension Type {
   struct FuncType {
     let args: [Type]
     let ret: Type
+  }
+
+  var asFunc: FuncType? {
+    switch self {
+    case let .`func`(args, ret):
+      return FuncType (
+        args: args , 
+        ret: ret 
+      )
+    default:
+      return nil
+    }
   }
 
   var isTuple: Bool {

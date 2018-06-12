@@ -25,6 +25,19 @@ extension {{ enum.name }} {
     let {{associatedValue.localName|default:case.name}}: {{associatedValue.typeName}}
     {% endfor %}
   }
+
+  var as{{ case.name|replace:"`",""|upperFirstLetter }}: {{ case.name|replace:"`",""|upperFirstLetter }}{{enum.name}}? {
+    switch self {
+    case let .{{ case.name }}({% for v in case.associatedValues %}{{v.localName}}{% ifnot forloop.last %}, {% endif %}{% endfor %}):
+      return {{ case.name|replace:"`",""|upperFirstLetter }}{{enum.name}} (
+        {% for v in case.associatedValues %}
+        {{v.localName|default:case.name}}: {{v.localName}}{% ifnot forloop.last %},{% endif %}
+        {% endfor %}
+      )
+    default:
+      return nil
+    }
+  }
   {% endif %}
 
   {% endfor %}
