@@ -181,50 +181,50 @@ func == (lhs: Expr, rhs: Expr) -> Bool {
     case (.const(let lhs), .const(let rhs)):
         return lhs == rhs
     case (.arithOps(let lhs), .arithOps(let rhs)):
-        if lhs.0 != rhs.0 { return false }
-        if lhs.1 != rhs.1 { return false }
+        if lhs.ops != rhs.ops { return false }
+        if lhs.args != rhs.args { return false }
         return true
     case (.`if`(let lhs), .`if`(let rhs)):
-        if lhs.0 != rhs.0 { return false }
-        if lhs.1 != rhs.1 { return false }
-        if lhs.2 != rhs.2 { return false }
+        if lhs.cond != rhs.cond { return false }
+        if lhs.ifTrue != rhs.ifTrue { return false }
+        if lhs.ifFalse != rhs.ifFalse { return false }
         return true
     case (.`let`(let lhs), .`let`(let rhs)):
-        if lhs.0 != rhs.0 { return false }
-        if lhs.1 != rhs.1 { return false }
-        if lhs.2 != rhs.2 { return false }
+        if lhs.varName != rhs.varName { return false }
+        if lhs.bind != rhs.bind { return false }
+        if lhs.body != rhs.body { return false }
         return true
     case (.`var`(let lhs), .`var`(let rhs)):
         return lhs == rhs
     case (.letRec(let lhs), .letRec(let rhs)):
-        if lhs.0 != rhs.0 { return false }
-        if lhs.1 != rhs.1 { return false }
-        if lhs.2 != rhs.2 { return false }
-        if lhs.3 != rhs.3 { return false }
+        if lhs.name != rhs.name { return false }
+        if lhs.args != rhs.args { return false }
+        if lhs.bind != rhs.bind { return false }
+        if lhs.body != rhs.body { return false }
         return true
     case (.apply(let lhs), .apply(let rhs)):
-        if lhs.0 != rhs.0 { return false }
-        if lhs.1 != rhs.1 { return false }
+        if lhs.function != rhs.function { return false }
+        if lhs.args != rhs.args { return false }
         return true
     case (.tuple(let lhs), .tuple(let rhs)):
         return lhs == rhs
     case (.readTuple(let lhs), .readTuple(let rhs)):
-        if lhs.0 != rhs.0 { return false }
-        if lhs.1 != rhs.1 { return false }
-        if lhs.2 != rhs.2 { return false }
+        if lhs.vars != rhs.vars { return false }
+        if lhs.bindings != rhs.bindings { return false }
+        if lhs.body != rhs.body { return false }
         return true
     case (.createArray(let lhs), .createArray(let rhs)):
-        if lhs.0 != rhs.0 { return false }
-        if lhs.1 != rhs.1 { return false }
+        if lhs.size != rhs.size { return false }
+        if lhs.element != rhs.element { return false }
         return true
     case (.readArray(let lhs), .readArray(let rhs)):
-        if lhs.0 != rhs.0 { return false }
-        if lhs.1 != rhs.1 { return false }
+        if lhs.array != rhs.array { return false }
+        if lhs.index != rhs.index { return false }
         return true
     case (.writeArray(let lhs), .writeArray(let rhs)):
-        if lhs.0 != rhs.0 { return false }
-        if lhs.1 != rhs.1 { return false }
-        if lhs.2 != rhs.2 { return false }
+        if lhs.array != rhs.array { return false }
+        if lhs.index != rhs.index { return false }
+        if lhs.value != rhs.value { return false }
         return true
     default: return false
     }
@@ -240,8 +240,8 @@ func == (lhs: Type, rhs: Type) -> Bool {
     case (.bool, .bool):
         return true
     case (.`func`(let lhs), .`func`(let rhs)):
-        if lhs.0 != rhs.0 { return false }
-        if lhs.1 != rhs.1 { return false }
+        if lhs.args != rhs.args { return false }
+        if lhs.ret != rhs.ret { return false }
         return true
     case (.tuple(let lhs), .tuple(let rhs)):
         return lhs == rhs
@@ -339,27 +339,27 @@ extension Expr: Hashable {
         case .const(let data):
             return combineHashes([1, data.hashValue])
         case .arithOps(let data):
-            return combineHashes([2, data.0.hashValue, data.1.hashValue])
+            return combineHashes([2, data.ops.hashValue, data.args.hashValue])
         case .`if`(let data):
-            return combineHashes([3, data.0.hashValue, data.1.hashValue, data.2.hashValue])
+            return combineHashes([3, data.cond.hashValue, data.ifTrue.hashValue, data.ifFalse.hashValue])
         case .`let`(let data):
-            return combineHashes([4, data.0.hashValue, data.1.hashValue, data.2.hashValue])
+            return combineHashes([4, data.varName.hashValue, data.bind.hashValue, data.body.hashValue])
         case .`var`(let data):
             return combineHashes([5, data.hashValue])
         case .letRec(let data):
-            return combineHashes([6, data.0.hashValue, data.1.hashValue, data.2.hashValue, data.3.hashValue])
+            return combineHashes([6, data.name.hashValue, data.args.hashValue, data.bind.hashValue, data.body.hashValue])
         case .apply(let data):
-            return combineHashes([7, data.0.hashValue, data.1.hashValue])
+            return combineHashes([7, data.function.hashValue, data.args.hashValue])
         case .tuple(let data):
             return combineHashes([8, data.hashValue])
         case .readTuple(let data):
-            return combineHashes([9, data.0.hashValue, data.1.hashValue, data.2.hashValue])
+            return combineHashes([9, data.vars.hashValue, data.bindings.hashValue, data.body.hashValue])
         case .createArray(let data):
-            return combineHashes([10, data.0.hashValue, data.1.hashValue])
+            return combineHashes([10, data.size.hashValue, data.element.hashValue])
         case .readArray(let data):
-            return combineHashes([11, data.0.hashValue, data.1.hashValue])
+            return combineHashes([11, data.array.hashValue, data.index.hashValue])
         case .writeArray(let data):
-            return combineHashes([12, data.0.hashValue, data.1.hashValue, data.2.hashValue])
+            return combineHashes([12, data.array.hashValue, data.index.hashValue, data.value.hashValue])
         }
     }
 }
@@ -375,7 +375,7 @@ extension Type: Hashable {
         case .bool:
             return 3.hashValue
         case .`func`(let data):
-            return combineHashes([4, data.0.hashValue, data.1.hashValue])
+            return combineHashes([4, data.args.hashValue, data.ret.hashValue])
         case .tuple(let data):
             return combineHashes([5, data.hashValue])
         case .array(let data):

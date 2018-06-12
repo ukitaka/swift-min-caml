@@ -31,18 +31,18 @@ typealias Var = Tagged<VarTag, String>
 
 /// Expressions
 indirect enum Expr: Node {
-    case const(Const)
-    case arithOps(ArithOps, [Expr])
-    case `if`(Expr, Expr, Expr)
-    case `let`(Var, Expr, Expr)
-    case `var`(Var)
-    case letRec(Var, [Var], Expr, Expr)
-    case apply(Expr, [Expr])
-    case tuple([Expr])
-    case readTuple([Var], Expr, Expr)
-    case createArray(Expr, Expr)
-    case readArray(Expr, Expr)
-    case writeArray(Expr, Expr, Expr)
+    case const(const: Const)
+    case arithOps(ops: ArithOps, args: [Expr])
+    case `if`(cond: Expr, ifTrue:Expr, ifFalse:Expr)
+    case `let`(varName: Var, bind: Expr, body: Expr)
+    case `var`(variable: Var)
+    case letRec(name: Var, args: [Var], bind: Expr, body: Expr)
+    case apply(function: Expr, args: [Expr])
+    case tuple(elements: [Expr])
+    case readTuple(vars: [Var], bindings: Expr, body: Expr)
+    case createArray(size: Expr, element: Expr)
+    case readArray(array: Expr, index: Expr)
+    case writeArray(array: Expr, index: Expr, value: Expr)
 }
 
 // Type
@@ -52,7 +52,7 @@ indirect enum Type: Node {
     case float
     case bool
     
-    case `func`([Type], Type)
-    case tuple([Type])
-    case array(Type)
+    case `func`(args: [Type], ret: Type)
+    case tuple(elements: [Type])
+    case array(element: Type)
 }
