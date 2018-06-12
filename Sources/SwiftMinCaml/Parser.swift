@@ -7,26 +7,6 @@
 
 import SwiftParsec
 
-private func binary(
-    _ op: ArithOps,
-    assoc: Associativity,
-    function: @escaping (Expr, Expr) -> Expr
-    ) -> Operator<String, (), Expr> {
-    
-    let opParser = ArithOps.paser *> GenericParser(result: function)
-    return .infix(opParser, assoc)
-    
-}
-
-private func prefix(
-    _ op: ArithOps,
-    function: @escaping (Expr) -> Expr
-    ) -> Operator<String, (), Expr> {
-    
-    let opParser = ArithOps.paser *> GenericParser(result: function)
-    return .prefix(opParser)
-}
-
 // MARK: -
 
 extension ArithOps {
@@ -42,7 +22,7 @@ extension ArithOps {
         let mul = symbol("*") *> Parser(result: .mul)
         let div = symbol("/") *> Parser(result: .div)
         
-        return add.attempt <|> sub.attempt <|> mul.attempt <|> div.attempt
+        return add.attempt <|> sub.attempt <|> mul.attempt <|> div
     }()
 }
 
@@ -51,36 +31,30 @@ extension ArithOps {
 extension Expr {
     typealias Parser = GenericParser<String, (), Expr>
 
+    private static func binary( _ op: ArithOps, assoc: Associativity) -> Operator<String, (), Expr> {
+        let function = { (lhs: Expr, rhs: Expr) in Expr.arithOps(ops: op, args: [lhs, rhs]) }
+        let opParser = ArithOps.paser *> GenericParser(result: function)
+        return .infix(opParser, assoc)
+    }
+
+    private static func prefix(_ op: ArithOps) -> Operator<String, (), Expr> {
+        let function = { (e: Expr) in Expr.arithOps(ops: op, args: [e]) }
+        let opParser = ArithOps.paser *> GenericParser(result: function)
+        return .prefix(opParser)
+    }
+
     private static let opTable: OperatorTable<String, (), Expr> = [
         [
-            // -
-            prefix(.sub, function: { e in
-                return Expr.arithOps(ops: .sub, args: [e])
-            }),
-            // +
-            prefix(.add, function: { e in
-                return Expr.arithOps(ops: .add, args: [e])
-            })
+            prefix(.sub), // -
+            prefix(.add) // +
         ],
         [
-            // *
-            binary(.mul, assoc: .left) { (lhs, rhs) in
-                return Expr.arithOps(ops: .mul, args: [lhs, rhs])
-            },
-            // /
-            binary(.div, assoc: .left) { (lhs, rhs) in
-                return Expr.arithOps(ops: .div, args: [lhs, rhs])
-            },
+            binary(.mul, assoc: .left), // *
+            binary(.div, assoc: .left)  // /
         ],
         [
-            // -
-            binary(.sub, assoc: .left) { (lhs, rhs) in
-                return Expr.arithOps(ops: .sub, args: [lhs, rhs])
-            },
-            // +
-            binary(.add, assoc: .left) { (lhs, rhs) in
-                return Expr.arithOps(ops: .add, args: [lhs, rhs])
-            },
+            binary(.sub, assoc: .left), // -
+            binary(.add, assoc: .left)  // +
         ]
     ]
     
@@ -98,7 +72,7 @@ extension Expr {
         // bool
         let trueValue = symbol("true") *> GenericParser(result: true)
         let falseValue = symbol("false") *> GenericParser(result: false)
-        let bool = Const.bool <^> (trueValue <|> falseValue)
+        let bool = Const.bool <^> (trueValue.attempt <|> falseValue)
         // float
         let float = Const.float <^> lexer.float
         // integer
@@ -106,14 +80,12 @@ extension Expr {
 
         let const = Expr.const <^> (bool.attempt <|> float.attempt <|> integer)
         
-        return GenericParser.recursive { (expr: Parser) in
+        return Parser.recursive { expr in
             // ArithOps
             let arithOps = Expr.opTable.makeExpressionParser { p in
-                p.between(openingParen, closingParen) <|> expr
+                p.between(openingParen, closingParen).attempt <|> const.attempt <|> expr
             }
-            //FIXME: still not work
-            // return arithOps.attempt <|> const
-            return const
+            return arithOps.attempt <|> const
         }
     }()
 }
