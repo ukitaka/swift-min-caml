@@ -30,4 +30,11 @@ class ParserTest: XCTestCase {
         let bool = try! parser.run(sourceName: "test", input: "true")
         XCTAssertEqual(bool.asConst?.asBool ?? false, true)
     }
+    
+    func testArithOps() {
+        let parser = Expr.parser
+        let input = "1 + 2 * 3"
+        let exp = try! parser.run(sourceName: "test", input: input)
+        print(exp)
+    }
 }
