@@ -7,7 +7,7 @@
 
 import SwiftParsec
 
-// MARK: -
+// MARK: - ArithOps
 
 extension ArithOps {
     typealias Parser = GenericParser<String, (), ArithOps>
@@ -26,7 +26,7 @@ extension ArithOps {
     }()
 }
 
-// MARK: -
+// MARK: - Expr
 
 extension Expr {
     typealias Parser = GenericParser<String, (), Expr>
