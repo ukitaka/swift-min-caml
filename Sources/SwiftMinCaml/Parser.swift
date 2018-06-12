@@ -10,20 +10,14 @@ import SwiftParsec
 // MARK: - ArithOps
 
 extension ArithOps {
-    typealias Parser = GenericParser<String, (), ArithOps>
-    
-    static let paser: GenericParser<String, (), ArithOps> = {
-        let minCaml = LanguageDefinition<()>.javaStyle // needs MLStyle...
-        let lexer = GenericTokenParser(languageDefinition: minCaml)
-        
-        let symbol = lexer.symbol
-        let add = symbol("+") *> Parser(result: .add)
-        let sub = symbol("-") *> Parser(result: .sub)
-        let mul = symbol("*") *> Parser(result: .mul)
-        let div = symbol("/") *> Parser(result: .div)
-        
-        return add.attempt <|> sub.attempt <|> mul.attempt <|> div
-    }()
+    var symbol: String {
+        switch self {
+        case .add: return "+"
+        case .sub: return "-"
+        case .mul: return "*"
+        case .div: return "/"
+        }
+    }
 }
 
 // MARK: - Expr
@@ -33,7 +27,7 @@ extension Expr {
 
     private static func binary( _ op: ArithOps, assoc: Associativity) -> Operator<String, (), Expr> {
         let function = { (lhs: Expr, rhs: Expr) in Expr.arithOps(ops: op, args: [lhs, rhs]) }
-        let opParser = ArithOps.paser *> GenericParser(result: function)
+        let opParser = StringParser.string(op.symbol) *> GenericParser(result: function)
         return .infix(opParser, assoc)
     }
 
@@ -48,7 +42,7 @@ extension Expr {
             }
             return Expr.arithOps(ops: op, args: [e])
         }
-        let opParser = ArithOps.paser *> GenericParser(result: function)
+        let opParser = StringParser.string(op.symbol) *> GenericParser(result: function)
         return .prefix(opParser)
     }
 
@@ -92,7 +86,7 @@ extension Expr {
         return Parser.recursive { expr in
             // ArithOps
             let arithOps = Expr.opTable.makeExpressionParser { p in
-                p.between(openingParen, closingParen).attempt <|> const.attempt <|> expr
+                p.between(openingParen, closingParen).attempt <|> const
             }
             return arithOps.attempt <|> const
         }
