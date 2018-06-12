@@ -22,12 +22,12 @@ extension Expr {
         let trueValue = symbol("true") *> GenericParser(result: true)
         let falseValue = symbol("false") *> GenericParser(result: false)
         let bool = Const.bool <^> (trueValue <|> falseValue)
-        // integer
-        let integer = Const.integer <^> (lexer.integer.attempt <|> lexer.integer)
         // float
-        let float = Const.float <^> (lexer.float.attempt <|> lexer.float)
-        
-        let const = Expr.const <^> (bool <|> integer <|> float)
+        let float = Const.float <^> lexer.float
+        // integer
+        let integer = Const.integer <^> lexer.integer
+
+        let const = Expr.const <^> (bool.attempt <|> float.attempt <|> integer)
 
         return const
 //        fatalError("Not implemented yet")
