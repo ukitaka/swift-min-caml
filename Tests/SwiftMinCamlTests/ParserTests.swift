@@ -12,7 +12,7 @@ class ParserTest: XCTestCase {
     func testArithmeticOperations() {
         let parser = Expr.parser
         let expr = try! parser.run(sourceName: "test", input: "1")
-        XCTAssertTrue(expr.isConst)
+        XCTAssertEqual(expr.asConst?.asInteger ?? 0, 1)
         print(expr)
     }
 }
