@@ -3,6 +3,44 @@
 
 
 
+extension ArithOps {
+  var isAdd: Bool {
+    switch self {
+      case .add: return true
+      default: return false
+    }
+  }
+
+
+
+  var isSub: Bool {
+    switch self {
+      case .sub: return true
+      default: return false
+    }
+  }
+
+
+
+  var isMul: Bool {
+    switch self {
+      case .mul: return true
+      default: return false
+    }
+  }
+
+
+
+  var isDiv: Bool {
+    switch self {
+      case .div: return true
+      default: return false
+    }
+  }
+
+
+
+}
 extension Const {
   var isInteger: Bool {
     switch self {
@@ -86,8 +124,8 @@ extension Expr {
     switch self {
     case let .arithOps(ops, args):
       return ArithOpsExpr (
-        ops: ops , 
-        args: args 
+        ops: ops,
+        args: args
       )
     default:
       return nil
@@ -111,9 +149,9 @@ extension Expr {
     switch self {
     case let .`if`(cond, ifTrue, ifFalse):
       return IfExpr (
-        cond: cond , 
-        ifTrue: ifTrue , 
-        ifFalse: ifFalse 
+        cond: cond,
+        ifTrue: ifTrue,
+        ifFalse: ifFalse
       )
     default:
       return nil
@@ -137,9 +175,9 @@ extension Expr {
     switch self {
     case let .`let`(varName, bind, body):
       return LetExpr (
-        varName: varName , 
-        bind: bind , 
-        body: body 
+        varName: varName,
+        bind: bind,
+        body: body
       )
     default:
       return nil
@@ -180,10 +218,10 @@ extension Expr {
     switch self {
     case let .letRec(name, args, bind, body):
       return LetRecExpr (
-        name: name , 
-        args: args , 
-        bind: bind , 
-        body: body 
+        name: name,
+        args: args,
+        bind: bind,
+        body: body
       )
     default:
       return nil
@@ -206,8 +244,8 @@ extension Expr {
     switch self {
     case let .apply(function, args):
       return ApplyExpr (
-        function: function , 
-        args: args 
+        function: function,
+        args: args
       )
     default:
       return nil
@@ -247,9 +285,9 @@ extension Expr {
     switch self {
     case let .readTuple(vars, bindings, body):
       return ReadTupleExpr (
-        vars: vars , 
-        bindings: bindings , 
-        body: body 
+        vars: vars,
+        bindings: bindings,
+        body: body
       )
     default:
       return nil
@@ -272,8 +310,8 @@ extension Expr {
     switch self {
     case let .createArray(size, element):
       return CreateArrayExpr (
-        size: size , 
-        element: element 
+        size: size,
+        element: element
       )
     default:
       return nil
@@ -296,8 +334,8 @@ extension Expr {
     switch self {
     case let .readArray(array, index):
       return ReadArrayExpr (
-        array: array , 
-        index: index 
+        array: array,
+        index: index
       )
     default:
       return nil
@@ -321,9 +359,9 @@ extension Expr {
     switch self {
     case let .writeArray(array, index, value):
       return WriteArrayExpr (
-        array: array , 
-        index: index , 
-        value: value 
+        array: array,
+        index: index,
+        value: value
       )
     default:
       return nil
@@ -375,8 +413,8 @@ extension Type {
     switch self {
     case let .`func`(args, ret):
       return FuncType (
-        args: args , 
-        ret: ret 
+        args: args,
+        ret: ret
       )
     default:
       return nil

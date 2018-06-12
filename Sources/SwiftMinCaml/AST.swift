@@ -17,7 +17,7 @@ enum Const: Node {
 }
 
 /// ArithmeticOperations
-enum ArithOps {
+enum ArithOps: AutoEnum {
     case add // +
     case sub // -
     case mul // *

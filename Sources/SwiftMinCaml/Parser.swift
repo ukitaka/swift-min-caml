@@ -38,7 +38,16 @@ extension Expr {
     }
 
     private static func prefix(_ op: ArithOps) -> Operator<String, (), Expr> {
-        let function = { (e: Expr) in Expr.arithOps(ops: op, args: [e]) }
+        let function = { (e: Expr) -> Expr in
+            // workaround ... so messy
+            if let f = e.asConst?.asFloat, op.isSub {
+                return Expr.const(const: Const.float(-f))
+            }
+            if let i = e.asConst?.asInteger, op.isSub {
+                return Expr.const(const: Const.integer(-i))
+            }
+            return Expr.arithOps(ops: op, args: [e])
+        }
         let opParser = ArithOps.paser *> GenericParser(result: function)
         return .prefix(opParser)
     }
