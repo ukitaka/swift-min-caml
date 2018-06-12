@@ -11,5 +11,5 @@ protocol AutoEquatable { }
 /// AutoHashable
 protocol AutoHashable { }
 
-/// AutoEnumIs
-protocol AutoEnumIs { }
+/// AutoEnum
+protocol AutoEnum { }
