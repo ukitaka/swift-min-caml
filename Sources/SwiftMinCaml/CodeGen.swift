@@ -6,14 +6,25 @@
 //
 
 struct CodeGen {
-    let builder = NasmX64Builder()
-    let startLabel = "start"
+    private let b = NasmX64Builder()
+    private let startLabel = "start"
+    private let exitLabel  = "exit"
 
     func gen(expr: Expr) -> String {
-        builder.raw("global \(startLabel)")
-        builder.section(.text)
-        builder.globalLabel(startLabel)
-        return builder.code
+        b.raw("global \(startLabel)")
+        b.section(.text)
+        b.globalLabel(startLabel)
+        b.jmp(exitLabel)
+        genExit()
+        return b.code
+    }
+    
+    private func genExit() {
+        b.globalLabel(exitLabel)
+        b.mov(.rax, .exit)
+        b.add(.rax, "0x2000000")
+        b.xor(.rdi, .rdi)
+        b.syscall()
     }
 }
 
@@ -21,6 +32,7 @@ class NasmX64Builder {
     enum Reg: String {
         case rax
         case rcx
+        case rdi
     }
     
     enum Section: String {
@@ -28,8 +40,17 @@ class NasmX64Builder {
         case text
     }
     
-    enum Inst {
-        case movq
+    enum Inst: String {
+        case mov
+        case add
+        case xor
+        case jmp
+        case syscall
+    }
+    
+    enum SystemCall: Int {
+        case exit  = 1
+        case write = 4
     }
     
     var code: String
@@ -46,15 +67,43 @@ class NasmX64Builder {
         self.raw("section .\(section)")
     }
     
-    func inst(_ inst: Inst, _ dst: Reg, _ src: Reg) {
-        self.raw("\(inst) \(dst), \(src)")
+    func inst(_ inst: Inst, _ dst: Any, _ src: Any) {
+        self.raw("\(inst.rawValue) \(dst), \(src)")
     }
     
     func globalLabel(_ label: String) {
         self.raw("\(label):")
     }
 
-    func movq(_ dst: Reg, src: Reg) {
-        self.inst(.movq, dst, src)
+    func mov(_ dst: Reg, _ src: Reg) {
+        self.inst(.mov, dst, src)
+    }
+
+    func mov(_ dst: Reg, _ src: SystemCall) {
+        self.inst(.mov, dst, src.rawValue)
+    }
+    
+    func mov(_ dst: Reg, _ src: Int) {
+        self.inst(.mov, dst, src)
+    }
+    
+    func add(_ dst: Reg, _ src: Int) {
+        self.inst(.add, dst, src)
+    }
+    
+    func add(_ dst: Reg, _ src: String) {
+        self.inst(.add, dst, src)
+    }
+    
+    func xor(_ dst: Reg, _ src: Reg) {
+        self.inst(.xor, dst, src)
+    }
+    
+    func jmp(_ label: String) {
+        self.raw("\(Inst.jmp) \(label)")
+    }
+
+    func syscall() {
+        self.raw(Inst.syscall.rawValue)
     }
 }
