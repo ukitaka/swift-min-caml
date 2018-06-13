@@ -8,7 +8,7 @@
 struct CodeGen {
     private let b = NasmX64Builder()
     private let startLabel = "start"
-    private let exitLabel  = "exit"
+    private let exitLabel  = "mincaml_exit"
 
     func gen(expr: Expr) -> String {
         b.raw("global \(startLabel)")
