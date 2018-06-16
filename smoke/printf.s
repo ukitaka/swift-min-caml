@@ -8,8 +8,7 @@ hello: db 'hello, world %d', 10, 0
 
 section .text
 start:
-push rbp
-mov rbp, rsp
+and rsp, -16
 sub rsp, 16
 mov rdi, 2234
 call print_int

@@ -14,6 +14,7 @@ struct CodeGen {
         b.raw("global \(startLabel)")
         b.section(.text)
         b.globalLabel(startLabel)
+        b.and(.rsp, -16) // 16byte alignment
         b.jmp(exitLabel)
         genExit()
         return b.code
@@ -30,6 +31,8 @@ struct CodeGen {
 
 class NasmX64Builder {
     enum Reg: String {
+        case rsp
+        case rbp
         case rax
         case rcx
         case rdi
@@ -43,6 +46,7 @@ class NasmX64Builder {
     enum Inst: String {
         case mov
         case add
+        case and
         case xor
         case jmp
         case syscall
@@ -93,6 +97,10 @@ class NasmX64Builder {
     
     func add(_ dst: Reg, _ src: String) {
         self.inst(.add, dst, src)
+    }
+    
+    func and(_ dst: Reg, _ src: Int) {
+        self.inst(.and, dst, src)
     }
     
     func xor(_ dst: Reg, _ src: Reg) {
