@@ -34,7 +34,7 @@ class ParserTest: XCTestCase {
     func testArithOps() {
         let parser = Expr.parser
         let input = "1+2*3"
-        let exp = try! parser.run(sourceName: "test2", input: input)
+        let exp = try! parser.run(sourceName: "test", input: input)
         XCTAssertTrue(exp.isArithOps)
         let arithOps1 = exp.asArithOps!
         XCTAssertEqual(arithOps1.ops, .add)
@@ -43,5 +43,14 @@ class ParserTest: XCTestCase {
         XCTAssertEqual(arithOps2.ops, .mul)
         XCTAssertEqual(arithOps2.args.first?.asConst?.asInteger, 2)
         XCTAssertEqual(arithOps2.args.last?.asConst?.asInteger, 3)
+    }
+    
+    func testVar() {
+        let parser = Expr.parser
+        let input = "abc"
+        let exp = try! parser.run(sourceName: "test", input: input)
+        XCTAssertTrue(exp.isVar)
+        let v = exp.asVar!
+        XCTAssertEqual(v.rawValue, "abc")
     }
 }

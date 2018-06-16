@@ -29,6 +29,12 @@ enum VarTag {}
 
 typealias Var = Tagged<VarTag, String>
 
+extension Tagged where Tag == VarTag, RawValue == String {
+    static func fromString(_ str: String) -> Var {
+        return Var(stringLiteral: str)
+    }
+}
+
 /// Expressions
 indirect enum Expr: Node {
     case const(const: Const)

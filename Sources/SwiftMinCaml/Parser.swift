@@ -67,7 +67,7 @@ extension Expr {
         
         let symbol = lexer.symbol
         let stringLiteral = lexer.stringLiteral
-        
+
         let openingParen = StringParser.character("(")
         let closingParen = StringParser.character(")")
         
@@ -83,12 +83,15 @@ extension Expr {
 
         let const = Expr.const <^> (bool.attempt <|> float.attempt <|> integer)
         
+        // Var
+        let variable = Expr.var <^> (Var.fromString <^> lexer.identifier)
+
         return Parser.recursive { expr in
             // ArithOps
             let arithOps = Expr.opTable.makeExpressionParser { p in
                 p.between(openingParen, closingParen).attempt <|> const
             }
-            return arithOps.attempt <|> const
+            return arithOps.attempt <|> const <|> variable
         }
     }()
 }
