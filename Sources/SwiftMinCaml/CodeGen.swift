@@ -20,6 +20,18 @@ struct CodeGen {
         return b.code
     }
     
+    private func genCall(expr: Expr) {
+        guard let apply = expr.asApply else {
+            fatalError("`expr` must be Expr.apply but \(expr)")
+        }
+        //FIXME: Support only Const.int arg now.
+        let num = apply.args.first!.asConst!.asInteger!
+        //FIXME: spill out if needed
+        //FIXME: support 2~ args
+        b.mov(.rdi, num)
+        b.call(apply.function.asVar!.rawValue)
+    }
+    
     private func genExit() {
         b.globalLabel(exitLabel)
         b.mov(.rax, .exit)
@@ -49,6 +61,7 @@ class NasmX64Builder {
         case and
         case xor
         case jmp
+        case call
         case syscall
     }
     
@@ -109,6 +122,10 @@ class NasmX64Builder {
     
     func jmp(_ label: String) {
         self.raw("\(Inst.jmp) \(label)")
+    }
+    
+    func call(_ label: String) {
+        self.raw("\(Inst.call) \(label)")
     }
 
     func syscall() {
