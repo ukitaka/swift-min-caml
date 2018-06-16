@@ -1,4 +1,5 @@
 extern _printf
+extern _fflush
 
 global print_int
 
@@ -14,6 +15,9 @@ sub rsp, 16
 mov rsi, rdi
 mov rdi, int_fmt
 call _printf
+xor rdi, rdi
+xor rsi, rsi
+call _fflush
 add rsp, 16
 mov rax, 0
 leave

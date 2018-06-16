@@ -1,6 +1,5 @@
 global start
 
-extern _printf
 extern print_int
 
 section .data
