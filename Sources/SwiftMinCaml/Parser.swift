@@ -85,13 +85,22 @@ extension Expr {
         
         // Var
         let variable = Expr.var <^> (Var.fromString <^> lexer.identifier)
+        
 
         return Parser.recursive { expr in
             // ArithOps
             let arithOps = Expr.opTable.makeExpressionParser { p in
                 p.between(openingParen, closingParen).attempt <|> const
             }
-            return arithOps.attempt <|> const <|> variable
+
+            // Call
+            // FIXME: Support high order function
+            let apply = variable >>- { name in
+                expr.many1 >>- { args in
+                    return GenericParser(result: Expr.apply(function: name, args: args))
+                }
+            }
+            return apply.attempt <|> arithOps.attempt <|> const.attempt <|> variable
         }
     }()
 }
