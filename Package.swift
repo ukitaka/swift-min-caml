@@ -14,14 +14,13 @@ let package = Package(
     dependencies: [
         .package(url: "git@github.com:davedufresne/SwiftParsec.git", from: "3.0.0"),
         .package(url: "git@github.com:pointfreeco/swift-tagged.git", from: "0.1.0"),
-        .package(url: "git@github.com:thoughtbot/Curry.git", from: "4.0.1"),
     ],
     targets: [
         // Targets are the basic building blocks of a package. A target can define a module or a test suite.
         // Targets can depend on other targets in this package, and on products in packages which this package depends on.
         .target(
             name: "SwiftMinCaml",
-            dependencies: ["SwiftParsec", "Tagged", "Curry"]),
+            dependencies: ["SwiftParsec", "Tagged"]),
         .testTarget(
             name: "SwiftMinCamlTests",
             dependencies: ["SwiftMinCaml"]),
