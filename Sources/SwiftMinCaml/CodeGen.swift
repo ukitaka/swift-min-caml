@@ -68,7 +68,15 @@ struct CodeGen {
         case .sub:
             b.sub(context.readReg(offset: 2), context.readReg(offset: 1))
         case .mul:
-            b.mul(context.readReg(offset: 2), context.readReg(offset: 1))
+            if context.readReg(offset: 2) == .rax {
+                b.mul(context.readReg(offset: 1))
+            } else {
+                b.push(.rax)
+                b.mov(.rax, context.readReg(offset: 2))
+                b.mul(context.readReg(offset: 1))
+                b.mov(context.readReg(offset: 2), .rax)
+                b.pop(.rax)
+            }
         case .div:
             fatalError("Not implemented!")
         }
@@ -160,6 +168,8 @@ class NasmX64Builder {
         case and
         case xor
         case jmp
+        case push
+        case pop
         case call
         case syscall
     }
@@ -219,8 +229,8 @@ class NasmX64Builder {
         self.inst(.sub, dst, src)
     }
 
-    func mul(_ dst: Reg, _ src: Reg) {
-        self.inst(.mul, dst, src)
+    func mul(_ reg: Reg) {
+        self.raw("\(Inst.mul) \(reg)")
     }
 
     func and(_ dst: Reg, _ src: Int) {
@@ -237,6 +247,14 @@ class NasmX64Builder {
     
     func call(_ label: String) {
         self.raw("\(Inst.call) \(label)")
+    }
+
+    func push(_ reg: Reg) {
+        self.raw("\(Inst.push) \(reg.rawValue)")
+    }
+
+    func pop(_ reg: Reg) {
+        self.raw("\(Inst.pop) \(reg.rawValue)")
     }
 
     func syscall() {
