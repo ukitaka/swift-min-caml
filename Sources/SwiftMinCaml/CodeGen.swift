@@ -64,11 +64,11 @@ struct CodeGen {
         }
         switch ops {
         case .add:
-            b.add(context.readReg(offset: 1), context.readReg(offset: 2))
+            b.add(context.readReg(offset: 2), context.readReg(offset: 1))
         case .sub:
-            b.sub(context.readReg(offset: 1), context.readReg(offset: 2))
+            b.sub(context.readReg(offset: 2), context.readReg(offset: 1))
         case .mul:
-            b.mul(context.readReg(offset: 1), context.readReg(offset: 2))
+            b.mul(context.readReg(offset: 2), context.readReg(offset: 1))
         case .div:
             fatalError("Not implemented!")
         }
