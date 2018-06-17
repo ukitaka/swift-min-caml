@@ -12,6 +12,14 @@ MinCaml compiler written in Swift.
 $ brew install nasm
 ```
 
+## try! SwiftMinCaml
+
+```
+$ swift build
+$ ./run.sh "1+2*3"
+7
+```
+
 ## For development
 
 ```
