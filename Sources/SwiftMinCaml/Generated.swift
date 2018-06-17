@@ -3,8 +3,8 @@
 
 
 
-extension ArithOps {
-  var isAdd: Bool {
+public extension ArithOps {
+  public var isAdd: Bool {
     switch self {
       case .add: return true
       default: return false
@@ -13,7 +13,7 @@ extension ArithOps {
 
 
 
-  var isSub: Bool {
+  public var isSub: Bool {
     switch self {
       case .sub: return true
       default: return false
@@ -22,7 +22,7 @@ extension ArithOps {
 
 
 
-  var isMul: Bool {
+  public var isMul: Bool {
     switch self {
       case .mul: return true
       default: return false
@@ -31,7 +31,7 @@ extension ArithOps {
 
 
 
-  var isDiv: Bool {
+  public var isDiv: Bool {
     switch self {
       case .div: return true
       default: return false
@@ -41,15 +41,15 @@ extension ArithOps {
 
 
 }
-extension Const {
-  var isInteger: Bool {
+public extension Const {
+  public var isInteger: Bool {
     switch self {
       case .integer: return true
       default: return false
     }
   }
 
-  var asInteger: Int? {
+  public var asInteger: Int? {
     switch self {
     case let .integer(integer):
       return integer
@@ -58,14 +58,14 @@ extension Const {
     }
   }
 
-  var isFloat: Bool {
+  public var isFloat: Bool {
     switch self {
       case .float: return true
       default: return false
     }
   }
 
-  var asFloat: Double? {
+  public var asFloat: Double? {
     switch self {
     case let .float(float):
       return float
@@ -74,14 +74,14 @@ extension Const {
     }
   }
 
-  var isBool: Bool {
+  public var isBool: Bool {
     switch self {
       case .bool: return true
       default: return false
     }
   }
 
-  var asBool: Bool? {
+  public var asBool: Bool? {
     switch self {
     case let .bool(bool):
       return bool
@@ -91,15 +91,15 @@ extension Const {
   }
 
 }
-extension Expr {
-  var isConst: Bool {
+public extension Expr {
+  public var isConst: Bool {
     switch self {
       case .const: return true
       default: return false
     }
   }
 
-  var asConst: Const? {
+  public var asConst: Const? {
     switch self {
     case let .const(const):
       return const
@@ -108,19 +108,19 @@ extension Expr {
     }
   }
 
-  var isArithOps: Bool {
+  public var isArithOps: Bool {
     switch self {
       case .arithOps: return true
       default: return false
     }
   }
 
-  struct ArithOpsExpr {
-    let ops: ArithOps
-    let args: [Expr]
+  public struct ArithOpsExpr {
+    public let ops: ArithOps
+    public let args: [Expr]
   }
 
-  var asArithOps: ArithOpsExpr? {
+  public var asArithOps: ArithOpsExpr? {
     switch self {
     case let .arithOps(ops, args):
       return ArithOpsExpr (
@@ -132,20 +132,20 @@ extension Expr {
     }
   }
 
-  var isIf: Bool {
+  public var isIf: Bool {
     switch self {
       case .`if`: return true
       default: return false
     }
   }
 
-  struct IfExpr {
-    let cond: Expr
-    let ifTrue: Expr
-    let ifFalse: Expr
+  public struct IfExpr {
+    public let cond: Expr
+    public let ifTrue: Expr
+    public let ifFalse: Expr
   }
 
-  var asIf: IfExpr? {
+  public var asIf: IfExpr? {
     switch self {
     case let .`if`(cond, ifTrue, ifFalse):
       return IfExpr (
@@ -158,20 +158,20 @@ extension Expr {
     }
   }
 
-  var isLet: Bool {
+  public var isLet: Bool {
     switch self {
       case .`let`: return true
       default: return false
     }
   }
 
-  struct LetExpr {
-    let varName: Var
-    let bind: Expr
-    let body: Expr
+  public struct LetExpr {
+    public let varName: Var
+    public let bind: Expr
+    public let body: Expr
   }
 
-  var asLet: LetExpr? {
+  public var asLet: LetExpr? {
     switch self {
     case let .`let`(varName, bind, body):
       return LetExpr (
@@ -184,14 +184,14 @@ extension Expr {
     }
   }
 
-  var isVar: Bool {
+  public var isVar: Bool {
     switch self {
       case .`var`: return true
       default: return false
     }
   }
 
-  var asVar: Var? {
+  public var asVar: Var? {
     switch self {
     case let .`var`(variable):
       return variable
@@ -200,21 +200,21 @@ extension Expr {
     }
   }
 
-  var isLetRec: Bool {
+  public var isLetRec: Bool {
     switch self {
       case .letRec: return true
       default: return false
     }
   }
 
-  struct LetRecExpr {
-    let name: Var
-    let args: [Var]
-    let bind: Expr
-    let body: Expr
+  public struct LetRecExpr {
+    public let name: Var
+    public let args: [Var]
+    public let bind: Expr
+    public let body: Expr
   }
 
-  var asLetRec: LetRecExpr? {
+  public var asLetRec: LetRecExpr? {
     switch self {
     case let .letRec(name, args, bind, body):
       return LetRecExpr (
@@ -228,19 +228,19 @@ extension Expr {
     }
   }
 
-  var isApply: Bool {
+  public var isApply: Bool {
     switch self {
       case .apply: return true
       default: return false
     }
   }
 
-  struct ApplyExpr {
-    let function: Expr
-    let args: [Expr]
+  public struct ApplyExpr {
+    public let function: Expr
+    public let args: [Expr]
   }
 
-  var asApply: ApplyExpr? {
+  public var asApply: ApplyExpr? {
     switch self {
     case let .apply(function, args):
       return ApplyExpr (
@@ -252,14 +252,14 @@ extension Expr {
     }
   }
 
-  var isTuple: Bool {
+  public var isTuple: Bool {
     switch self {
       case .tuple: return true
       default: return false
     }
   }
 
-  var asTuple: [Expr]? {
+  public var asTuple: [Expr]? {
     switch self {
     case let .tuple(elements):
       return elements
@@ -268,20 +268,20 @@ extension Expr {
     }
   }
 
-  var isReadTuple: Bool {
+  public var isReadTuple: Bool {
     switch self {
       case .readTuple: return true
       default: return false
     }
   }
 
-  struct ReadTupleExpr {
-    let vars: [Var]
-    let bindings: Expr
-    let body: Expr
+  public struct ReadTupleExpr {
+    public let vars: [Var]
+    public let bindings: Expr
+    public let body: Expr
   }
 
-  var asReadTuple: ReadTupleExpr? {
+  public var asReadTuple: ReadTupleExpr? {
     switch self {
     case let .readTuple(vars, bindings, body):
       return ReadTupleExpr (
@@ -294,19 +294,19 @@ extension Expr {
     }
   }
 
-  var isCreateArray: Bool {
+  public var isCreateArray: Bool {
     switch self {
       case .createArray: return true
       default: return false
     }
   }
 
-  struct CreateArrayExpr {
-    let size: Expr
-    let element: Expr
+  public struct CreateArrayExpr {
+    public let size: Expr
+    public let element: Expr
   }
 
-  var asCreateArray: CreateArrayExpr? {
+  public var asCreateArray: CreateArrayExpr? {
     switch self {
     case let .createArray(size, element):
       return CreateArrayExpr (
@@ -318,19 +318,19 @@ extension Expr {
     }
   }
 
-  var isReadArray: Bool {
+  public var isReadArray: Bool {
     switch self {
       case .readArray: return true
       default: return false
     }
   }
 
-  struct ReadArrayExpr {
-    let array: Expr
-    let index: Expr
+  public struct ReadArrayExpr {
+    public let array: Expr
+    public let index: Expr
   }
 
-  var asReadArray: ReadArrayExpr? {
+  public var asReadArray: ReadArrayExpr? {
     switch self {
     case let .readArray(array, index):
       return ReadArrayExpr (
@@ -342,20 +342,20 @@ extension Expr {
     }
   }
 
-  var isWriteArray: Bool {
+  public var isWriteArray: Bool {
     switch self {
       case .writeArray: return true
       default: return false
     }
   }
 
-  struct WriteArrayExpr {
-    let array: Expr
-    let index: Expr
-    let value: Expr
+  public struct WriteArrayExpr {
+    public let array: Expr
+    public let index: Expr
+    public let value: Expr
   }
 
-  var asWriteArray: WriteArrayExpr? {
+  public var asWriteArray: WriteArrayExpr? {
     switch self {
     case let .writeArray(array, index, value):
       return WriteArrayExpr (
@@ -369,8 +369,8 @@ extension Expr {
   }
 
 }
-extension Type {
-  var isInt: Bool {
+public extension Type {
+  public var isInt: Bool {
     switch self {
       case .int: return true
       default: return false
@@ -379,7 +379,7 @@ extension Type {
 
 
 
-  var isFloat: Bool {
+  public var isFloat: Bool {
     switch self {
       case .float: return true
       default: return false
@@ -388,7 +388,7 @@ extension Type {
 
 
 
-  var isBool: Bool {
+  public var isBool: Bool {
     switch self {
       case .bool: return true
       default: return false
@@ -397,19 +397,19 @@ extension Type {
 
 
 
-  var isFunc: Bool {
+  public var isFunc: Bool {
     switch self {
       case .`func`: return true
       default: return false
     }
   }
 
-  struct FuncType {
-    let args: [Type]
-    let ret: Type
+  public struct FuncType {
+    public let args: [Type]
+    public let ret: Type
   }
 
-  var asFunc: FuncType? {
+  public var asFunc: FuncType? {
     switch self {
     case let .`func`(args, ret):
       return FuncType (
@@ -421,14 +421,14 @@ extension Type {
     }
   }
 
-  var isTuple: Bool {
+  public var isTuple: Bool {
     switch self {
       case .tuple: return true
       default: return false
     }
   }
 
-  var asTuple: [Type]? {
+  public var asTuple: [Type]? {
     switch self {
     case let .tuple(elements):
       return elements
@@ -437,14 +437,14 @@ extension Type {
     }
   }
 
-  var isArray: Bool {
+  public var isArray: Bool {
     switch self {
       case .array: return true
       default: return false
     }
   }
 
-  var asArray: Type? {
+  public var asArray: Type? {
     switch self {
     case let .array(element):
       return element
@@ -482,7 +482,7 @@ fileprivate func compareArrays<T>(lhs: [T], rhs: [T], compare: (_ lhs: T, _ rhs:
 // MARK: - AutoEquatable for Enums
 // MARK: - Const AutoEquatable
 extension Const: Equatable {}
-func == (lhs: Const, rhs: Const) -> Bool {
+public func == (lhs: Const, rhs: Const) -> Bool {
     switch (lhs, rhs) {
     case (.integer(let lhs), .integer(let rhs)):
         return lhs == rhs
@@ -495,7 +495,7 @@ func == (lhs: Const, rhs: Const) -> Bool {
 }
 // MARK: - Expr AutoEquatable
 extension Expr: Equatable {}
-func == (lhs: Expr, rhs: Expr) -> Bool {
+public func == (lhs: Expr, rhs: Expr) -> Bool {
     switch (lhs, rhs) {
     case (.const(let lhs), .const(let rhs)):
         return lhs == rhs
@@ -550,7 +550,7 @@ func == (lhs: Expr, rhs: Expr) -> Bool {
 }
 // MARK: - Type AutoEquatable
 extension Type: Equatable {}
-func == (lhs: Type, rhs: Type) -> Bool {
+public func == (lhs: Type, rhs: Type) -> Bool {
     switch (lhs, rhs) {
     case (.int, .int):
         return true
@@ -628,7 +628,7 @@ fileprivate func hashDictionary<T: Hashable, U: Hashable>(_ dictionary: [T: U]?)
 // MARK: - AutoHashable for classes, protocols, structs
 // MARK: - Node AutoHashable
 extension Node {
-    internal var hashValue: Int {
+    public var hashValue: Int {
 
         return combineHashes([
             0])
@@ -639,7 +639,7 @@ extension Node {
 
 // MARK: - Const AutoHashable
 extension Const: Hashable {
-    internal var hashValue: Int {
+    public var hashValue: Int {
         switch self {
         case .integer(let data):
             return combineHashes([1, data.hashValue])
@@ -653,7 +653,7 @@ extension Const: Hashable {
 
 // MARK: - Expr AutoHashable
 extension Expr: Hashable {
-    internal var hashValue: Int {
+    public var hashValue: Int {
         switch self {
         case .const(let data):
             return combineHashes([1, data.hashValue])
@@ -685,7 +685,7 @@ extension Expr: Hashable {
 
 // MARK: - Type AutoHashable
 extension Type: Hashable {
-    internal var hashValue: Int {
+    public var hashValue: Int {
         switch self {
         case .int:
             return 1.hashValue

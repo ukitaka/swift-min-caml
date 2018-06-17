@@ -6,10 +6,10 @@
 //
 
 /// AutoEquatable
-protocol AutoEquatable { }
+public protocol AutoEquatable { }
 
 /// AutoHashable
-protocol AutoHashable { }
+public protocol AutoHashable { }
 
 /// AutoEnum
-protocol AutoEnum { }
+public protocol AutoEnum { }

@@ -6,7 +6,7 @@
 //
 
 import XCTest
-@testable import SwiftMinCaml
+import SwiftMinCaml
 
 class ParserTest: XCTestCase {
     func testConst() {
