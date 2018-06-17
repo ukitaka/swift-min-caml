@@ -10,8 +10,8 @@ import Curry
 
 // MARK: - ArithOps
 
-extension ArithOps {
-    var symbol: String {
+public extension ArithOps {
+    public var symbol: String {
         switch self {
         case .add: return "+"
         case .sub: return "-"
@@ -23,7 +23,7 @@ extension ArithOps {
 
 // MARK: - Expr
 
-extension Expr {
+public extension Expr {
     typealias Parser = GenericParser<String, (), Expr>
 
     private static func binary( _ op: ArithOps, assoc: Associativity) -> Operator<String, (), Expr> {
@@ -62,7 +62,7 @@ extension Expr {
         ]
     ]
     
-    static let parser: Parser = {
+    public static let parser: Parser = {
         let minCaml = LanguageDefinition<()>.javaStyle // needs MLStyle...
         let lexer = GenericTokenParser(languageDefinition: minCaml)
         
