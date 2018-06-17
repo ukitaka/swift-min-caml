@@ -90,7 +90,7 @@ extension Expr {
         return Parser.recursive { expr in
             // ArithOps
             let arithOps = Expr.opTable.makeExpressionParser { p in
-                p.between(openingParen, closingParen).attempt <|> const
+                p.between(openingParen, closingParen).attempt <|> const.attempt <|> variable
             }
 
             // Call
