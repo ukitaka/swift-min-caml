@@ -30,11 +30,20 @@ struct CodeGen {
     }
 
     func gen(expr: Expr) -> String {
+        b.raw("extern print_int") //FIXME: workaround. Need to emit all builtin function's label.
         b.raw("global \(startLabel)")
         b.section(.text)
         b.globalLabel(startLabel)
-        b.and(.rsp, -16) // 16byte alignment
-        genExpr(expr: expr, context: Context()) // body
+        // 16byte alignment
+        b.and(.rsp, -16)
+        // body
+        genExpr(expr: expr, context: Context())
+        // print rax
+        b.mov(.rdi, .rax)
+        b.sub(.rsp, -16)
+        b.call("print_int")
+        b.add(.rsp, 16)
+        // exit
         b.jmp(exitLabel)
         genExit()
         return b.code
@@ -226,6 +235,10 @@ class NasmX64Builder {
     }
 
     func sub(_ dst: Reg, _ src: Reg) {
+        self.inst(.sub, dst, src)
+    }
+
+    func sub(_ dst: Reg, _ src: Int) {
         self.inst(.sub, dst, src)
     }
 
