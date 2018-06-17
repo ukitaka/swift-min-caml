@@ -6,6 +6,7 @@
 //
 
 import SwiftParsec
+import Curry
 
 // MARK: - ArithOps
 
@@ -86,7 +87,6 @@ extension Expr {
         // Var
         let variable = Expr.var <^> (Var.fromString <^> lexer.identifier)
         
-
         return Parser.recursive { expr in
             // ArithOps
             let arithOps = Expr.opTable.makeExpressionParser { p in
@@ -100,7 +100,14 @@ extension Expr {
                     return GenericParser(result: Expr.apply(function: name, args: args))
                 }
             }
-            return apply.attempt <|> arithOps.attempt <|> const.attempt <|> variable
+
+            // Let
+            let letVar = Var.fromString <^> (symbol("let") *> lexer.identifier)
+            let letBinding = symbol("=") *> expr
+            let letBody = symbol("in") *> expr
+            let letExpr = curry(Expr.let) <^> letVar <*> letBinding <*> letBody
+
+            return letExpr.attempt <|> apply.attempt <|> arithOps.attempt <|> const.attempt <|> variable
         }
     }()
 }
