@@ -6,7 +6,7 @@
 //
 
 import XCTest
-import SwiftMinCaml
+@testable import SwiftMinCaml
 
 class CodeGenTest: XCTestCase {
     func testArithOps() {

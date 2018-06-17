@@ -5,14 +5,12 @@
 //  Created by Yuki Takahashi on 2018/06/13.
 //
 
-public struct CodeGen {
+struct CodeGen {
     typealias Reg = NasmX64Builder.Reg
     private let b = NasmX64Builder()
     private let startLabel = "start"
     private let exitLabel  = "mincaml_exit"
     
-    public init() { }
-
     class Context {
         private var regInUse: Int = 0
         func useReg() -> Reg {
@@ -31,7 +29,7 @@ public struct CodeGen {
         }
     }
 
-    public func gen(expr: Expr) -> String {
+    func gen(expr: Expr) -> String {
         b.raw("extern print_int") //FIXME: workaround. Need to emit all builtin function's label.
         b.raw("global \(startLabel)")
         b.section(.text)

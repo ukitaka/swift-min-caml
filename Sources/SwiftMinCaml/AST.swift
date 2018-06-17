@@ -7,17 +7,17 @@
 
 import Tagged
 
-public protocol Node: AutoEquatable, AutoHashable, AutoEnum { }
+protocol Node: AutoEquatable, AutoHashable, AutoEnum { }
 
 /// Constants
-public enum Const: Node {
+enum Const: Node {
     case integer(Int)
     case float(Double)
     case bool(Bool)
 }
 
 /// ArithmeticOperations
-public enum ArithOps: AutoEnum {
+enum ArithOps: AutoEnum {
     case add // +
     case sub // -
     case mul // *
@@ -25,18 +25,18 @@ public enum ArithOps: AutoEnum {
 }
 
 /// Var
-public enum VarTag {}
+enum VarTag {}
 
-public typealias Var = Tagged<VarTag, String>
+typealias Var = Tagged<VarTag, String>
 
-public extension Tagged where Tag == VarTag, RawValue == String {
+extension Tagged where Tag == VarTag, RawValue == String {
     static func fromString(_ str: String) -> Var {
         return Var(stringLiteral: str)
     }
 }
 
 /// Expressions
-public indirect enum Expr: Node {
+indirect enum Expr: Node {
     case const(const: Const)
     case arithOps(ops: ArithOps, args: [Expr])
     case `if`(cond: Expr, ifTrue:Expr, ifFalse:Expr)
@@ -52,7 +52,7 @@ public indirect enum Expr: Node {
 }
 
 // Type
-public indirect enum Type: Node {
+indirect enum Type: Node {
     // primitives
     case int
     case float
