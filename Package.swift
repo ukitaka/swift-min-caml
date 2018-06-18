@@ -10,8 +10,8 @@ let package = Package(
             name: "smcc",
             targets: ["smcc"]),
         .library(
-            name: "SwiftMinCaml",
-            targets: ["SwiftMinCaml"]),
+            name: "SwiftMinCamlKit",
+            targets: ["SwiftMinCamlKit"]),
     ],
     dependencies: [
         .package(url: "git@github.com:davedufresne/SwiftParsec.git", from: "3.0.0"),
@@ -21,12 +21,12 @@ let package = Package(
     targets: [
         .target(
             name: "smcc",
-            dependencies: ["SwiftMinCaml"]),
+            dependencies: ["SwiftMinCamlKit"]),
         .target(
-            name: "SwiftMinCaml",
+            name: "SwiftMinCamlKit",
             dependencies: ["SwiftParsec", "Tagged", "Curry"]),
         .testTarget(
             name: "SwiftMinCamlTests",
-            dependencies: ["SwiftMinCaml"]),
+            dependencies: ["SwiftMinCamlKit"]),
     ]
 )

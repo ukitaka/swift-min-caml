@@ -1,5 +1,5 @@
 import XCTest
-import SwiftMinCaml
+import SwiftMinCamlKit
 
 final class SwiftMinCamlTests: XCTestCase {
     static var allTests: [String:() -> Void] = [:]
