@@ -88,11 +88,6 @@ public extension Expr {
         let variable = Expr.var <^> (Var.fromString <^> lexer.identifier)
         
         return Parser.recursive { expr in
-            // ArithOps
-            let arithOps = Expr.opTable.makeExpressionParser { p in
-                p.between(openingParen, closingParen).attempt <|> const.attempt <|> variable
-            }
-
             // Call
             // FIXME: Support high order function
             let apply = variable >>- { name in
@@ -101,13 +96,18 @@ public extension Expr {
                 }
             }
 
+            // ArithOps
+            let arithOps = Expr.opTable.makeExpressionParser { p in
+                p.between(openingParen, closingParen).attempt <|> const.attempt <|> apply.attempt <|> variable
+            }
+
             // Let
             let letVar = Var.fromString <^> (symbol("let") *> lexer.identifier)
             let letBinding = symbol("=") *> expr
             let letBody = symbol("in") *> expr
             let letExpr = curry(Expr.let) <^> letVar <*> letBinding <*> letBody
 
-            return letExpr.attempt <|> apply.attempt <|> arithOps.attempt <|> const.attempt <|> variable
+            return letExpr.attempt <|> arithOps.attempt <|> apply.attempt <|> const.attempt <|> variable
         }
     }()
 }
