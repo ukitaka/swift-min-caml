@@ -57,11 +57,20 @@ public struct CodeGen {
             return genConst(const: const, context: context)
         case let .arithOps(ops: ops, args: args):
             return genArithOps(ops: ops, args: args, context: context)
+        case let .let(varName: varName, bind: bind, body: body):
+            return genLet(varName: varName, bind: bind, body: body, context: context)
         default:
             fatalError("Not implemented")
         }
     }
     
+    private func genLet(varName: Var, bind: Expr, body: Expr, context: Context) {
+        //FIXME: implement.
+        genExpr(expr: bind, context: context)
+        genExpr(expr: body, context: context)
+
+    }
+
     private func genArithOps(ops: ArithOps, args: [Expr], context: Context) {
         //FIXME: Now support only binary operators.
         let lhs = args.first!
