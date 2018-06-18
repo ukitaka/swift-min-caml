@@ -68,11 +68,12 @@ class ParserTest: XCTestCase {
 
     func testLet() {
         let parser = Expr.parser
-        let input = "let x = 1 in x+1"
+        let input = "let x = 1 in x"
         let exp = try! parser.run(sourceName: "test", input: input)
         XCTAssertTrue(exp.isLet)
         let l = exp.asLet!
         XCTAssertEqual(l.varName, "x")
+        XCTAssertTrue(l.body.isVar)
         print(exp)
     }
 }
