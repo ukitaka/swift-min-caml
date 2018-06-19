@@ -11,6 +11,7 @@
         case punctuation // for (, ) ..
         case identifier(String) // for IDENTIFIER
         case integerLiteral(Int)
+        case floatLiteral(Double)
     }
 
     extension Token {
@@ -20,6 +21,15 @@
               return i
             default:
               fatalError("\(self) is not integer value.")
+          }
+        }
+
+        func asFloat() -> Double { 
+          switch self {
+            case let .floatLiteral(f):
+              return f
+            default:
+              fatalError("\(self) is not float value.")
           }
         }
     }
@@ -69,5 +79,9 @@ expr ::= const(a). {
 
 const ::= INT(a). {
     return .integer(a.asInt())
+}
+
+const ::= FLOAT(a). {
+    return .float(a.asFloat())
 }
 

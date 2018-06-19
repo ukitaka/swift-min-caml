@@ -27,11 +27,11 @@ class ParserTest: XCTestCase {
         XCTAssertEqual(integer2.asConst?.asInteger ?? 0, -10)
         
         // double
-//        let double = self.parse(input: "1.2")
-//        XCTAssertEqual(double.asConst?.asFloat ?? 0.0, 1.2)
+        let double = self.parse(input: "1.2")
+        XCTAssertEqual(double.asConst?.asFloat ?? 0.0, 1.2)
         
-//        let double2 = self.parse(input: "-3.4")
-//        XCTAssertEqual(double2.asConst?.asFloat ?? 0.0, -3.4)
+        let double2 = self.parse(input: "-3.4")
+        XCTAssertEqual(double2.asConst?.asFloat ?? 0.0, -3.4)
         
         // bool
 //        let bool = self.parse(input: "true")

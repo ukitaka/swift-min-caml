@@ -12,6 +12,12 @@ typealias Lexer = CitronLexer<(Token, Parser.CitronTokenCode)>
 
 let lexer = Lexer(rules: [
     // Numbers
+    .regexPattern("(-)?[0-9]+\\.[0-9]+", { str in
+        if let number = Double(str) {
+            return (.floatLiteral(number), .FLOAT)
+        }
+        return nil
+    }),
     .regexPattern("(-)?[0-9]+", { str in
         if let number = Int(str) {
             return (.integerLiteral(number), .INT)
