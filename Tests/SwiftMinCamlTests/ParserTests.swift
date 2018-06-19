@@ -52,14 +52,14 @@ class ParserTest: XCTestCase {
         print(exp)
     }
     
-//    func testVar() {
-//        let input = "abc"
-//        let exp = self.parse(input: input)
-//        XCTAssertTrue(exp.isVar)
-//        let v = exp.asVar!
-//        XCTAssertEqual(v.rawValue, "abc")
-//    }
-//
+    func testVar() {
+        let input = "abc"
+        let exp = self.parse(input: input)
+        XCTAssertTrue(exp.isVar)
+        let v = exp.asVar!
+        XCTAssertEqual(v.rawValue, "abc")
+    }
+
 //    func testApply() {
 //        let input = "print_int 123 + 456"
 //        let exp = self.parse(input: input)

@@ -35,12 +35,21 @@
         }
 
         func asBool() -> Bool {
-            switch self {
-                case let .boolLiteral(b):
-                return b
-                default:
-                fatalError("\(self) is not boolean value.")
-            }
+          switch self {
+            case let .boolLiteral(b):
+             return b
+            default:
+             fatalError("\(self) is not boolean value.")
+          }
+        }
+
+        func asIdentifier() -> String {
+          switch self {
+            case let .identifier(id):
+             return id
+            default:
+             fatalError("\(self) is not identifier.")
+          }
         }
     }
 }
@@ -97,4 +106,8 @@ const ::= FLOAT(a). {
 
 const ::= BOOL(a). {
     return .bool(a.asBool())
+}
+
+expr ::= IDENTIFIER(a). {
+    return .var(variable: Var(rawValue: a.asIdentifier()))
 }
