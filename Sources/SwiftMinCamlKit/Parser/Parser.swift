@@ -5,6 +5,28 @@
 // 
 // The authors of Citron disclaim copyright to the source code in this file.
 
+// Preface
+
+
+    enum Token {
+        case keyword // for let, rec, int ..
+        case punctuation // for (, ) ..
+        case identifier(String) // for IDENTIFIER
+        case integerLiteral(Int)
+    }
+
+    extension Token {
+        func asInt() -> Int { 
+          switch self {
+            case let .integerLiteral(i):
+              return i
+            default:
+              fatalError("\(self) is not integer value.")
+          }
+        }
+    }
+
+
 // Parser class
 
 import CitronKit
@@ -19,13 +41,13 @@ class Parser: CitronParser {
 
     enum CitronTokenCode: CitronSymbolCode {
       case ADD                            =   1
-      case SUBTRACT                       =   2
-      case MULTIPLY                       =   3
-      case DIVIDE                         =   4
-      case INTEGER                        =   5
+      case SUB                            =   2
+      case MUL                            =   3
+      case DIV                            =   4
+      case INT                            =   5
     }
 
-    typealias CitronToken = Int
+    typealias CitronToken = Token
 
     enum CitronSymbol {
         case yyBaseOfStack
@@ -100,18 +122,18 @@ class Parser: CitronParser {
 
     var isTracingEnabled: Bool = false
     let yySymbolName: [String] = [
-        "$",                   "ADD",                 "SUBTRACT",            "MULTIPLY",    
-        "DIVIDE",              "INTEGER",             "root",                "expr",        
+        "$",                   "ADD",                 "SUB",                 "MUL",         
+        "DIV",                 "INT",                 "root",                "expr",        
         "const",       
     ]
     let yyRuleText: [String] = [
         /*   0 */ "root ::= expr(a)",
         /*   1 */ "expr ::= expr(a) ADD expr(b)",
-        /*   2 */ "expr ::= expr(a) SUBTRACT expr(b)",
-        /*   3 */ "expr ::= expr(a) MULTIPLY expr(b)",
-        /*   4 */ "expr ::= expr(a) DIVIDE expr(b)",
+        /*   2 */ "expr ::= expr(a) SUB expr(b)",
+        /*   3 */ "expr ::= expr(a) MUL expr(b)",
+        /*   4 */ "expr ::= expr(a) DIV expr(b)",
         /*   5 */ "expr ::= const(a)",
-        /*   6 */ "const ::= INTEGER(a)",
+        /*   6 */ "const ::= INT(a)",
     ]
 
     // Function definitions
@@ -137,7 +159,7 @@ class Parser: CitronParser {
                case .yy18(let b) = yySymbolOnStack(distanceFromTop: 0) {
                 return .yy18(try codeBlockForRule1(a: a, b: b))
             }
-        case 2: /* expr ::= expr(a) SUBTRACT expr(b) */
+        case 2: /* expr ::= expr(a) SUB expr(b) */
             func codeBlockForRule2(a: Expr, b: Expr) throws -> Expr {
     return .arithOps(ops: .sub, args: [a, b])
  }
@@ -145,7 +167,7 @@ class Parser: CitronParser {
                case .yy18(let b) = yySymbolOnStack(distanceFromTop: 0) {
                 return .yy18(try codeBlockForRule2(a: a, b: b))
             }
-        case 3: /* expr ::= expr(a) MULTIPLY expr(b) */
+        case 3: /* expr ::= expr(a) MUL expr(b) */
             func codeBlockForRule3(a: Expr, b: Expr) throws -> Expr {
     return .arithOps(ops: .mul, args: [a, b])
  }
@@ -153,7 +175,7 @@ class Parser: CitronParser {
                case .yy18(let b) = yySymbolOnStack(distanceFromTop: 0) {
                 return .yy18(try codeBlockForRule3(a: a, b: b))
             }
-        case 4: /* expr ::= expr(a) DIVIDE expr(b) */
+        case 4: /* expr ::= expr(a) DIV expr(b) */
             func codeBlockForRule4(a: Expr, b: Expr) throws -> Expr {
     return .arithOps(ops: .div, args: [a, b])
  }
@@ -168,9 +190,9 @@ class Parser: CitronParser {
             if case .yy14(let a) = yySymbolOnStack(distanceFromTop: 0) {
                 return .yy18(try codeBlockForRule5(a: a))
             }
-        case 6: /* const ::= INTEGER(a) */
-            func codeBlockForRule6(a: Int) throws -> Const {
-    return .integer(a)
+        case 6: /* const ::= INT(a) */
+            func codeBlockForRule6(a: Token) throws -> Const {
+    return .integer(a.asInt())
  }
             if case .yy0(let a) = yySymbolOnStack(distanceFromTop: 0) {
                 return .yy14(try codeBlockForRule6(a: a))

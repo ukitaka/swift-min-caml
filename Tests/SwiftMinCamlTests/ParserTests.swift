@@ -23,8 +23,8 @@ class ParserTest: XCTestCase {
         let integer = self.parse(input: "1")
         XCTAssertEqual(integer.asConst?.asInteger ?? 0, 1)
         
-//        let integer2 = self.parse(input: "-10")
-//        XCTAssertEqual(integer2.asConst?.asInteger ?? 0, -10)
+        let integer2 = self.parse(input: "-10")
+        XCTAssertEqual(integer2.asConst?.asInteger ?? 0, -10)
         
         // double
 //        let double = self.parse(input: "1.2")

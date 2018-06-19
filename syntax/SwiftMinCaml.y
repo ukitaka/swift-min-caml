@@ -3,9 +3,31 @@
 %class_name Parser
 
 
+// Token type
+
+%preface {
+    enum Token {
+        case keyword // for let, rec, int ..
+        case punctuation // for (, ) ..
+        case identifier(String) // for IDENTIFIER
+        case integerLiteral(Int)
+    }
+
+    extension Token {
+        func asInt() -> Int { 
+          switch self {
+            case let .integerLiteral(i):
+              return i
+            default:
+              fatalError("\(self) is not integer value.")
+          }
+        }
+    }
+}
+
 // Type for terminals
 
-%token_type Int
+%token_type Token
 
 
 // Type for non-terminals
@@ -16,8 +38,8 @@
 
 // Associativity and precedences
 
-%left_associative ADD SUBTRACT.
-%left_associative MULTIPLY DIVIDE.
+%left_associative ADD SUB.
+%left_associative MUL DIV.
 
 // Grammar rules
 
@@ -29,15 +51,15 @@ expr ::= expr(a) ADD expr(b). {
     return .arithOps(ops: .add, args: [a, b])
 }
 
-expr ::= expr(a) SUBTRACT expr(b). {
+expr ::= expr(a) SUB expr(b). {
     return .arithOps(ops: .sub, args: [a, b])
 }
 
-expr ::= expr(a) MULTIPLY expr(b). {
+expr ::= expr(a) MUL expr(b). {
     return .arithOps(ops: .mul, args: [a, b])
 }
 
-expr ::= expr(a) DIVIDE expr(b). {
+expr ::= expr(a) DIV expr(b). {
     return .arithOps(ops: .div, args: [a, b])
 }
 
@@ -45,7 +67,7 @@ expr ::= const(a). {
     return .const(const: a)
 }
 
-const ::= INTEGER(a). {
-    return .integer(a)
+const ::= INT(a). {
+    return .integer(a.asInt())
 }
 
