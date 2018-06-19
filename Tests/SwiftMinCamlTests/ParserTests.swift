@@ -34,8 +34,8 @@ class ParserTest: XCTestCase {
         XCTAssertEqual(double2.asConst?.asFloat ?? 0.0, -3.4)
         
         // bool
-//        let bool = self.parse(input: "true")
-//        XCTAssertEqual(bool.asConst?.asBool ?? false, true)
+        let bool = self.parse(input: "true")
+        XCTAssertEqual(bool.asConst?.asBool ?? false, true)
     }
     
     func testArithOps() {

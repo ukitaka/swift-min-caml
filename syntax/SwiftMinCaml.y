@@ -12,6 +12,7 @@
         case identifier(String) // for IDENTIFIER
         case integerLiteral(Int)
         case floatLiteral(Double)
+        case boolLiteral(Bool)
     }
 
     extension Token {
@@ -31,6 +32,15 @@
             default:
               fatalError("\(self) is not float value.")
           }
+        }
+
+        func asBool() -> Bool {
+            switch self {
+                case let .boolLiteral(b):
+                return b
+                default:
+                fatalError("\(self) is not boolean value.")
+            }
         }
     }
 }
@@ -85,3 +95,6 @@ const ::= FLOAT(a). {
     return .float(a.asFloat())
 }
 
+const ::= BOOL(a). {
+    return .bool(a.asBool())
+}

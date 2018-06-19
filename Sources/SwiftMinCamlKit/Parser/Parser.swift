@@ -14,6 +14,7 @@
         case identifier(String) // for IDENTIFIER
         case integerLiteral(Int)
         case floatLiteral(Double)
+        case boolLiteral(Bool)
     }
 
     extension Token {
@@ -33,6 +34,15 @@
             default:
               fatalError("\(self) is not float value.")
           }
+        }
+
+        func asBool() -> Bool {
+            switch self {
+                case let .boolLiteral(b):
+                return b
+                default:
+                fatalError("\(self) is not boolean value.")
+            }
         }
     }
 
@@ -56,6 +66,7 @@ class Parser: CitronParser {
       case DIV                            =   4
       case INT                            =   5
       case FLOAT                          =   6
+      case BOOL                           =   7
     }
 
     typealias CitronToken = Token
@@ -63,7 +74,7 @@ class Parser: CitronParser {
     enum CitronSymbol {
         case yyBaseOfStack
         case yy0(CitronToken)
-        case yy4(Expr)
+        case yy6(Expr)
         case yy16(Const)
     }
 
@@ -71,30 +82,31 @@ class Parser: CitronParser {
 
     // Counts
 
-    let yyNumberOfSymbols: Int = 10
+    let yyNumberOfSymbols: Int = 11
     let yyNumberOfStates: Int = 8
 
     // Action tables
 
     let yyLookaheadAction: [(CitronSymbolCode, CitronParsingAction)] = [
 /*   0 */  ( 0, .RD( 0)), ( 1, .SH( 4)), ( 2, .SH( 3)), ( 3, .SH( 2)), ( 4, .SH( 1)),
-/*   5 */  ( 7, .ACCEPT),   ( 8, .SH( 5)), ( 9, .RD( 5)), ( 5, .SR( 6)), ( 6, .SR( 7)),
-/*  10 */  ( 8, .RD( 4)), ( 9, .RD( 5)), ( 8, .RD( 3)), ( 9, .RD( 5)), ( 8, .SH( 6)),
-/*  15 */  ( 9, .RD( 5)), ( 8, .SH( 7)), ( 9, .RD( 5)), ( 3, .SH( 2)), ( 4, .SH( 1)),
+/*   5 */  (11, .RD( 2)), ( 5, .SR( 6)), ( 6, .SR( 7)), ( 7, .SR( 8)), (11, .RD( 2)),
+/*  10 */  ( 8, .ACCEPT),   ( 9, .SH( 5)), (10, .RD( 5)), ( 9, .RD( 4)), (10, .RD( 5)),
+/*  15 */  (11, .RD( 2)), ( 9, .RD( 3)), (10, .RD( 5)), ( 9, .SH( 6)), (10, .RD( 5)),
+/*  20 */  ( 9, .SH( 7)), (10, .RD( 5)), ( 3, .SH( 2)), ( 4, .SH( 1)),
     ]
 
-    let yyShiftUseDefault: Int = 20
+    let yyShiftUseDefault: Int = 24
     let yyShiftOffsetMin: Int = 0
-    let yyShiftOffsetMax: Int = 15
+    let yyShiftOffsetMax: Int = 19
     let yyShiftOffset: [Int] = [
-        /*     0 */     3,    3,    3,    3,    3,    0,   15,   15,
+        /*     0 */     1,    1,    1,    1,    1,    0,   19,   19,
     ]
 
-    let yyReduceUseDefault: Int = -3
-    let yyReduceOffsetMin: Int =   -2
-    let yyReduceOffsetMax: Int =   8
+    let yyReduceUseDefault: Int = -1
+    let yyReduceOffsetMin: Int =   0
+    let yyReduceOffsetMax: Int =   11
     let yyReduceOffset: [Int] = [
-        /*     0 */    -2,    2,    4,    6,    8,
+        /*     0 */     2,    4,    7,    9,   11,
     ]
 
     let yyDefaultAction: [CitronParsingAction] = [
@@ -114,14 +126,15 @@ class Parser: CitronParser {
     // Rules
 
     let yyRuleInfo: [(lhs: CitronSymbolCode, nrhs: UInt)] = [
-        (lhs: 7, nrhs: 1),
-        (lhs: 8, nrhs: 3),
-        (lhs: 8, nrhs: 3),
-        (lhs: 8, nrhs: 3),
-        (lhs: 8, nrhs: 3),
         (lhs: 8, nrhs: 1),
+        (lhs: 9, nrhs: 3),
+        (lhs: 9, nrhs: 3),
+        (lhs: 9, nrhs: 3),
+        (lhs: 9, nrhs: 3),
         (lhs: 9, nrhs: 1),
-        (lhs: 9, nrhs: 1),
+        (lhs: 10, nrhs: 1),
+        (lhs: 10, nrhs: 1),
+        (lhs: 10, nrhs: 1),
     ]
 
     // Stack
@@ -135,8 +148,8 @@ class Parser: CitronParser {
     var isTracingEnabled: Bool = false
     let yySymbolName: [String] = [
         "$",                   "ADD",                 "SUB",                 "MUL",         
-        "DIV",                 "INT",                 "FLOAT",               "root",        
-        "expr",                "const",       
+        "DIV",                 "INT",                 "FLOAT",               "BOOL",        
+        "root",                "expr",                "const",       
     ]
     let yyRuleText: [String] = [
         /*   0 */ "root ::= expr(a)",
@@ -147,6 +160,7 @@ class Parser: CitronParser {
         /*   5 */ "expr ::= const(a)",
         /*   6 */ "const ::= INT(a)",
         /*   7 */ "const ::= FLOAT(a)",
+        /*   8 */ "const ::= BOOL(a)",
     ]
 
     // Function definitions
@@ -161,47 +175,47 @@ class Parser: CitronParser {
             func codeBlockForRule0(a: Expr) throws -> Expr {
     return a
  }
-            if case .yy4(let a) = yySymbolOnStack(distanceFromTop: 0) {
-                return .yy4(try codeBlockForRule0(a: a))
+            if case .yy6(let a) = yySymbolOnStack(distanceFromTop: 0) {
+                return .yy6(try codeBlockForRule0(a: a))
             }
         case 1: /* expr ::= expr(a) ADD expr(b) */
             func codeBlockForRule1(a: Expr, b: Expr) throws -> Expr {
     return .arithOps(ops: .add, args: [a, b])
  }
-            if case .yy4(let a) = yySymbolOnStack(distanceFromTop: 2),
-               case .yy4(let b) = yySymbolOnStack(distanceFromTop: 0) {
-                return .yy4(try codeBlockForRule1(a: a, b: b))
+            if case .yy6(let a) = yySymbolOnStack(distanceFromTop: 2),
+               case .yy6(let b) = yySymbolOnStack(distanceFromTop: 0) {
+                return .yy6(try codeBlockForRule1(a: a, b: b))
             }
         case 2: /* expr ::= expr(a) SUB expr(b) */
             func codeBlockForRule2(a: Expr, b: Expr) throws -> Expr {
     return .arithOps(ops: .sub, args: [a, b])
  }
-            if case .yy4(let a) = yySymbolOnStack(distanceFromTop: 2),
-               case .yy4(let b) = yySymbolOnStack(distanceFromTop: 0) {
-                return .yy4(try codeBlockForRule2(a: a, b: b))
+            if case .yy6(let a) = yySymbolOnStack(distanceFromTop: 2),
+               case .yy6(let b) = yySymbolOnStack(distanceFromTop: 0) {
+                return .yy6(try codeBlockForRule2(a: a, b: b))
             }
         case 3: /* expr ::= expr(a) MUL expr(b) */
             func codeBlockForRule3(a: Expr, b: Expr) throws -> Expr {
     return .arithOps(ops: .mul, args: [a, b])
  }
-            if case .yy4(let a) = yySymbolOnStack(distanceFromTop: 2),
-               case .yy4(let b) = yySymbolOnStack(distanceFromTop: 0) {
-                return .yy4(try codeBlockForRule3(a: a, b: b))
+            if case .yy6(let a) = yySymbolOnStack(distanceFromTop: 2),
+               case .yy6(let b) = yySymbolOnStack(distanceFromTop: 0) {
+                return .yy6(try codeBlockForRule3(a: a, b: b))
             }
         case 4: /* expr ::= expr(a) DIV expr(b) */
             func codeBlockForRule4(a: Expr, b: Expr) throws -> Expr {
     return .arithOps(ops: .div, args: [a, b])
  }
-            if case .yy4(let a) = yySymbolOnStack(distanceFromTop: 2),
-               case .yy4(let b) = yySymbolOnStack(distanceFromTop: 0) {
-                return .yy4(try codeBlockForRule4(a: a, b: b))
+            if case .yy6(let a) = yySymbolOnStack(distanceFromTop: 2),
+               case .yy6(let b) = yySymbolOnStack(distanceFromTop: 0) {
+                return .yy6(try codeBlockForRule4(a: a, b: b))
             }
         case 5: /* expr ::= const(a) */
             func codeBlockForRule5(a: Const) throws -> Expr {
     return .const(const: a)
  }
             if case .yy16(let a) = yySymbolOnStack(distanceFromTop: 0) {
-                return .yy4(try codeBlockForRule5(a: a))
+                return .yy6(try codeBlockForRule5(a: a))
             }
         case 6: /* const ::= INT(a) */
             func codeBlockForRule6(a: Token) throws -> Const {
@@ -217,6 +231,13 @@ class Parser: CitronParser {
             if case .yy0(let a) = yySymbolOnStack(distanceFromTop: 0) {
                 return .yy16(try codeBlockForRule7(a: a))
             }
+        case 8: /* const ::= BOOL(a) */
+            func codeBlockForRule8(a: Token) throws -> Const {
+    return .bool(a.asBool())
+ }
+            if case .yy0(let a) = yySymbolOnStack(distanceFromTop: 0) {
+                return .yy16(try codeBlockForRule8(a: a))
+            }
         default:
             fatalError("Can't invoke code block for rule number \(ruleNumber) - no such rule")
         }
@@ -229,7 +250,7 @@ class Parser: CitronParser {
     }
 
     func yyUnwrapResultFromSymbol(_ symbol: CitronSymbol) -> CitronResult {
-        if case .yy4(let result) = symbol {
+        if case .yy6(let result) = symbol {
             return result
         } else {
             fatalError("Unexpected mismatch in result type")

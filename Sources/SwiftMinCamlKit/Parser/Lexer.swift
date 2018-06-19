@@ -25,6 +25,10 @@ let lexer = Lexer(rules: [
         return nil
     }),
     
+    // Boolean
+    .string("true", (.boolLiteral(true), .BOOL)),
+    .string("false", (.boolLiteral(false), .BOOL)),
+
     // Operators
     .string("+", (.identifier("+"), .ADD)),
     .string("-", (.identifier("-"), .SUB)),
