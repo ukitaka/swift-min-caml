@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import CitronKit
 
 typealias Lexer = CitronLexer<(Int, Parser.CitronTokenCode)>
 

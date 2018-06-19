@@ -7,6 +7,9 @@
 
 // Parser class
 
+import Foundation
+import CitronKit
+
 class Parser: CitronParser {
 
     // Types

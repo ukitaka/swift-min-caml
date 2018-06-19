@@ -2,6 +2,15 @@
   "object": {
     "pins": [
       {
+        "package": "Citron",
+        "repositoryURL": "git@github.com:ukitaka/citron.git",
+        "state": {
+          "branch": null,
+          "revision": "2ba07a05240d3e654f45a4673c6364b4cbbbaf1b",
+          "version": "0.0.1"
+        }
+      },
+      {
         "package": "Curry",
         "repositoryURL": "git@github.com:thoughtbot/Curry.git",
         "state": {
