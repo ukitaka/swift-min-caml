@@ -24,7 +24,18 @@ $ ./run.sh "1+2*3"
 
 ```
 $ swift package generate-xcodeproj
+```
+
+You need to run `sourcery` when update `AST/AST.swift`, 
+
+```
 $ brew install sourcery
 $ sourcery
+```
+
+and run `./generate_parser.sh` when update syntax file.
+
+```
+$ ./generate_parser.sh
 ```
 
