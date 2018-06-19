@@ -6,13 +6,22 @@
 //
 
 import XCTest
-import SwiftMinCamlKit
+@testable import SwiftMinCamlKit
 
 class CodeGenTest: XCTestCase {
+    func parse(input: String) -> Expr {
+        let parser = Parser()
+        try! lexer.tokenize(input) { (t, c) in
+            try! parser.consume(token: t, code: c)
+        }
+        let expr = try! parser.endParsing()
+        return expr
+    }
+    
+
     func testArithOps() {
-        let parser = Expr.parser
         let input = "1+2*3"
-        let exp = try! parser.run(sourceName: "test", input: input)
+        let exp = parse(input: input)
         let asm = CodeGen().gen(expr: exp)
         let expected = """
         extern print_int
