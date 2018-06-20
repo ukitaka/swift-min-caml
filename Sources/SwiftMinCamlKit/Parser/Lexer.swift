@@ -30,6 +30,9 @@ let lexer = Lexer(rules: [
     .string("false", (.boolLiteral(false), .BOOL)),
     
     // Keyword
+    .string("if", (.keyword, .IF)),
+    .string("then", (.keyword, .THEN)),
+    .string("else", (.keyword, .ELSE)),
     .string("let", (.keyword, .LET)),
     .string("in", (.keyword, .IN)),
     

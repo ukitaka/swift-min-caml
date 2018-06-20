@@ -140,6 +140,10 @@ args ::= arg(a). {
     return [a]
 }
 
+expr ::= IF expr(a) THEN expr(b) ELSE expr(c). {
+    return .if(cond: a, ifTrue:b, ifFalse:c)
+}
+
 expr ::= LET var(a) EQUAL expr(b) IN expr(c). {
     return .let(varName: a, bind: b, body: c)
 }

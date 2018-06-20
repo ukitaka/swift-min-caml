@@ -75,4 +75,10 @@ class ParserTest: XCTestCase {
         XCTAssertEqual(l.varName, "x")
         XCTAssertTrue(l.body.isArithOps)
     }
+    
+    func testIf() {
+        let input = "if true then 1 else 2"
+        let exp = self.parse(input: input)
+        XCTAssertTrue(exp.isIf)
+    }
 }
