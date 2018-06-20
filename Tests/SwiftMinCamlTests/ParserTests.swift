@@ -81,4 +81,10 @@ class ParserTest: XCTestCase {
         let exp = self.parse(input: input)
         XCTAssertTrue(exp.isIf)
     }
+    
+    func testLetRec() {
+        let input = "let rec f a b = 1 in 2"
+        let exp = self.parse(input: input)
+        XCTAssertTrue(exp.isLetRec)
+    }
 }

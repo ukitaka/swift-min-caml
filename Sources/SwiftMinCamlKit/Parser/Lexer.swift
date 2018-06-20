@@ -34,6 +34,7 @@ let lexer = Lexer(rules: [
     .string("then", (.keyword, .THEN)),
     .string("else", (.keyword, .ELSE)),
     .string("let", (.keyword, .LET)),
+    .string("rec", (.keyword, .REC)),
     .string("in", (.keyword, .IN)),
     
     // Identifier

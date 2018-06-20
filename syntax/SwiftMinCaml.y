@@ -66,6 +66,7 @@
 %nonterminal_type arithOps Expr
 %nonterminal_type const Const
 %nonterminal_type var Var
+%nonterminal_type vars "[Var]"
 %nonterminal_type arg Expr
 %nonterminal_type args "[Expr]"
 
@@ -120,6 +121,14 @@ var ::= IDENTIFIER(a). {
     return Var(rawValue: a.asIdentifier())
 }
 
+vars ::= var(a) vars(list). {
+    return [a] + list
+}
+
+vars ::= var(a). {
+    return [a]
+}
+
 arg ::= const(a). {
     return .const(const: a)
 }
@@ -142,6 +151,10 @@ args ::= arg(a). {
 
 expr ::= IF expr(a) THEN expr(b) ELSE expr(c). {
     return .if(cond: a, ifTrue:b, ifFalse:c)
+}
+
+expr ::= LET REC var(a) vars(b) EQUAL expr(c) IN expr(d). {
+    return .letRec(name: a, args: b, bind: c, body: d)
 }
 
 expr ::= LET var(a) EQUAL expr(b) IN expr(c). {
