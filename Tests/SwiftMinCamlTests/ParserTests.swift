@@ -111,4 +111,10 @@ class ParserTest: XCTestCase {
         let exp = self.parse(input: input)
         XCTAssertTrue(exp.isReadArray)
     }
+    
+    func testWriteArray() {
+        let input = "a.(1) <- 2"
+        let exp = self.parse(input: input)
+        XCTAssertTrue(exp.isWriteArray)
+    }
 }

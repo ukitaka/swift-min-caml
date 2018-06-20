@@ -171,6 +171,10 @@ expr ::= ARRAY_CREATE expr(num) expr(element). {
     return .createArray(size: num, element: element)
 }
 
+expr ::= expr(arr) DOT L_BR expr(index) R_BR LEFT_ARROW expr(value). {
+    return .writeArray(array: arr, index: index, value: value)
+}
+
 expr ::= expr(arr) DOT L_BR expr(index) R_BR. {
     return .readArray(array: arr, index: index)
 }
