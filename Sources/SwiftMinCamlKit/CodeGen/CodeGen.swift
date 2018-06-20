@@ -123,7 +123,7 @@ public struct CodeGen {
         //FIXME: spill out if needed
         //FIXME: support 2~ args
         b.mov(.rdi, num)
-        b.call(apply.function.asVar!.rawValue)
+        b.call(apply.function.rawValue)
     }
     
     private func genExit() {

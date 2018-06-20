@@ -60,15 +60,14 @@ class ParserTest: XCTestCase {
         XCTAssertEqual(v.rawValue, "abc")
     }
 
-//    func testApply() {
-//        let input = "print_int 123 + 456"
-//        let exp = self.parse(input: input)
-//        print(exp)
-//        XCTAssertTrue(exp.isApply)
-//        let a = exp.asApply!
-//        XCTAssertTrue(a.function.isVar)
-//        print(exp)
-//    }
+    func testApply() {
+        let input = "print_int 123"
+        let exp = self.parse(input: input)
+        print(exp)
+        XCTAssertTrue(exp.isApply)
+        let a = exp.asApply!
+        XCTAssertEqual(a.function.rawValue, "print_int")
+    }
 //
 //    func testLet() {
 //        let input = "let x = 1 in x"

@@ -63,7 +63,11 @@
 
 %nonterminal_type root Expr
 %nonterminal_type expr Expr
+%nonterminal_type arithOps Expr
 %nonterminal_type const Const
+%nonterminal_type var Var
+%nonterminal_type arg Expr
+%nonterminal_type args "[Expr]"
 
 // Associativity and precedences
 
@@ -76,20 +80,24 @@ root ::= expr(a). {
     return a
 }
 
-expr ::= expr(a) ADD expr(b). {
+arithOps ::= expr(a) ADD expr(b). {
     return .arithOps(ops: .add, args: [a, b])
 }
 
-expr ::= expr(a) SUB expr(b). {
+arithOps ::= expr(a) SUB expr(b). {
     return .arithOps(ops: .sub, args: [a, b])
 }
 
-expr ::= expr(a) MUL expr(b). {
+arithOps ::= expr(a) MUL expr(b). {
     return .arithOps(ops: .mul, args: [a, b])
 }
 
-expr ::= expr(a) DIV expr(b). {
+arithOps ::= expr(a) DIV expr(b). {
     return .arithOps(ops: .div, args: [a, b])
+}
+
+expr ::= arithOps(a). {
+    return a
 }
 
 expr ::= const(a). {
@@ -108,6 +116,34 @@ const ::= BOOL(a). {
     return .bool(a.asBool())
 }
 
-expr ::= IDENTIFIER(a). {
-    return .var(variable: Var(rawValue: a.asIdentifier()))
+var ::= IDENTIFIER(a). {
+    return Var(rawValue: a.asIdentifier())
+}
+
+arg ::= const(a). {
+    return .const(const: a)
+}
+
+arg ::= var(a). {
+    return .var(variable: a)
+}
+
+arg ::= L_BR expr(a) R_BR. {
+    return a
+}
+
+args ::= arg(a) args(list). {
+    return [a] + list
+}
+
+args ::= arg(a). {
+    return [a]
+}
+
+expr ::= var(a) args(b). {
+    return .apply(function: a, args: b)
+}
+
+expr ::= var(a). {
+    return .var(variable: a)
 }

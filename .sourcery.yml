@@ -3,4 +3,4 @@ sources:
 templates:
   - templates/
 output:
-  Sources/SwiftMinCaml/Generated.swift
+  Sources/SwiftMinCamlKit/Generated.swift

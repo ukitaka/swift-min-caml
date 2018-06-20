@@ -29,7 +29,7 @@ let lexer = Lexer(rules: [
     .string("true", (.boolLiteral(true), .BOOL)),
     .string("false", (.boolLiteral(false), .BOOL)),
     
-    .regexPattern("[a-zA-Z]+[a-zA-Z0-9]*", { str in
+    .regexPattern("[a-zA-Z]+[a-zA-Z0-9_]*", { str in
         return (.identifier(str), .IDENTIFIER)
     }),
 

@@ -43,7 +43,7 @@ public indirect enum Expr: Node {
     case `let`(varName: Var, bind: Expr, body: Expr)
     case `var`(variable: Var)
     case letRec(name: Var, args: [Var], bind: Expr, body: Expr)
-    case apply(function: Expr, args: [Expr])
+    case apply(function: Var, args: [Expr])
     case tuple(elements: [Expr])
     case readTuple(vars: [Var], bindings: Expr, body: Expr)
     case createArray(size: Expr, element: Expr)

@@ -236,7 +236,7 @@ public extension Expr {
   }
 
   public struct ApplyExpr {
-    public let function: Expr
+    public let function: Var
     public let args: [Expr]
   }
 
