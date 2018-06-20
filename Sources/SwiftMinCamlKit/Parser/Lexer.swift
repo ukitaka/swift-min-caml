@@ -36,6 +36,7 @@ let lexer = Lexer(rules: [
     .string("let", (.keyword, .LET)),
     .string("rec", (.keyword, .REC)),
     .string("in", (.keyword, .IN)),
+    .string("Array.create", (.keyword, .ARRAY_CREATE)),
     
     // Identifier
     .regexPattern("[a-zA-Z]+[a-zA-Z0-9_]*", { str in

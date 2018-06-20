@@ -167,9 +167,14 @@ expr ::= LET var(a) EQUAL expr(b) IN expr(c). {
     return .let(varName: a, bind: b, body: c)
 }
 
+expr ::= ARRAY_CREATE expr(num) expr(element). {
+    return .createArray(size: num, element: element)
+}
+
 expr ::= var(a) args(b). {
     return .apply(function: a, args: b)
 }
+
 
 expr ::= var(a). {
     return .var(variable: a)

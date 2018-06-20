@@ -99,4 +99,10 @@ class ParserTest: XCTestCase {
         let exp = self.parse(input: input)
         XCTAssertTrue(exp.isReadTuple)
     }
+    
+    func testCreateArray() {
+        let input = "Array.create 2 1"
+        let exp = self.parse(input: input)
+        XCTAssertTrue(exp.isCreateArray)
+    }
 }
