@@ -38,6 +38,10 @@ let lexer = Lexer(rules: [
     .string("-", (.identifier("-"), .SUB)),
     .string("*", (.identifier("*"), .MUL)),
     .string("/", (.identifier("/"), .DIV)),
+    
+    // Punctuation
+    .string("(", (.punctuation, .L_BR)),
+    .string(")", (.punctuation, .R_BR)),
 
     // Whitespace
     .regexPattern("\\s", { _ in nil })
