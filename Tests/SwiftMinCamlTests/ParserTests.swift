@@ -87,4 +87,10 @@ class ParserTest: XCTestCase {
         let exp = self.parse(input: input)
         XCTAssertTrue(exp.isLetRec)
     }
+    
+    func testTuple() {
+        let input = "(1, 2, 3)"
+        let exp = self.parse(input: input)
+        XCTAssertTrue(exp.isTuple)
+    }
 }

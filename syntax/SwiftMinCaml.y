@@ -63,6 +63,7 @@
 
 %nonterminal_type root Expr
 %nonterminal_type expr Expr
+%nonterminal_type elements "[Expr]"
 %nonterminal_type arithOps Expr
 %nonterminal_type const Const
 %nonterminal_type var Var
@@ -169,3 +170,14 @@ expr ::= var(a). {
     return .var(variable: a)
 }
 
+elements ::= expr(a) COMMA elements(list). {
+    return [a] + list
+}
+
+elements ::= expr(a). {
+    return [a]
+}
+
+expr ::= L_BR elements(e) R_BR. {
+    return .tuple(elements: e)
+}
