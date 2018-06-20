@@ -93,4 +93,10 @@ class ParserTest: XCTestCase {
         let exp = self.parse(input: input)
         XCTAssertTrue(exp.isTuple)
     }
+    
+    func testReadTuple() {
+        let input = "let (x, y, z) = a in x"
+        let exp = self.parse(input: input)
+        XCTAssertTrue(exp.isReadTuple)
+    }
 }

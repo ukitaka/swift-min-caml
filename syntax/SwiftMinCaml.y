@@ -64,6 +64,7 @@
 %nonterminal_type root Expr
 %nonterminal_type expr Expr
 %nonterminal_type elements "[Expr]"
+%nonterminal_type element_vars "[Var]"
 %nonterminal_type arithOps Expr
 %nonterminal_type const Const
 %nonterminal_type var Var
@@ -158,6 +159,10 @@ expr ::= LET REC var(a) vars(b) EQUAL expr(c) IN expr(d). {
     return .letRec(name: a, args: b, bind: c, body: d)
 }
 
+expr ::= LET L_BR element_vars(a) R_BR EQUAL expr(b) IN expr(c). {
+    return .readTuple(vars: a, bindings: b, body: c)
+}
+
 expr ::= LET var(a) EQUAL expr(b) IN expr(c). {
     return .let(varName: a, bind: b, body: c)
 }
@@ -175,6 +180,14 @@ elements ::= expr(a) COMMA elements(list). {
 }
 
 elements ::= expr(a). {
+    return [a]
+}
+
+element_vars ::= var(a) COMMA element_vars(list). {
+    return [a] + list
+}
+
+element_vars ::= var(a). {
     return [a]
 }
 
