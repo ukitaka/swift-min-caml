@@ -52,6 +52,7 @@ let lexer = Lexer(rules: [
 
 
     // Punctuation
+    .string(".", (.punctuation, .DOT)),
     .string(",", (.punctuation, .COMMA)),
     .string("(", (.punctuation, .L_BR)),
     .string(")", (.punctuation, .R_BR)),
