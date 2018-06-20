@@ -29,6 +29,11 @@ let lexer = Lexer(rules: [
     .string("true", (.boolLiteral(true), .BOOL)),
     .string("false", (.boolLiteral(false), .BOOL)),
     
+    // Keyword
+    .string("let", (.keyword, .LET)),
+    .string("in", (.keyword, .IN)),
+    
+    // Identifier
     .regexPattern("[a-zA-Z]+[a-zA-Z0-9_]*", { str in
         return (.identifier(str), .IDENTIFIER)
     }),
@@ -38,7 +43,9 @@ let lexer = Lexer(rules: [
     .string("-", (.identifier("-"), .SUB)),
     .string("*", (.identifier("*"), .MUL)),
     .string("/", (.identifier("/"), .DIV)),
-    
+    .string("=", (.identifier("="), .EQUAL)),
+
+
     // Punctuation
     .string("(", (.punctuation, .L_BR)),
     .string(")", (.punctuation, .R_BR)),

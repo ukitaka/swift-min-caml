@@ -140,6 +140,10 @@ args ::= arg(a). {
     return [a]
 }
 
+expr ::= LET var(a) EQUAL expr(b) IN expr(c). {
+    return .let(varName: a, bind: b, body: c)
+}
+
 expr ::= var(a) args(b). {
     return .apply(function: a, args: b)
 }
@@ -147,3 +151,4 @@ expr ::= var(a) args(b). {
 expr ::= var(a). {
     return .var(variable: a)
 }
+
