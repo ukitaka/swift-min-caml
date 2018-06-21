@@ -61,4 +61,6 @@ public indirect enum Type: Node {
     case `func`(args: [Type], ret: Type)
     case tuple(elements: [Type])
     case array(element: Type)
+    
+    case typeVar(name: String)
 }

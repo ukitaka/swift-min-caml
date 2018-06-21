@@ -453,6 +453,22 @@ public extension Type {
     }
   }
 
+  public var isTypeVar: Bool {
+    switch self {
+      case .typeVar: return true
+      default: return false
+    }
+  }
+
+  public var asTypeVar: String? {
+    switch self {
+    case let .typeVar(name):
+      return name
+    default:
+      return nil
+    }
+  }
+
 }
 
 // swiftlint:disable file_length
@@ -565,6 +581,8 @@ public func == (lhs: Type, rhs: Type) -> Bool {
     case (.tuple(let lhs), .tuple(let rhs)):
         return lhs == rhs
     case (.array(let lhs), .array(let rhs)):
+        return lhs == rhs
+    case (.typeVar(let lhs), .typeVar(let rhs)):
         return lhs == rhs
     default: return false
     }
@@ -699,6 +717,8 @@ extension Type: Hashable {
             return combineHashes([5, data.hashValue])
         case .array(let data):
             return combineHashes([6, data.hashValue])
+        case .typeVar(let data):
+            return combineHashes([7, data.hashValue])
         }
     }
 }
