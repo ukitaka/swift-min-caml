@@ -747,3 +747,35 @@ public enum TypedExpr {
     case readArray(array: Expr, index: Expr, type: Type)
     case writeArray(array: Expr, index: Expr, value: Expr, type: Type)
 }
+
+public extension TypedExpr {
+    var type: Type {
+        switch self {
+            case let .const(_, type):
+                return type
+            case let .arithOps(_, _, type):
+                return type
+            case let .`if`(_, _, _, type):
+                return type
+            case let .`let`(_, _, _, type):
+                return type
+            case let .`var`(_, type):
+                return type
+            case let .letRec(_, _, _, _, type):
+                return type
+            case let .apply(_, _, type):
+                return type
+            case let .tuple(_, type):
+                return type
+            case let .readTuple(_, _, _, type):
+                return type
+            case let .createArray(_, _, type):
+                return type
+            case let .readArray(_, _, type):
+                return type
+            case let .writeArray(_, _, _, type):
+                return type
+        }
+    }
+}
+

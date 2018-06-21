@@ -4,4 +4,16 @@ public enum Typed{{ enum.name }} {
     case {{ case.name }}({% for associatedValue in case.associatedValues %}{{associatedValue.localName}}: {{associatedValue.typeName}}, {% endfor %}type: Type)
     {% endfor %}
 }
+
+public extension Typed{{ enum.name }} {
+    var type: Type {
+        switch self {
+            {% for case in enum.cases %}
+            case let .{{ case.name }}({% for associatedValue in case.associatedValues %}_, {% endfor %}type):
+                return type
+            {% endfor %}
+        }
+    }
+}
+
 {% endfor %}
