@@ -808,3 +808,35 @@ public extension TypedExpr {
     }
 }
 
+public extension Expr {
+    func typing(type: Type) -> TypedExpr {
+        switch self {
+            case let .const(const):
+                return .const(const: const, type: type)
+            case let .arithOps(ops, args):
+                return .arithOps(ops: ops, args: args, type: type)
+            case let .`if`(cond, ifTrue, ifFalse):
+                return .`if`(cond: cond, ifTrue: ifTrue, ifFalse: ifFalse, type: type)
+            case let .`let`(varName, bind, body):
+                return .`let`(varName: varName, bind: bind, body: body, type: type)
+            case let .`var`(variable):
+                return .`var`(variable: variable, type: type)
+            case let .letRec(name, args, bind, body):
+                return .letRec(name: name, args: args, bind: bind, body: body, type: type)
+            case let .apply(function, args):
+                return .apply(function: function, args: args, type: type)
+            case let .tuple(elements):
+                return .tuple(elements: elements, type: type)
+            case let .readTuple(vars, bindings, body):
+                return .readTuple(vars: vars, bindings: bindings, body: body, type: type)
+            case let .createArray(size, element):
+                return .createArray(size: size, element: element, type: type)
+            case let .readArray(array, index):
+                return .readArray(array: array, index: index, type: type)
+            case let .writeArray(array, index, value):
+                return .writeArray(array: array, index: index, value: value, type: type)
+        }
+    }
+}
+
+

@@ -25,4 +25,16 @@ public extension Typed{{ enum.name }} {
     }
 }
 
+public extension {{ enum.name }} {
+    func typing(type: Type) -> Typed{{ enum.name }} {
+        switch self {
+        {% for case in enum.cases %}
+            case let .{{ case.name }}({% for associatedValue in case.associatedValues %}{{associatedValue.localName}}{% ifnot forloop.last %}, {% endif %}{% endfor %}):
+                return .{{ case.name }}({% for associatedValue in case.associatedValues %}{{associatedValue.localName}}: {{associatedValue.localName}}, {% endfor %}type: type)
+        {% endfor %}
+        }
+    }
+}
+
 {% endfor %}
+
