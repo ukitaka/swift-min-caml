@@ -1,0 +1,7 @@
+{% for enum in types.implementing.AutoTyped|enum %}
+public enum Typed{{ enum.name }} {
+    {% for case in enum.cases %}
+    case {{ case.name }}({% for associatedValue in case.associatedValues %}{{associatedValue.localName}}: {{associatedValue.typeName}}, {% endfor %}type: Type)
+    {% endfor %}
+}
+{% endfor %}

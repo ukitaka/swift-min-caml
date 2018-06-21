@@ -731,3 +731,19 @@ extension Array: Hashable where Element: Hashable {
         }
     }
 }
+
+
+public enum TypedExpr {
+    case const(const: Const, type: Type)
+    case arithOps(ops: ArithOps, args: [Expr], type: Type)
+    case `if`(cond: Expr, ifTrue: Expr, ifFalse: Expr, type: Type)
+    case `let`(varName: Var, bind: Expr, body: Expr, type: Type)
+    case `var`(variable: Var, type: Type)
+    case letRec(name: Var, args: [Var], bind: Expr, body: Expr, type: Type)
+    case apply(function: Var, args: [Expr], type: Type)
+    case tuple(elements: [Expr], type: Type)
+    case readTuple(vars: [Var], bindings: Expr, body: Expr, type: Type)
+    case createArray(size: Expr, element: Expr, type: Type)
+    case readArray(array: Expr, index: Expr, type: Type)
+    case writeArray(array: Expr, index: Expr, value: Expr, type: Type)
+}

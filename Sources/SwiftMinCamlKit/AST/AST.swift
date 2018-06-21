@@ -36,7 +36,7 @@ public extension Tagged where Tag == VarTag, RawValue == String {
 }
 
 /// Expressions
-public indirect enum Expr: Node {
+public indirect enum Expr: Node, AutoTyped {
     case const(const: Const)
     case arithOps(ops: ArithOps, args: [Expr])
     case `if`(cond: Expr, ifTrue:Expr, ifFalse:Expr)
