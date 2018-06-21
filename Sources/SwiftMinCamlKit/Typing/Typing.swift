@@ -15,3 +15,22 @@ extension Type {
         return .typeVar(name: "TypeVar\(counter)")
     }
 }
+
+enum Typing {
+    static func type(expr: Expr) -> TypedExpr {
+        let constraintType = expr.constraintTyping()
+        //FIXME: implement
+        return constraintType
+    }
+    
+    static func type(const: Const) -> Type {
+        switch const {
+        case .bool:
+            return .bool
+        case .float:
+            return .float
+        case .integer:
+            return .int
+        }
+    }
+}

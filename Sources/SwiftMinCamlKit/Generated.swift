@@ -811,8 +811,8 @@ public extension TypedExpr {
 public extension Expr {
     func constraintTyping() -> TypedExpr {
         switch self {
-            case let .const(const):
-                return .const(const: const, type: Type.newTypeVar())
+        case let .const(const):
+            return .const(const: const, type: Typing.type(const: const))
             case let .arithOps(ops, args):
                 return .arithOps(ops: ops, args: args.map { $0.constraintTyping() }, type: Type.newTypeVar())
             case let .`if`(cond, ifTrue, ifFalse):

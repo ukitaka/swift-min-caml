@@ -29,8 +29,13 @@ public extension {{ enum.name }} {
     func constraintTyping() -> Typed{{ enum.name }} {
         switch self {
         {% for case in enum.cases %}
+        {% if case.name == "const" %}
+        case let .const(const):
+            return .const(const: const, type: Typing.type(const: const))
+        {% else %}
             case let .{{ case.name }}({% for associatedValue in case.associatedValues %}{{associatedValue.localName}}{% ifnot forloop.last %}, {% endif %}{% endfor %}):
                 return .{{ case.name }}({% for associatedValue in case.associatedValues %}{{associatedValue.localName}}: {% if associatedValue.typeName.name == "Expr" %}{{associatedValue.localName}}.constraintTyping(){% else %}{% if associatedValue.typeName.name == "[Expr]" %}{{associatedValue.localName}}.map { $0.constraintTyping() }{% else %}{{associatedValue.localName}}{% endif %}{% endif %}, {% endfor %}type: Type.newTypeVar())
+        {% endif %}
         {% endfor %}
         }
     }
