@@ -733,19 +733,19 @@ extension Array: Hashable where Element: Hashable {
 }
 
 
-public enum TypedExpr {
+public indirect enum TypedExpr {
     case const(const: Const, type: Type)
-    case arithOps(ops: ArithOps, args: [Expr], type: Type)
-    case `if`(cond: Expr, ifTrue: Expr, ifFalse: Expr, type: Type)
-    case `let`(varName: Var, bind: Expr, body: Expr, type: Type)
+    case arithOps(ops: ArithOps, args: [TypedExpr], type: Type)
+    case `if`(cond: TypedExpr, ifTrue: TypedExpr, ifFalse: TypedExpr, type: Type)
+    case `let`(varName: Var, bind: TypedExpr, body: TypedExpr, type: Type)
     case `var`(variable: Var, type: Type)
-    case letRec(name: Var, args: [Var], bind: Expr, body: Expr, type: Type)
-    case apply(function: Var, args: [Expr], type: Type)
-    case tuple(elements: [Expr], type: Type)
-    case readTuple(vars: [Var], bindings: Expr, body: Expr, type: Type)
-    case createArray(size: Expr, element: Expr, type: Type)
-    case readArray(array: Expr, index: Expr, type: Type)
-    case writeArray(array: Expr, index: Expr, value: Expr, type: Type)
+    case letRec(name: Var, args: [Var], bind: TypedExpr, body: TypedExpr, type: Type)
+    case apply(function: Var, args: [TypedExpr], type: Type)
+    case tuple(elements: [TypedExpr], type: Type)
+    case readTuple(vars: [Var], bindings: TypedExpr, body: TypedExpr, type: Type)
+    case createArray(size: TypedExpr, element: TypedExpr, type: Type)
+    case readArray(array: TypedExpr, index: TypedExpr, type: Type)
+    case writeArray(array: TypedExpr, index: TypedExpr, value: TypedExpr, type: Type)
 }
 
 public extension TypedExpr {
@@ -781,29 +781,29 @@ public extension TypedExpr {
     func untyped() -> Expr {
         switch self {
             case let .const(const, _):
-                return .const(const: const)
+                return .const(const:  const)
             case let .arithOps(ops, args, _):
-                return .arithOps(ops: ops, args: args)
+                return .arithOps(ops:  ops, args: args.map { $0.untyped() })
             case let .`if`(cond, ifTrue, ifFalse, _):
-                return .`if`(cond: cond, ifTrue: ifTrue, ifFalse: ifFalse)
+                return .`if`(cond: cond.untyped(), ifTrue: ifTrue.untyped(), ifFalse: ifFalse.untyped())
             case let .`let`(varName, bind, body, _):
-                return .`let`(varName: varName, bind: bind, body: body)
+                return .`let`(varName:  varName, bind: bind.untyped(), body: body.untyped())
             case let .`var`(variable, _):
-                return .`var`(variable: variable)
+                return .`var`(variable:  variable)
             case let .letRec(name, args, bind, body, _):
-                return .letRec(name: name, args: args, bind: bind, body: body)
+                return .letRec(name:  name, args:  args, bind: bind.untyped(), body: body.untyped())
             case let .apply(function, args, _):
-                return .apply(function: function, args: args)
+                return .apply(function:  function, args: args.map { $0.untyped() })
             case let .tuple(elements, _):
-                return .tuple(elements: elements)
+                return .tuple(elements: elements.map { $0.untyped() })
             case let .readTuple(vars, bindings, body, _):
-                return .readTuple(vars: vars, bindings: bindings, body: body)
+                return .readTuple(vars:  vars, bindings: bindings.untyped(), body: body.untyped())
             case let .createArray(size, element, _):
-                return .createArray(size: size, element: element)
+                return .createArray(size: size.untyped(), element: element.untyped())
             case let .readArray(array, index, _):
-                return .readArray(array: array, index: index)
+                return .readArray(array: array.untyped(), index: index.untyped())
             case let .writeArray(array, index, value, _):
-                return .writeArray(array: array, index: index, value: value)
+                return .writeArray(array: array.untyped(), index: index.untyped(), value: value.untyped())
         }
     }
 }

@@ -1,7 +1,7 @@
 {% for enum in types.implementing.AutoTyped|enum %}
-public enum Typed{{ enum.name }} {
+public indirect enum Typed{{ enum.name }} {
     {% for case in enum.cases %}
-    case {{ case.name }}({% for associatedValue in case.associatedValues %}{{associatedValue.localName}}: {{associatedValue.typeName}}, {% endfor %}type: Type)
+    case {{ case.name }}({% for associatedValue in case.associatedValues %}{{associatedValue.localName}}: {% if associatedValue.typeName.name == "[Expr]" %}[TypedExpr]{% else %}{% if associatedValue.typeName.name == enum.name %}Typed{% endif %}{{associatedValue.typeName}}{% endif %}, {% endfor %}type: Type)
     {% endfor %}
 }
 
@@ -19,7 +19,7 @@ public extension Typed{{ enum.name }} {
         switch self {
         {% for case in enum.cases %}
             case let .{{ case.name }}({% for associatedValue in case.associatedValues %}{{associatedValue.localName}}, {% endfor %}_):
-                return .{{ case.name }}({% for associatedValue in case.associatedValues %}{{associatedValue.localName}}: {{associatedValue.localName}}{% ifnot forloop.last %}, {% endif %}{% endfor %})
+                return .{{ case.name }}({% for associatedValue in case.associatedValues %}{{associatedValue.localName}}: {% if associatedValue.typeName.name == "Expr" %}{{associatedValue.localName}}.untyped(){% else %}{% if associatedValue.typeName.name == "[Expr]" %}{{associatedValue.localName}}.map { $0.untyped() }{% else %} {{associatedValue.localName}}{% endif %}{% endif %}{% ifnot forloop.last %}, {% endif %}{% endfor %})
             {% endfor %}
         }
     }
