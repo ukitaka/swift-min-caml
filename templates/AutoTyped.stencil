@@ -14,6 +14,15 @@ public extension Typed{{ enum.name }} {
             {% endfor %}
         }
     }
+
+    func untyped() -> {{ enum.name }} {
+        switch self {
+        {% for case in enum.cases %}
+            case let .{{ case.name }}({% for associatedValue in case.associatedValues %}{{associatedValue.localName}}, {% endfor %}_):
+                return .{{ case.name }}({% for associatedValue in case.associatedValues %}{{associatedValue.localName}}: {{associatedValue.localName}}{% ifnot forloop.last %}, {% endif %}{% endfor %})
+            {% endfor %}
+        }
+    }
 }
 
 {% endfor %}

@@ -777,5 +777,34 @@ public extension TypedExpr {
                 return type
         }
     }
+
+    func untyped() -> Expr {
+        switch self {
+            case let .const(const, _):
+                return .const(const: const)
+            case let .arithOps(ops, args, _):
+                return .arithOps(ops: ops, args: args)
+            case let .`if`(cond, ifTrue, ifFalse, _):
+                return .`if`(cond: cond, ifTrue: ifTrue, ifFalse: ifFalse)
+            case let .`let`(varName, bind, body, _):
+                return .`let`(varName: varName, bind: bind, body: body)
+            case let .`var`(variable, _):
+                return .`var`(variable: variable)
+            case let .letRec(name, args, bind, body, _):
+                return .letRec(name: name, args: args, bind: bind, body: body)
+            case let .apply(function, args, _):
+                return .apply(function: function, args: args)
+            case let .tuple(elements, _):
+                return .tuple(elements: elements)
+            case let .readTuple(vars, bindings, body, _):
+                return .readTuple(vars: vars, bindings: bindings, body: body)
+            case let .createArray(size, element, _):
+                return .createArray(size: size, element: element)
+            case let .readArray(array, index, _):
+                return .readArray(array: array, index: index)
+            case let .writeArray(array, index, value, _):
+                return .writeArray(array: array, index: index, value: value)
+        }
+    }
 }
 
