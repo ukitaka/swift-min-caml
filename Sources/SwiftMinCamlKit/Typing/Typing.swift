@@ -30,6 +30,7 @@ enum Typing {
         switch typedExpr {
         case let .const(const, _):
             return .const(const: const, type: typed(const: const))
+
         case let .arithOps(ops, args, _):
             let lhs = unify(typedExpr: args.first!, context: &context)
             let rhs = unify(typedExpr: args.last!, context: &context)
@@ -37,6 +38,7 @@ enum Typing {
             return .arithOps(ops: ops,
                              args: [lhs, rhs],
                              type: lhs.type)
+
         case let .`if`(cond, ifTrue, ifFalse, _):
             let typedCond = unify(typedExpr: cond, context: &context)
             let typedIfTrue = unify(typedExpr: ifTrue, context: &context)
@@ -47,35 +49,53 @@ enum Typing {
                        ifTrue: typedIfTrue,
                        ifFalse: typedIfFalse,
                        type: typedIfTrue.type)
+
         case let .`let`(varName, bind, body, _):
             let typedBind = unify(typedExpr: bind, context: &context)
             context[varName] = typedBind.type
             let typedBody = unify(typedExpr: body, context: &context)
+            context.removeValue(forKey: varName)
             return .let(varName: varName, bind: typedBind, body: typedBody, type: typedBody.type)
+
         case let .`var`(variable, _):
             guard let type = context[variable] else {
                 fatalError("Unknown variable: \(variable)")
             }
             return .var(variable: variable, type: type)
+
         case .letRec: // let .letRec(name, args, bind, body, type):
             fatalError("Not implemeneted yet")
+
         case let .apply(function, args, _):
             guard let functionType = context[function]?.asFunc else {
                 fatalError("Unknown function: \(function)")
             }
             let typedArgs = args.map { unify(typedExpr: $0, context: &context) }
             precondition(typedArgs.map{ $0.type } == functionType.args)
-            return .apply(function: function, args: args, type: functionType.ret)
-        case let .tuple(elements, type):
-            fatalError()
-        case let .readTuple(vars, bindings, body, type):
-            fatalError()
-        case let .createArray(size, element, type):
-            fatalError()
-        case let .readArray(array, index, type):
-            fatalError()
-        case let .writeArray(array, index, value, type):
-            fatalError()
+            return .apply(function: function, args: typedArgs, type: functionType.ret)
+            
+        case let .tuple(elements, _):
+            let typeElements = elements.map { unify(typedExpr: $0, context: &context) }
+            return .tuple(elements: typeElements, type: .tuple(elements: typeElements.map { $0.type }))
+            
+        case let .readTuple(vars, bindings, body, _):
+            let typedBindings = unify(typedExpr: bindings, context: &context)
+            precondition(typedBindings.type.isTuple)
+            for (v, t) in zip(vars, typedBindings.type.asTuple!) {
+                context[v] = t
+            }
+            let typedBody = unify(typedExpr: body, context: &context)
+            for v in vars {
+                context.removeValue(forKey: v)
+            }
+            return .readTuple(vars: vars, bindings: typedBindings, body: typedBody, type: typedBody.type)
+
+        case .createArray: // let .createArray(size, element, type):
+            fatalError("Not implemeneted yet")
+        case .readArray: // let .readArray(array, index, type):
+            fatalError("Not implemeneted yet")
+        case .writeArray: // let .writeArray(array, index, value, type):
+            fatalError("Not implemeneted yet")
         }
     }
     
