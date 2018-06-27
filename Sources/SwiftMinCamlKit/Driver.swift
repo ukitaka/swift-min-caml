@@ -9,7 +9,7 @@ import Foundation
 
 public struct Driver {
     public init() { }
-    
+
     public func run(input: String) -> String {
         let parser = Parser()
         try! lexer.tokenize(input) { (t, c) in

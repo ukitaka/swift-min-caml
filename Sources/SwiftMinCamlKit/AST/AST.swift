@@ -7,60 +7,56 @@
 
 import Tagged
 
-public protocol Node: AutoEquatable, AutoHashable, AutoEnum { }
-
-/// Constants
-public enum Const: Node {
-    case integer(Int)
-    case float(Double)
-    case bool(Bool)
-}
-
-/// ArithmeticOperations
-public enum ArithOps: AutoEnum {
-    case add // +
-    case sub // -
-    case mul // *
-    case div // /
-}
-
 /// Var
-public enum VarTag {}
+public enum IDTag {}
 
-public typealias Var = Tagged<VarTag, String>
+public typealias ID = Tagged<IDTag, String>
+public typealias Var = ID
 
-public extension Tagged where Tag == VarTag, RawValue == String {
-    static func fromString(_ str: String) -> Var {
+public extension Tagged where Tag == IDTag, RawValue == String {
+    static func fromString(_ str: String) -> ID {
         return Var(stringLiteral: str)
     }
 }
 
 /// Expressions
-public indirect enum Expr: Node, AutoTyped {
-    case const(const: Const)
-    case arithOps(ops: ArithOps, args: [Expr])
+public indirect enum Expr: AutoTyped, AutoHashable, AutoEquatable {
+    case unit
+    case bool(Bool)
+    case int(Int)
+    case float(Double)
+    case not(op: Expr)              // !
+    case neg(op: Expr)              // unary -
+    case add(lhs: Expr, rhs: Expr)  // +
+    case sub(lhs: Expr, rhs: Expr)  // -
+    case mul(lhs: Expr, rhs: Expr)  // *
+    case div(lhs: Expr, rhs: Expr)  // /
+    case fadd(lhs: Expr, rhs: Expr) // +
+    case fsub(lhs: Expr, rhs: Expr) // -
+    case fmul(lhs: Expr, rhs: Expr) // *
+    case fdiv(lhs: Expr, rhs: Expr) // /
+    case eq(lhs: Expr, rhs: Expr)   // ==
+    case le(lhs: Expr, rhs: Expr)   // <
     case `if`(cond: Expr, ifTrue:Expr, ifFalse:Expr)
-    case `let`(varName: Var, bind: Expr, body: Expr)
-    case `var`(variable: Var)
+    case `let`(name: Var, bind: Expr, body: Expr)
+    case `var`(name: Var)
     case letRec(name: Var, args: [Var], bind: Expr, body: Expr)
-    case apply(function: Var, args: [Expr])
+    case app(function: ID, args: [Expr])
     case tuple(elements: [Expr])
-    case readTuple(vars: [Var], bindings: Expr, body: Expr)
-    case createArray(size: Expr, element: Expr)
-    case readArray(array: Expr, index: Expr)
-    case writeArray(array: Expr, index: Expr, value: Expr)
+    case letTuple(vars: [Var], binding: Expr, body: Expr)
+    case array(size: Expr, element: Expr)
+    case get(array: Expr, index: Expr)
+    case put(array: Expr, index: Expr, value: Expr)
 }
 
 // Type
-public indirect enum Type: Node {
-    // primitives
+public indirect enum Type: AutoEquatable, AutoHashable, AutoEnum {
+    case unit
     case int
     case float
     case bool
-    
     case `func`(args: [Type], ret: Type)
     case tuple(elements: [Type])
     case array(element: Type)
-    
     case typeVar(name: String)
 }

@@ -7,7 +7,6 @@
 
 // Preface
 
-
     enum Token {
         case keyword // for let, rec, int ..
         case punctuation // for (, ) ..
@@ -18,7 +17,7 @@
     }
 
     extension Token {
-        func asInt() -> Int { 
+        func asInt() -> Int {
           switch self {
             case let .integerLiteral(i):
               return i
@@ -27,7 +26,7 @@
           }
         }
 
-        func asFloat() -> Double { 
+        func asFloat() -> Double {
           switch self {
             case let .floatLiteral(f):
               return f
@@ -54,7 +53,6 @@
           }
         }
     }
-
 
 // Parser class
 
@@ -135,7 +133,7 @@ class Parser: CitronParser {
 /*  90 */  (10, .SR(31)), (25, .SH(49)), (32, .RD( 2)), (19, .SH(53)), (28, .SH(47)),
 /*  95 */  ( 1, .SH(20)), ( 2, .SH(19)), ( 3, .SH(18)), ( 4, .SH(17)), ( 0, .RD( 0)),
 /* 100 */  ( 1, .SH(20)), ( 2, .SH(19)), ( 3, .SH(18)), ( 4, .SH(17)), (10, .SH(52)),
-/* 105 */  (22, .ACCEPT),   (23, .SH(37)), (28, .SH(25)), (29, .SH(51)), (26, .RD( 5)),
+/* 105 */  (22, .ACCEPT), (23, .SH(37)), (28, .SH(25)), (29, .SH(51)), (26, .RD( 5)),
 /* 110 */  (27, .RD( 6)), (28, .SH(22)), (32, .RD( 2)), (19, .SH(53)), (32, .RD( 2)),
 /* 115 */  (32, .RD( 2)), (32, .RD( 2)), (32, .RD( 2)), (19, .SH(53)), ( 5, .SR( 7)),
 /* 120 */  ( 6, .SR( 8)), ( 7, .SR( 9)), ( 8, .SR(10)), ( 9, .SH( 8)), ( 1, .SH(20)),
@@ -167,43 +165,43 @@ class Parser: CitronParser {
 /* 250 */  (31, .RD(25)), ( 3, .SH(18)), ( 4, .SH(17)), (32, .RD( 2)), (32, .RD( 2)),
 /* 255 */  (32, .RD( 2)), (32, .RD( 2)), (32, .RD( 2)), (32, .RD( 2)), (32, .RD( 2)),
 /* 260 */  (32, .RD( 2)), (32, .RD( 2)), (32, .RD( 2)), (32, .RD( 2)), (32, .RD( 2)),
-/* 265 */  (32, .RD( 2)), (32, .RD( 2)), (19, .SH(53)),
+/* 265 */  (32, .RD( 2)), (32, .RD( 2)), (19, .SH(53))
     ]
 
     let yyShiftUseDefault: Int = 268
     let yyShiftOffsetMin: Int = -1
     let yyShiftOffsetMax: Int = 248
     let yyShiftOffset: [Int] = [
-        /*     0 */    14,   14,   14,   -1,   14,   14,   14,   14,   14,   14,
-        /*    10 */    14,   14,   14,   14,   14,   14,   14,   14,   14,   14,
-        /*    20 */    14,  114,  114,    1,    1,    1,    1,   50,    1,   33,
-        /*    30 */    37,   41,   45,   65,   70,   74,   94,   99,  123,  123,
-        /*    40 */   123,  123,  123,  123,  248,  248,   35,   32,   47,   77,
-        /*    50 */    80,   54,   61,   48,   42,   42,
+        /*     0 */    14, 14, 14, -1, 14, 14, 14, 14, 14, 14,
+        /*    10 */    14, 14, 14, 14, 14, 14, 14, 14, 14, 14,
+        /*    20 */    14, 114, 114, 1, 1, 1, 1, 50, 1, 33,
+        /*    30 */    37, 41, 45, 65, 70, 74, 94, 99, 123, 123,
+        /*    40 */   123, 123, 123, 123, 248, 248, 35, 32, 47, 77,
+        /*    50 */    80, 54, 61, 48, 42, 42
     ]
 
     let yyReduceUseDefault: Int = -13
     let yyReduceOffsetMin: Int =   -12
     let yyReduceOffsetMax: Int =   219
     let yyReduceOffset: [Int] = [
-        /*     0 */    83,  -12,    3,  105,  111,  120,  126,  132,  138,  144,
-        /*    10 */   150,  156,  162,  168,  174,  180,  186,  192,  198,  204,
-        /*    20 */   210,  213,  219,   60,   66,   51,   79,   -4,    5,
+        /*     0 */    83, -12, 3, 105, 111, 120, 126, 132, 138, 144,
+        /*    10 */   150, 156, 162, 168, 174, 180, 186, 192, 198, 204,
+        /*    20 */   210, 213, 219, 60, 66, 51, 79, -4, 5
     ]
 
     let yyDefaultAction: [CitronParsingAction] = [
-  /*     0 */  .ERROR , .ERROR , .ERROR , .ERROR , .ERROR ,
-  /*     5 */  .ERROR , .ERROR , .ERROR , .ERROR , .ERROR ,
-  /*    10 */  .ERROR , .ERROR , .ERROR , .ERROR , .ERROR ,
-  /*    15 */  .ERROR , .ERROR , .ERROR , .ERROR , .ERROR ,
-  /*    20 */  .ERROR , .RD(17), .RD(26), .ERROR , .ERROR ,
-  /*    25 */  .RD(12), .ERROR , .ERROR , .ERROR , .ERROR ,
-  /*    30 */  .ERROR , .RD(28), .ERROR , .ERROR , .ERROR ,
-  /*    35 */  .ERROR , .ERROR , .ERROR , .RD(21), .RD(20),
+  /*     0 */  .ERROR, .ERROR, .ERROR, .ERROR, .ERROR ,
+  /*     5 */  .ERROR, .ERROR, .ERROR, .ERROR, .ERROR ,
+  /*    10 */  .ERROR, .ERROR, .ERROR, .ERROR, .ERROR ,
+  /*    15 */  .ERROR, .ERROR, .ERROR, .ERROR, .ERROR ,
+  /*    20 */  .ERROR, .RD(17), .RD(26), .ERROR, .ERROR ,
+  /*    25 */  .RD(12), .ERROR, .ERROR, .ERROR, .ERROR ,
+  /*    30 */  .ERROR, .RD(28), .ERROR, .ERROR, .ERROR ,
+  /*    35 */  .ERROR, .ERROR, .ERROR, .RD(21), .RD(20),
   /*    40 */  .RD(22), .RD(19), .RD(18), .RD(23), .RD( 2),
-  /*    45 */  .RD( 1), .ERROR , .RD(30), .ERROR , .ERROR ,
-  /*    50 */  .ERROR , .ERROR , .RD(24), .ERROR , .RD( 4),
-  /*    55 */  .RD( 3),
+  /*    45 */  .RD( 1), .ERROR, .RD(30), .ERROR, .ERROR ,
+  /*    50 */  .ERROR, .ERROR, .RD(24), .ERROR, .RD( 4),
+  /*    55 */  .RD( 3)
     ]
 
     // Fallback
@@ -249,27 +247,27 @@ class Parser: CitronParser {
         (lhs: 24, nrhs: 1),
         (lhs: 25, nrhs: 3),
         (lhs: 25, nrhs: 1),
-        (lhs: 23, nrhs: 3),
+        (lhs: 23, nrhs: 3)
     ]
 
     // Stack
 
-    var yyStack: [(stateOrRule: CitronStateOrRule , symbolCode: CitronSymbolCode, symbol: CitronSymbol)]  = [
+    var yyStack: [(stateOrRule: CitronStateOrRule, symbolCode: CitronSymbolCode, symbol: CitronSymbol)]  = [
         (stateOrRule: .state(0), symbolCode: 0, symbol: .yyBaseOfStack)
     ]
-    var maxStackSize: Int? = nil
+    var maxStackSize: Int?
     // Tracing
 
     var isTracingEnabled: Bool = false
     let yySymbolName: [String] = [
-        "$",                   "ADD",                 "SUB",                 "MUL",         
-        "DIV",                 "INT",                 "FLOAT",               "BOOL",        
-        "IDENTIFIER",          "L_BR",                "R_BR",                "IF",          
-        "THEN",                "ELSE",                "LET",                 "REC",         
-        "EQUAL",               "IN",                  "ARRAY_CREATE",        "DOT",         
-        "LEFT_ARROW",          "COMMA",               "root",                "expr",        
-        "elements",            "element_vars",        "arithOps",            "const",       
-        "var",                 "vars",                "arg",                 "args",        
+        "$", "ADD", "SUB", "MUL",
+        "DIV", "INT", "FLOAT", "BOOL",
+        "IDENTIFIER", "L_BR", "R_BR", "IF",
+        "THEN", "ELSE", "LET", "REC",
+        "EQUAL", "IN", "ARRAY_CREATE", "DOT",
+        "LEFT_ARROW", "COMMA", "root", "expr",
+        "elements", "element_vars", "arithOps", "const",
+        "var", "vars", "arg", "args"
     ]
     let yyRuleText: [String] = [
         /*   0 */ "root ::= expr(a)",
@@ -303,7 +301,7 @@ class Parser: CitronParser {
         /*  28 */ "elements ::= expr(a)",
         /*  29 */ "element_vars ::= var(a) COMMA element_vars(list)",
         /*  30 */ "element_vars ::= var(a)",
-        /*  31 */ "expr ::= L_BR elements(e) R_BR",
+        /*  31 */ "expr ::= L_BR elements(e) R_BR"
     ]
 
     // Function definitions
@@ -580,4 +578,3 @@ class Parser: CitronParser {
     }
 
 }
-

@@ -24,11 +24,11 @@ let lexer = Lexer(rules: [
         }
         return nil
     }),
-    
+
     // Boolean
     .string("true", (.boolLiteral(true), .BOOL)),
     .string("false", (.boolLiteral(false), .BOOL)),
-    
+
     // Keyword
     .string("if", (.keyword, .IF)),
     .string("then", (.keyword, .THEN)),
@@ -37,7 +37,7 @@ let lexer = Lexer(rules: [
     .string("rec", (.keyword, .REC)),
     .string("in", (.keyword, .IN)),
     .string("Array.create", (.keyword, .ARRAY_CREATE)),
-    
+
     // Identifier
     .regexPattern("[a-zA-Z]+[a-zA-Z0-9_]*", { str in
         return (.identifier(str), .IDENTIFIER)
@@ -49,7 +49,6 @@ let lexer = Lexer(rules: [
     .string("*", (.identifier("*"), .MUL)),
     .string("/", (.identifier("/"), .DIV)),
     .string("=", (.identifier("="), .EQUAL)),
-
 
     // Punctuation
     .string("<-", (.punctuation, .LEFT_ARROW)),

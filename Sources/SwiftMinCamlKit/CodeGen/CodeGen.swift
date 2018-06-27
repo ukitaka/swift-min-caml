@@ -10,7 +10,7 @@ public struct CodeGen {
     private let b = NasmX64Builder()
     private let startLabel = "start"
     private let exitLabel  = "mincaml_exit"
-    
+
     public init() { }
 
     class Context {
@@ -21,11 +21,11 @@ public struct CodeGen {
             }
             return Reg.regs[regInUse]
         }
-        
+
         func readReg(offset: Int) -> Reg {
             return Reg.regs[regInUse - offset]
         }
-        
+
         func releaseReg() {
             regInUse = regInUse - 1
         }
@@ -50,7 +50,7 @@ public struct CodeGen {
         genExit()
         return b.code
     }
-    
+
     private func genExpr(expr: Expr, context: Context) {
         switch expr {
         case let .const(const: const):
@@ -63,7 +63,7 @@ public struct CodeGen {
             fatalError("Not implemented")
         }
     }
-    
+
     private func genLet(varName: Var, bind: Expr, body: Expr, context: Context) {
         //FIXME: implement.
         genExpr(expr: bind, context: context)
@@ -102,18 +102,18 @@ public struct CodeGen {
         }
         context.releaseReg()
     }
-    
+
     private func genConst(const: Const, context: Context) {
         switch const {
         case let .integer(n):
             b.mov(context.useReg(), n)
-        case .float(_):
+        case .float:
             fatalError("Not implemented")
-        case .bool(_):
+        case .bool:
             fatalError("Not implemented")
         }
     }
-    
+
     private func genCall(expr: Expr) {
         guard let apply = expr.asApply else {
             fatalError("`expr` must be Expr.apply but \(expr)")
@@ -125,7 +125,7 @@ public struct CodeGen {
         b.mov(.rdi, num)
         b.call(apply.function.rawValue)
     }
-    
+
     private func genExit() {
         b.globalLabel(exitLabel)
         b.mov(.rax, .exit)
@@ -133,7 +133,7 @@ public struct CodeGen {
         b.xor(.rdi, .rdi)
         b.syscall()
     }
-    
+
     private func labelOf(node: Expr) -> Int {
         switch node {
         case .var, .const:
@@ -174,12 +174,12 @@ class NasmX64Builder {
             return [.rax, .rdi, .rsi, .rdx, .rcx, .r8, .r9]
         }
     }
-    
+
     enum Section: String {
         case data
         case text
     }
-    
+
     enum Inst: String {
         case mov
         case add
@@ -193,18 +193,18 @@ class NasmX64Builder {
         case call
         case syscall
     }
-    
+
     enum SystemCall: Int {
         case exit  = 1
         case write = 4
     }
-    
+
     var code: String
 
     init() {
         self.code = ""
     }
-    
+
     func raw(_ code: String) {
         self.code += code + "\n"
     }
@@ -212,11 +212,11 @@ class NasmX64Builder {
     func section(_ section: Section) {
         self.raw("section .\(section)")
     }
-    
+
     func inst(_ inst: Inst, _ dst: Any, _ src: Any) {
         self.raw("\(inst.rawValue) \(dst), \(src)")
     }
-    
+
     func globalLabel(_ label: String) {
         self.raw("\(label):")
     }
@@ -228,19 +228,19 @@ class NasmX64Builder {
     func mov(_ dst: Reg, _ src: SystemCall) {
         self.inst(.mov, dst, src.rawValue)
     }
-    
+
     func mov(_ dst: Reg, _ src: Int) {
         self.inst(.mov, dst, src)
     }
-    
+
     func add(_ dst: Reg, _ src: Reg) {
         self.inst(.add, dst, src)
     }
-    
+
     func add(_ dst: Reg, _ src: Int) {
         self.inst(.add, dst, src)
     }
-    
+
     func add(_ dst: Reg, _ src: String) {
         self.inst(.add, dst, src)
     }
@@ -260,15 +260,15 @@ class NasmX64Builder {
     func and(_ dst: Reg, _ src: Int) {
         self.inst(.and, dst, src)
     }
-    
+
     func xor(_ dst: Reg, _ src: Reg) {
         self.inst(.xor, dst, src)
     }
-    
+
     func jmp(_ label: String) {
         self.raw("\(Inst.jmp) \(label)")
     }
-    
+
     func call(_ label: String) {
         self.raw("\(Inst.call) \(label)")
     }
