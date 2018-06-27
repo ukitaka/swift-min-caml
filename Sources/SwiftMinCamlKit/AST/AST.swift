@@ -7,7 +7,7 @@
 
 import Tagged
 
-/// Var
+/// ID
 public enum IDTag {}
 
 public typealias ID = Tagged<IDTag, String>
@@ -17,6 +17,19 @@ public extension Tagged where Tag == IDTag, RawValue == String {
     static func fromString(_ str: String) -> ID {
         return Var(stringLiteral: str)
     }
+}
+
+/// TypedVar
+public struct TypedVar: Hashable {
+    var name: ID
+    var type: Type
+}
+
+/// FuncDef
+public struct FuncDef: Hashable {
+    var name: TypedVar
+    var args: [TypedVar]
+    var body: Expr
 }
 
 /// Expressions
@@ -38,9 +51,9 @@ public indirect enum Expr: AutoTyped, AutoHashable, AutoEquatable {
     case eq(lhs: Expr, rhs: Expr)   // ==
     case le(lhs: Expr, rhs: Expr)   // <
     case `if`(cond: Expr, ifTrue:Expr, ifFalse:Expr)
-    case `let`(name: Var, bind: Expr, body: Expr)
+    case `let`(name: TypedVar, bind: Expr, body: Expr)
     case `var`(name: Var)
-    case letRec(name: Var, args: [Var], bind: Expr, body: Expr)
+    case letRec(funcDecl: FuncDef, bind: Expr)
     case app(function: ID, args: [Expr])
     case tuple(elements: [Expr])
     case letTuple(vars: [Var], binding: Expr, body: Expr)
