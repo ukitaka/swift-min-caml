@@ -25,17 +25,26 @@ enum Typing {
     private static func unify(typedExpr: TypedExpr) -> TypedExpr {
         switch typedExpr {
         case let .const(const, type):
-            precondition(!type.isTypeVar)
-            return .const(const: const, type: type)
+            precondition(type.isTypeVar)
+            return .const(const: const, type: typed(const: const))
         case let .arithOps(ops, args, type):
+            guard type.isTypeVar else { return typedExpr }
             let lhs = unify(typedExpr: args.first!)
             let rhs = unify(typedExpr: args.last!)
-            let concreteType = unifyBinaryOpsType(lhs: lhs.type, rhs: rhs.type)
+            let concreteType = unify(lhs: lhs.type, rhs: rhs.type)
             return .arithOps(ops: ops,
                              args: [lhs.typed(type: concreteType), rhs.typed(type: concreteType)],
                              type: concreteType)
         case let .`if`(cond, ifTrue, ifFalse, type):
-            fatalError()
+            guard type.isTypeVar else { return typedExpr }
+            let c = unify(typedExpr: cond)
+            let t = unify(typedExpr: ifTrue)
+            let f = unify(typedExpr: ifFalse)
+            let concreteType = unify(lhs: t.type, rhs: f.type)
+            return .if(cond: c.typed(type: .bool),
+                       ifTrue: t.typed(type: concreteType),
+                       ifFalse: f.typed(type: concreteType),
+                       type: concreteType)
         case let .`let`(varName, bind, body, type):
             fatalError()
         case let .`var`(variable, type):
@@ -57,7 +66,7 @@ enum Typing {
         }
     }
     
-    private static func unifyBinaryOpsType(lhs: Type, rhs: Type) -> Type {
+    private static func unify(lhs: Type, rhs: Type) -> Type {
         switch (lhs, rhs) {
         case (.int, .int):
             return .int
@@ -82,7 +91,7 @@ enum Typing {
         }
     }
     
-    static func type(const: Const) -> Type {
+    static func typed(const: Const) -> Type {
         switch const {
         case .bool:
             return .bool
