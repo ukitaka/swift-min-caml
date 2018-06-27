@@ -16,7 +16,8 @@ public struct Driver {
             try! parser.consume(token: t, code: c)
         }
         let expr = try! parser.endParsing()
-        let output = CodeGen().gen(expr: expr)
+        let typedExpr = Typing.type(expr: expr)
+        let output = CodeGen().gen(expr: typedExpr.untyped())
         return output
     }
 }

@@ -99,7 +99,7 @@ enum Typing {
         }
     }
     
-    static func typed(const: Const) -> Type {
+    private static func typed(const: Const) -> Type {
         switch const {
         case .bool:
             return .bool
