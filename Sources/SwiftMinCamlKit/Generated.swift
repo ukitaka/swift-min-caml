@@ -806,35 +806,65 @@ public extension TypedExpr {
                 return .writeArray(array: array.untyped(), index: index.untyped(), value: value.untyped())
         }
     }
+
+
+    func typed(type: Type) -> TypedExpr {
+        switch self {
+        case let .const(const, _):
+            return .const(const:const, type: type)
+        case let .arithOps(ops,args, _):
+            return .arithOps(ops:ops, args:args, type: type)
+        case let .`if`(cond,ifTrue,ifFalse, _):
+            return .`if`(cond:cond, ifTrue:ifTrue, ifFalse:ifFalse, type: type)
+        case let .`let`(varName,bind,body, _):
+            return .`let`(varName:varName, bind:bind, body:body, type: type)
+        case let .`var`(variable, _):
+            return .`var`(variable:variable, type: type)
+        case let .letRec(name,args,bind,body, _):
+            return .letRec(name:name, args:args, bind:bind, body:body, type: type)
+        case let .apply(function,args, _):
+            return .apply(function:function, args:args, type: type)
+        case let .tuple(elements, _):
+            return .tuple(elements:elements, type: type)
+        case let .readTuple(vars,bindings,body, _):
+            return .readTuple(vars:vars, bindings:bindings, body:body, type: type)
+        case let .createArray(size,element, _):
+            return .createArray(size:size, element:element, type: type)
+        case let .readArray(array,index, _):
+            return .readArray(array:array, index:index, type: type)
+        case let .writeArray(array,index,value, _):
+            return .writeArray(array:array, index:index, value:value, type: type)
+        }
+    }
 }
 
 public extension Expr {
     func constraintTyping() -> TypedExpr {
         switch self {
-        case let .const(const):
+            case let .const(const):
             return .const(const: const, type: Typing.type(const: const))
             case let .arithOps(ops, args):
-                return .arithOps(ops: ops, args: args.map { $0.constraintTyping() }, type: Type.newTypeVar())
+            return .arithOps(ops: ops, args: args.map { $0.constraintTyping() }, type: Type.newTypeVar())
             case let .`if`(cond, ifTrue, ifFalse):
-                return .`if`(cond: cond.constraintTyping(), ifTrue: ifTrue.constraintTyping(), ifFalse: ifFalse.constraintTyping(), type: Type.newTypeVar())
+            return .`if`(cond: cond.constraintTyping(), ifTrue: ifTrue.constraintTyping(), ifFalse: ifFalse.constraintTyping(), type: Type.newTypeVar())
             case let .`let`(varName, bind, body):
-                return .`let`(varName: varName, bind: bind.constraintTyping(), body: body.constraintTyping(), type: Type.newTypeVar())
+            return .`let`(varName: varName, bind: bind.constraintTyping(), body: body.constraintTyping(), type: Type.newTypeVar())
             case let .`var`(variable):
-                return .`var`(variable: variable, type: Type.newTypeVar())
+            return .`var`(variable: variable, type: Type.newTypeVar())
             case let .letRec(name, args, bind, body):
-                return .letRec(name: name, args: args, bind: bind.constraintTyping(), body: body.constraintTyping(), type: Type.newTypeVar())
+            return .letRec(name: name, args: args, bind: bind.constraintTyping(), body: body.constraintTyping(), type: Type.newTypeVar())
             case let .apply(function, args):
-                return .apply(function: function, args: args.map { $0.constraintTyping() }, type: Type.newTypeVar())
+            return .apply(function: function, args: args.map { $0.constraintTyping() }, type: Type.newTypeVar())
             case let .tuple(elements):
-                return .tuple(elements: elements.map { $0.constraintTyping() }, type: Type.newTypeVar())
+            return .tuple(elements: elements.map { $0.constraintTyping() }, type: Type.newTypeVar())
             case let .readTuple(vars, bindings, body):
-                return .readTuple(vars: vars, bindings: bindings.constraintTyping(), body: body.constraintTyping(), type: Type.newTypeVar())
+            return .readTuple(vars: vars, bindings: bindings.constraintTyping(), body: body.constraintTyping(), type: Type.newTypeVar())
             case let .createArray(size, element):
-                return .createArray(size: size.constraintTyping(), element: element.constraintTyping(), type: Type.newTypeVar())
+            return .createArray(size: size.constraintTyping(), element: element.constraintTyping(), type: Type.newTypeVar())
             case let .readArray(array, index):
-                return .readArray(array: array.constraintTyping(), index: index.constraintTyping(), type: Type.newTypeVar())
+            return .readArray(array: array.constraintTyping(), index: index.constraintTyping(), type: Type.newTypeVar())
             case let .writeArray(array, index, value):
-                return .writeArray(array: array.constraintTyping(), index: index.constraintTyping(), value: value.constraintTyping(), type: Type.newTypeVar())
+            return .writeArray(array: array.constraintTyping(), index: index.constraintTyping(), value: value.constraintTyping(), type: Type.newTypeVar())
         }
     }
 }
