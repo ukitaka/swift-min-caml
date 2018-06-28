@@ -17,33 +17,35 @@ class Parser: CitronParser {
     typealias CitronRuleNumber = UInt8
 
     enum CitronTokenCode: CitronSymbolCode {
-        case ADD = 1
-        case SUB = 2
-        case MUL = 3
-        case DIV = 4
-        case L_PAREN = 5
-        case R_PAREN = 6
-        case BOOL = 7
-        case INT = 8
-        case FLOAT = 9
-        case IDENTIFIER = 10
-        case DOT = 11
-        case NOT = 12
-        case MINUS = 13
-        case EQUAL = 14
-        case LESS_GREATER = 15
-        case LESS = 16
-        case GREATER = 17
-        case LESS_EQUAL = 18
-        case GREATER_EQUAL = 19
-        case IF = 20
-        case THEN = 21
-        case ELSE = 22
-        case F_MINUS = 23
-        case F_ADD = 24
-        case F_SUB = 25
-        case F_MUL = 26
-        case F_DIV = 27
+        case IN = 1
+        case LET = 2
+        case SEMICOLON = 3
+        case IF = 4
+        case COMMA = 5
+        case EQUAL = 6
+        case LESS_GREATER = 7
+        case LESS = 8
+        case GREATER = 9
+        case LESS_EQUAL = 10
+        case GREATER_EQUAL = 11
+        case ADD = 12
+        case SUB = 13
+        case F_ADD = 14
+        case F_SUB = 15
+        case F_MUL = 16
+        case F_DIV = 17
+        case MINUS = 18
+        case F_MINUS = 19
+        case DOT = 20
+        case L_PAREN = 21
+        case R_PAREN = 22
+        case BOOL = 23
+        case INT = 24
+        case FLOAT = 25
+        case IDENTIFIER = 26
+        case NOT = 27
+        case THEN = 28
+        case ELSE = 29
     }
 
     typealias CitronToken = Token
@@ -58,71 +60,65 @@ class Parser: CitronParser {
 
     // Counts
 
-    let yyNumberOfSymbols: Int = 32
-    let yyNumberOfStates: Int = 44
+    let yyNumberOfSymbols: Int = 34
+    let yyNumberOfStates: Int = 40
 
     // Action tables
 
     let yyLookaheadAction: [(CitronSymbolCode, CitronParsingAction)] = [
-        /*   0 */ (1, .SH(20)), (2, .SH(19)), (28, .ACCEPT), (29, .SH(25)), (30, .SH(43)),
-        /*   5 */ (29, .SH(24)), (30, .SH(43)), (29, .SH(28)), (30, .SH(43)), (29, .SH(29)),
-        /*  10 */ (30, .SH(43)), (29, .SH(21)), (30, .SH(43)), (14, .SH(17)), (15, .SH(15)),
-        /*  15 */ (16, .SH(13)), (17, .SH(12)), (18, .SH(11)), (19, .SH(10)), (1, .SH(20)),
-        /*  20 */ (2, .SH(19)), (22, .SH(3)), (5, .SH(18)), (24, .SH(9)), (25, .SH(8)),
-        /*  25 */ (26, .SH(7)), (27, .SH(6)), (29, .SH(22)), (30, .SH(43)), (29, .SH(30)),
-        /*  30 */ (30, .SH(43)), (11, .SH(42)), (14, .SH(17)), (15, .SH(15)), (16, .SH(13)),
-        /*  35 */ (17, .SH(12)), (18, .SH(11)), (19, .SH(10)), (32, .RD(2)), (21, .SH(4)),
-        /*  40 */ (29, .SH(31)), (30, .SH(43)), (24, .SH(9)), (25, .SH(8)), (26, .SH(7)),
-        /*  45 */ (27, .SH(6)), (1, .SH(20)), (2, .SH(19)), (29, .SH(32)), (30, .SH(43)),
-        /*  50 */ (32, .RD(2)), (6, .SR(7)), (32, .RD(2)), (29, .SH(33)), (30, .SH(43)),
-        /*  55 */ (29, .SH(34)), (30, .SH(43)), (29, .SH(35)), (30, .SH(43)), (14, .SH(17)),
-        /*  60 */ (15, .SH(15)), (16, .SH(13)), (17, .SH(12)), (18, .SH(11)), (19, .SH(10)),
-        /*  65 */ (29, .SH(36)), (30, .SH(43)), (29, .SH(37)), (30, .SH(43)), (24, .SH(9)),
-        /*  70 */ (25, .SH(8)), (26, .SH(7)), (27, .SH(6)), (1, .SH(20)), (2, .SH(19)),
-        /*  75 */ (29, .SH(38)), (30, .SH(43)), (32, .RD(2)), (6, .SR(1)), (29, .SH(27)),
-        /*  80 */ (30, .SH(43)), (29, .SH(39)), (30, .SH(43)), (29, .SH(26)), (30, .SH(43)),
-        /*  85 */ (32, .RD(2)), (14, .SH(17)), (15, .SH(15)), (16, .SH(13)), (17, .SH(12)),
-        /*  90 */ (18, .SH(11)), (19, .SH(10)), (0, .RD(0)), (1, .SH(20)), (2, .SH(19)),
-        /*  95 */ (32, .RD(2)), (24, .SH(9)), (25, .SH(8)), (26, .SH(7)), (27, .SH(6)),
-        /* 100 */ (29, .SH(23)), (30, .SH(43)), (29, .SH(41)), (30, .SH(43)), (29, .SH(40)),
-        /* 105 */ (30, .SH(43)), (14, .SH(17)), (15, .SH(15)), (16, .SH(13)), (17, .SH(12)),
-        /* 110 */ (18, .SH(11)), (19, .SH(10)), (1, .SH(20)), (2, .SH(19)), (32, .RD(2)),
-        /* 115 */ (32, .RD(2)), (24, .SH(9)), (25, .SH(8)), (26, .SH(7)), (27, .SH(6)),
-        /* 120 */ (32, .RD(2)), (32, .RD(2)), (32, .RD(2)), (32, .RD(2)), (32, .RD(2)),
-        /* 125 */ (14, .SH(17)), (15, .SH(15)), (16, .SH(13)), (17, .SH(12)), (18, .SH(11)),
-        /* 130 */ (19, .SH(10)), (32, .RD(2)), (32, .RD(2)), (32, .RD(2)), (32, .RD(2)),
-        /* 135 */ (24, .SH(9)), (25, .SH(8)), (26, .SH(7)), (27, .SH(6)), (32, .RD(2)),
-        /* 140 */ (32, .RD(2)), (5, .SH(1)), (6, .SR(2)), (7, .SR(3)), (8, .SR(4)),
-        /* 145 */ (9, .SR(5)), (10, .SR(6)), (32, .RD(2)), (12, .SH(16)), (13, .SH(14)),
-        /* 150 */ (32, .RD(2)), (32, .RD(2)), (32, .RD(2)), (32, .RD(2)), (32, .RD(2)),
-        /* 155 */ (32, .RD(2)), (20, .SH(5)), (32, .RD(2)), (32, .RD(2)), (23, .SH(2)),
-        /* 160 */ (14, .SH(17)), (15, .SH(15)), (16, .SH(13)), (17, .SH(12)), (18, .SH(11)),
-        /* 165 */ (19, .SH(10)), (32, .RD(2)), (32, .RD(2)), (32, .RD(2)), (32, .RD(2)),
-        /* 170 */ (24, .SH(9)), (25, .SH(8)), (26, .SH(7)), (27, .SH(6)), (32, .RD(2)),
-        /* 175 */ (32, .RD(2)), (5, .SH(1)), (32, .RD(2)), (7, .SR(3)), (8, .SR(4)),
-        /* 180 */ (9, .SR(5)), (10, .SR(6)), (32, .RD(2)), (12, .SH(16)), (13, .SH(14)),
-        /* 185 */ (32, .RD(2)), (32, .RD(2)), (32, .RD(2)), (32, .RD(2)), (32, .RD(2)),
-        /* 190 */ (32, .RD(2)), (20, .SH(5)), (32, .RD(2)), (32, .RD(2)), (23, .SH(2)),
+        /*   0 */ (6, .SH(17)), (7, .SH(15)), (8, .SH(13)), (9, .SH(12)), (10, .SH(11)),
+        /*   5 */ (11, .SH(10)), (12, .SH(20)), (13, .SH(19)), (14, .SH(9)), (15, .SH(8)),
+        /*  10 */ (16, .SH(7)), (17, .SH(6)), (12, .SH(20)), (13, .SH(19)), (14, .SH(9)),
+        /*  15 */ (15, .SH(8)), (16, .SH(7)), (17, .SH(6)), (30, .ACCEPT), (31, .SH(25)),
+        /*  20 */ (32, .SH(39)), (31, .SH(24)), (32, .SH(39)), (29, .SH(3)), (31, .RD(20)),
+        /*  25 */ (32, .SH(39)), (31, .SH(26)), (32, .SH(39)), (31, .SH(21)), (32, .SH(39)),
+        /*  30 */ (6, .SH(17)), (7, .SH(15)), (8, .SH(13)), (9, .SH(12)), (10, .SH(11)),
+        /*  35 */ (11, .SH(10)), (12, .SH(20)), (13, .SH(19)), (14, .SH(9)), (15, .SH(8)),
+        /*  40 */ (16, .SH(7)), (17, .SH(6)), (31, .SH(22)), (32, .SH(39)), (31, .RD(24)),
+        /*  45 */ (32, .SH(39)), (31, .RD(23)), (32, .SH(39)), (31, .SH(36)), (32, .SH(39)),
+        /*  50 */ (31, .SH(37)), (32, .SH(39)), (28, .SH(4)), (31, .SH(30)), (32, .SH(39)),
+        /*  55 */ (21, .SH(18)), (31, .SH(31)), (32, .SH(39)), (20, .SH(38)), (6, .SH(17)),
+        /*  60 */ (7, .SH(15)), (8, .SH(13)), (9, .SH(12)), (10, .SH(11)), (11, .SH(10)),
+        /*  65 */ (12, .SH(20)), (13, .SH(19)), (14, .SH(9)), (15, .SH(8)), (16, .SH(7)),
+        /*  70 */ (17, .SH(6)), (31, .SH(32)), (32, .SH(39)), (31, .SH(33)), (32, .SH(39)),
+        /*  75 */ (22, .SR(7)), (6, .SH(17)), (7, .SH(15)), (8, .SH(13)), (9, .SH(12)),
+        /*  80 */ (10, .SH(11)), (11, .SH(10)), (12, .SH(20)), (13, .SH(19)), (14, .SH(9)),
+        /*  85 */ (15, .SH(8)), (16, .SH(7)), (17, .SH(6)), (0, .RD(0)), (31, .RD(10)),
+        /*  90 */ (32, .SH(39)), (34, .RD(2)), (22, .SR(1)), (34, .RD(2)), (6, .SH(17)),
+        /*  95 */ (7, .SH(15)), (8, .SH(13)), (9, .SH(12)), (10, .SH(11)), (11, .SH(10)),
+        /* 100 */ (12, .SH(20)), (13, .SH(19)), (14, .SH(9)), (15, .SH(8)), (16, .SH(7)),
+        /* 105 */ (17, .SH(6)), (6, .SH(17)), (7, .SH(15)), (8, .SH(13)), (9, .SH(12)),
+        /* 110 */ (10, .SH(11)), (11, .SH(10)), (12, .SH(20)), (13, .SH(19)), (14, .SH(9)),
+        /* 115 */ (15, .SH(8)), (16, .SH(7)), (17, .SH(6)), (4, .SH(5)), (34, .RD(2)),
+        /* 120 */ (31, .SH(29)), (32, .SH(39)), (31, .SH(27)), (32, .SH(39)), (31, .SH(28)),
+        /* 125 */ (32, .SH(39)), (31, .SH(23)), (32, .SH(39)), (31, .SH(35)), (32, .SH(39)),
+        /* 130 */ (31, .SH(34)), (32, .SH(39)), (18, .SH(14)), (19, .SH(2)), (34, .RD(2)),
+        /* 135 */ (21, .SH(1)), (22, .SR(2)), (23, .SR(3)), (24, .SR(4)), (25, .SR(5)),
+        /* 140 */ (26, .SR(6)), (27, .SH(16)), (4, .SH(5)), (16, .SH(7)), (17, .SH(6)),
+        /* 145 */ (34, .RD(2)), (34, .RD(2)), (34, .RD(2)), (34, .RD(2)), (34, .RD(2)),
+        /* 150 */ (34, .RD(2)), (34, .RD(2)), (34, .RD(2)), (34, .RD(2)), (34, .RD(2)),
+        /* 155 */ (34, .RD(2)), (18, .SH(14)), (19, .SH(2)), (34, .RD(2)), (21, .SH(1)),
+        /* 160 */ (34, .RD(2)), (23, .SR(3)), (24, .SR(4)), (25, .SR(5)), (26, .SR(6)),
+        /* 165 */ (27, .SH(16)),
     ]
 
-    let yyShiftUseDefault: Int = 195
-    let yyShiftOffsetMin: Int = -1
-    let yyShiftOffsetMax: Int = 171
+    let yyShiftUseDefault: Int = 166
+    let yyShiftOffsetMin: Int = -6
+    let yyShiftOffsetMax: Int = 138
     let yyShiftOffset: [Int] = [
-        /*     0 */ 171, 136, 171, 171, 171, 171, 171, 171, 171, 171,
-        /*    10 */ 171, 171, 171, 171, 171, 171, 171, 171, 171, 171,
-        /*    20 */ 171, -1, 18, 45, 72, 92, 111, 111, 111, 111,
-        /*    30 */ 111, 111, 111, 111, 111, 111, 111, 111, 111, 111,
-        /*    40 */ 146, 146, 17, 20,
+        /*     0 */ 138, 114, 138, 138, 138, 138, 138, 138, 138, 138,
+        /*    10 */ 138, 138, 138, 138, 138, 138, 138, 138, 138, 138,
+        /*    20 */ 138, -6, 24, 53, 70, 88, 100, 100, 0, 0,
+        /*    30 */ 0, 0, 0, 0, 127, 127, 127, 127, 34, 38,
     ]
 
-    let yyReduceUseDefault: Int = -27
-    let yyReduceOffsetMin: Int = -26
-    let yyReduceOffsetMax: Int = 75
+    let yyReduceUseDefault: Int = -13
+    let yyReduceOffsetMin: Int = -12
+    let yyReduceOffsetMax: Int = 99
     let yyReduceOffset: [Int] = [
-        /*     0 */ -26, -24, -22, -20, -18, -2, 0, 11, 19, 24,
-        /*    10 */ 26, 28, 36, 38, 46, 50, 52, 54, 71, 73,
-        /*    20 */ 75,
+        /*     0 */ -12, -10, -7, -5, -3, 11, 13, 15, 17, 19,
+        /*    10 */ 22, 25, 40, 42, 58, 89, 91, 93, 95, 97,
+        /*    20 */ 99,
     ]
 
     let yyDefaultAction: [CitronParsingAction] = [
@@ -131,10 +127,9 @@ class Parser: CitronParser {
         /*    10 */ .ERROR, .ERROR, .ERROR, .ERROR, .ERROR,
         /*    15 */ .ERROR, .ERROR, .ERROR, .ERROR, .ERROR,
         /*    20 */ .ERROR, .ERROR, .ERROR, .ERROR, .ERROR,
-        /*    25 */ .ERROR, .RD(13), .RD(14), .RD(20), .RD(19),
-        /*    30 */ .RD(24), .RD(23), .RD(22), .RD(21), .RD(18),
-        /*    35 */ .RD(17), .RD(16), .RD(15), .RD(10), .RD(9),
-        /*    40 */ .RD(11), .RD(12), .ERROR, .RD(8),
+        /*    25 */ .ERROR, .RD(19), .RD(9), .RD(13), .RD(14),
+        /*    30 */ .RD(18), .RD(17), .RD(16), .RD(15), .RD(11),
+        /*    35 */ .RD(12), .RD(22), .RD(21), .ERROR, .RD(8),
     ]
 
     // Fallback
@@ -149,31 +144,31 @@ class Parser: CitronParser {
     // Rules
 
     let yyRuleInfo: [(lhs: CitronSymbolCode, nrhs: UInt)] = [
-        (lhs: 28, nrhs: 1),
-        (lhs: 30, nrhs: 3),
-        (lhs: 30, nrhs: 2),
         (lhs: 30, nrhs: 1),
-        (lhs: 30, nrhs: 1),
-        (lhs: 30, nrhs: 1),
-        (lhs: 30, nrhs: 1),
-        (lhs: 30, nrhs: 5),
-        (lhs: 29, nrhs: 1),
-        (lhs: 29, nrhs: 2),
-        (lhs: 29, nrhs: 2),
-        (lhs: 29, nrhs: 3),
-        (lhs: 29, nrhs: 3),
-        (lhs: 29, nrhs: 3),
-        (lhs: 29, nrhs: 3),
-        (lhs: 29, nrhs: 3),
-        (lhs: 29, nrhs: 3),
-        (lhs: 29, nrhs: 3),
-        (lhs: 29, nrhs: 3),
-        (lhs: 29, nrhs: 6),
-        (lhs: 29, nrhs: 2),
-        (lhs: 29, nrhs: 3),
-        (lhs: 29, nrhs: 3),
-        (lhs: 29, nrhs: 3),
-        (lhs: 29, nrhs: 3),
+        (lhs: 32, nrhs: 3),
+        (lhs: 32, nrhs: 2),
+        (lhs: 32, nrhs: 1),
+        (lhs: 32, nrhs: 1),
+        (lhs: 32, nrhs: 1),
+        (lhs: 32, nrhs: 1),
+        (lhs: 32, nrhs: 5),
+        (lhs: 31, nrhs: 1),
+        (lhs: 31, nrhs: 2),
+        (lhs: 31, nrhs: 2),
+        (lhs: 31, nrhs: 3),
+        (lhs: 31, nrhs: 3),
+        (lhs: 31, nrhs: 3),
+        (lhs: 31, nrhs: 3),
+        (lhs: 31, nrhs: 3),
+        (lhs: 31, nrhs: 3),
+        (lhs: 31, nrhs: 3),
+        (lhs: 31, nrhs: 3),
+        (lhs: 31, nrhs: 6),
+        (lhs: 31, nrhs: 2),
+        (lhs: 31, nrhs: 3),
+        (lhs: 31, nrhs: 3),
+        (lhs: 31, nrhs: 3),
+        (lhs: 31, nrhs: 3),
     ]
 
     // Stack
@@ -186,14 +181,15 @@ class Parser: CitronParser {
 
     var isTracingEnabled: Bool = false
     let yySymbolName: [String] = [
-        "$", "ADD", "SUB", "MUL",
-        "DIV", "L_PAREN", "R_PAREN", "BOOL",
-        "INT", "FLOAT", "IDENTIFIER", "DOT",
-        "NOT", "MINUS", "EQUAL", "LESS_GREATER",
+        "$", "IN", "LET", "SEMICOLON",
+        "IF", "COMMA", "EQUAL", "LESS_GREATER",
         "LESS", "GREATER", "LESS_EQUAL", "GREATER_EQUAL",
-        "IF", "THEN", "ELSE", "F_MINUS",
-        "F_ADD", "F_SUB", "F_MUL", "F_DIV",
-        "root", "expr", "simple_expr", "var",
+        "ADD", "SUB", "F_ADD", "F_SUB",
+        "F_MUL", "F_DIV", "MINUS", "F_MINUS",
+        "DOT", "L_PAREN", "R_PAREN", "BOOL",
+        "INT", "FLOAT", "IDENTIFIER", "NOT",
+        "THEN", "ELSE", "root", "expr",
+        "simple_expr", "var",
     ]
     let yyRuleText: [String] = [
         /*   0 */ "root ::= expr(e)",

@@ -15,8 +15,16 @@
 
 // Associativity and precedences
 
-%left_associative ADD SUB.
-%left_associative MUL DIV.
+%nonassociative IN.
+%right_associative LET.
+%right_associative SEMICOLON.
+%right_associative IF.
+%left_associative COMMA.
+%left_associative EQUAL LESS_GREATER LESS GREATER LESS_EQUAL GREATER_EQUAL.
+%left_associative ADD SUB F_ADD F_SUB.
+%left_associative F_MUL F_DIV.
+%right_associative MINUS F_MINUS.
+%left_associative DOT.
 
 // Grammar rules
 
