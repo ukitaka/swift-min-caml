@@ -19,8 +19,9 @@ extension Type {
 typealias Env = [Var: Type]
 
 enum Typing {
-    static func type(env: Env, expr: inout Expr) -> Type {
-        return typeInfer(env: env, expr: &expr)
+    static func type(env: Env, expr: Expr) -> (Expr, Type) {
+        let (substitution, type) = typeInfer(env: env, expr: expr)
+        return (expr.apply(substitution), type.apply(substitution))
     }
     
     private static func mostGeneralUnifier(_ type1: Type, _ type2: Type) -> Substitution {
@@ -52,83 +53,77 @@ enum Typing {
         }
     }
     
-    @discardableResult
-    private static func unify(env: Env, expr: inout Expr, type: Type) -> Type {
-        let t = typeInfer(env: env, expr: &expr)
-        let s = mostGeneralUnifier(type, t)
-        return t.apply(s)
+    private static func typeInfer(env: Env, expr: Expr, preferredType: Type) -> (Substitution, Type) {
+        let (subsutitution, inferredType) = typeInfer(env: env, expr: expr)
+        let s = subsutitution.merging(other: mostGeneralUnifier(preferredType, inferredType.apply(subsutitution)))
+        return (s, inferredType.apply(s))
     }
     
-    @discardableResult
-    private static func unify(env: Env, lhs: inout Expr, rhs: inout Expr) -> Type {
-        let l = typeInfer(env: env, expr: &lhs)
-        let r = typeInfer(env: env, expr: &rhs)
-        let s = mostGeneralUnifier(l, r)
-        return l.apply(s) // or r.apply(s)
+    private static func typeInfer(env: Env, lhs: Expr, rhs: Expr, preferredType: Type) -> (Substitution, Type) {
+        let (ls, lt) = typeInfer(env: env, expr: lhs, preferredType: preferredType)
+        let (rs, rt) = typeInfer(env: env, expr: rhs, preferredType: preferredType)
+        let s = mostGeneralUnifier(lt, rt).merging(other: ls).merging(other: rs)
+        precondition(lt.apply(s) == rt.apply(s) && rt.apply(s) == preferredType)
+        return (s, lt.apply(s))
     }
 
-    private static func typeInfer(env: Env, expr: inout Expr) -> Type {
+    private static func typeInfer(env: Env, lhs: Expr, rhs: Expr) -> (Substitution, Type) {
+        let (ls, lt) = typeInfer(env: env, expr: lhs)
+        let (rs, rt) = typeInfer(env: env, expr: rhs)
+        let s = mostGeneralUnifier(lt, rt).merging(other: ls).merging(other: rs)
+        precondition(lt.apply(s) == rt.apply(s))
+        return (s, lt.apply(s))
+    }
+
+    private static func typeInfer(env: Env, expr: Expr) -> (Substitution, Type) {
         switch expr {
         case .unit:
-            return .unit
+            return (Substitution(), .unit)
         case .bool:
-            return .bool
+            return (Substitution(), .bool)
         case .int:
-            return .int
+            return (Substitution(), .int)
         case .float:
-            return .float
-        case var .not(op: op):
-            return unify(env: env, expr: &op, type: .bool)
-        case var .neg(op: op):
-            return unify(env: env, expr: &op, type: .int)
-        case var .add(lhs: lhs, rhs: rhs):
-            unify(env: env, expr: &lhs, type: .int)
-            unify(env: env, expr: &rhs, type: .int)
-            return .int
-        case var .sub(lhs: lhs, rhs: rhs):
-            unify(env: env, expr: &lhs, type: .int)
-            unify(env: env, expr: &rhs, type: .int)
-            return .int
-        case var .fneg(op: op):
-            return unify(env: env, expr: &op, type: .float)
-        case var .fadd(lhs: lhs, rhs: rhs):
-            unify(env: env, expr: &lhs, type: .float)
-            unify(env: env, expr: &rhs, type: .float)
-            return .float
-        case var .fsub(lhs: lhs, rhs: rhs):
-            unify(env: env, expr: &lhs, type: .float)
-            unify(env: env, expr: &rhs, type: .float)
-            return .float
-        case var .fmul(lhs: lhs, rhs: rhs):
-            unify(env: env, expr: &lhs, type: .float)
-            unify(env: env, expr: &rhs, type: .float)
-            return .float
-        case var .fdiv(lhs: lhs, rhs: rhs):
-            unify(env: env, expr: &lhs, type: .float)
-            unify(env: env, expr: &rhs, type: .float)
-            return .float
-        case var .eq(lhs: lhs, rhs: rhs):
-             unify(env: env, lhs: &lhs, rhs: &rhs)
-            return .bool
-        case var .le(lhs: lhs, rhs: rhs): //MEMO: need to check lhs/rhs are both number.
-            unify(env: env, lhs: &lhs, rhs: &rhs)
-            return .bool
-        case var .if(cond, ifTrue, ifFalse):
-            unify(env: env, expr: &cond, type: .bool)
-            return unify(env: env, lhs: &ifTrue, rhs: &ifFalse)
-        case .let(let name, var bind, var body):
-            let bindType = unify(env: env, expr: &bind, type: name.type)
+            return (Substitution(), .float)
+        case let .not(op: op):
+            return typeInfer(env: env, expr: op, preferredType: .bool)
+        case let .neg(op: op):
+            return typeInfer(env: env, expr: op, preferredType: .int)
+        case let .add(lhs: lhs, rhs: rhs):
+            return typeInfer(env: env, lhs: lhs, rhs: rhs, preferredType: .int)
+        case let .sub(lhs: lhs, rhs: rhs):
+            return typeInfer(env: env, lhs: lhs, rhs: rhs, preferredType: .int)
+        case let .fneg(op: op):
+            return typeInfer(env: env, expr: op, preferredType: .int)
+        case let .fadd(lhs: lhs, rhs: rhs):
+            return typeInfer(env: env, lhs: lhs, rhs: rhs, preferredType: .int)
+        case let .fsub(lhs: lhs, rhs: rhs):
+            return typeInfer(env: env, lhs: lhs, rhs: rhs, preferredType: .int)
+        case let .fmul(lhs: lhs, rhs: rhs):
+            return typeInfer(env: env, lhs: lhs, rhs: rhs, preferredType: .int)
+        case let .fdiv(lhs: lhs, rhs: rhs):
+            return typeInfer(env: env, lhs: lhs, rhs: rhs, preferredType: .int)
+        case let .eq(lhs: lhs, rhs: rhs):
+            return typeInfer(env: env, lhs: lhs, rhs: rhs)
+        case let .le(lhs: lhs, rhs: rhs): //MEMO: need to check lhs/rhs are both number.
+            return typeInfer(env: env, lhs: lhs, rhs: rhs)
+        case let .if(cond, ifTrue, ifFalse):
+            let (s1, _) = typeInfer(env: env, expr: cond, preferredType: .bool)
+            let (s2, t2) = typeInfer(env: env, lhs: ifTrue, rhs: ifFalse)
+            let s = s1.merging(other: s2)
+            return (s, t2.apply(s))
+        case let .let(name, bind, body):
+            let (bis, bit) = typeInfer(env: env, expr: bind)
             var env = env
-            env.updateValue(bindType, forKey: name.name)
-            let bodyType = typeInfer(env: env, expr: &body)
-            // update expr
-            expr = .let(name: name.assign(type: bindType), bind: bind, body: body)
-            return bodyType
+            env.updateValue(bit, forKey: name.name)
+            let (bos, bot) = typeInfer(env: env, expr: body)
+            let s = bis.merging(other: bos)
+            return (s, bot.apply(s))
         case let .var(name: name):
             guard let type = env[name] else {
                 fatalError("Uknown value: \(name)")
             }
-            return type
+            return (Substitution(), type)
         case .letRec: // .letRec(funcDef: funcDef, body: body):
             fatalError("not implemented yet")
         case .app: // var .app(function: function, args: args):

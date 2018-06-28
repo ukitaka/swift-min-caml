@@ -15,10 +15,10 @@ public struct Driver {
         try! lexer.tokenize(input) { (t, c) in
             try! parser.consume(token: t, code: c)
         }
-        var expr = try! parser.endParsing()
-        let type = Typing.type(env: [:], expr: &expr)
+        let expr = try! parser.endParsing()
+        let (checkedExpr, type) = Typing.type(env: [:], expr: expr)
         print(type)
-        let output = CodeGen().gen(expr: expr)
+        let output = CodeGen().gen(expr: checkedExpr)
         return output
     }
 }
