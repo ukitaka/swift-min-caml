@@ -104,6 +104,10 @@ expr ::= expr(lhs) GREATER_EQUAL expr(rhs). {
     return .le(lhs: rhs, rhs: lhs)
 }
 
+expr ::= IF expr(a) THEN expr(b) ELSE expr(c). {
+    return .if(cond: a, ifTrue:b, ifFalse:c)
+}
+
 expr ::= expr(lhs) MUL expr(rhs). {
     return .sub(lhs: lhs, rhs: rhs)
 }

@@ -33,10 +33,10 @@ let lexer = Lexer(rules: [
     .string("if", (.keyword, .IF)),
     .string("then", (.keyword, .THEN)),
     .string("else", (.keyword, .ELSE)),
-    .string("let", (.keyword, .LET)),
-    .string("rec", (.keyword, .REC)),
-    .string("in", (.keyword, .IN)),
-    .string("Array.create", (.keyword, .ARRAY_CREATE)),
+//    .string("let", (.keyword, .LET)),
+//    .string("rec", (.keyword, .REC)),
+//    .string("in", (.keyword, .IN)),
+//    .string("Array.create", (.keyword, .ARRAY_CREATE)),
 
     // Identifier
     .regexPattern("[a-zA-Z]+[a-zA-Z0-9_]*", { str in
@@ -58,9 +58,9 @@ let lexer = Lexer(rules: [
     .string(">=", (.identifier(">="), .GREATER_EQUAL)),
 
     // Punctuation
-    .string("<-", (.punctuation, .LEFT_ARROW)),
+//    .string("<-", (.punctuation, .LEFT_ARROW)),
     .string(".", (.punctuation, .DOT)),
-    .string(",", (.punctuation, .COMMA)),
+//    .string(",", (.punctuation, .COMMA)),
     .string("(", (.punctuation, .L_PAREN)),
     .string(")", (.punctuation, .R_PAREN)),
 
