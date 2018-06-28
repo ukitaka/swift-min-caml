@@ -19,9 +19,7 @@ extension Type {
 typealias Env = [Var: Type]
 
 enum Typing {
-    static func type(expr: Expr) -> Expr {
-        var env: Env = [:] //TODO: add builtin functions
-        //return unify(expr: expr, env: &env)
+    static func type(env: Env, expr: Expr) -> Type {
         fatalError()
     }
     
@@ -40,16 +38,16 @@ enum Typing {
         }
     }
 
-    private static func g(expr: Expr, env: Env) -> Type {
+    private static func typeInfer(env: Env, expr: Expr) -> (Substitution, Type) {
         switch expr {
         case .unit:
-            return .unit
+            return (Substitution(), .unit)
         case .int:
-            return .int
+            return (Substitution(), .int)
         case .float:
-            return .float
+            return (Substitution(), .float)
         case .bool:
-            return .bool
+            return (Substitution(), .bool)
         default:
             fatalError()
         }
