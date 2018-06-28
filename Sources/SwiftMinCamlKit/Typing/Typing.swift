@@ -106,7 +106,7 @@ enum Typing {
             var env = env
             env.updateValue(bit, forKey: name.name)
             let (bos, bot) = typeInfer(env: env, expr: body)
-            let s = bis.merging(other: bos)
+            let s = bis.merging(other: bos).merging(other: Substitution([name.type: bit]))
             return (s, bot.apply(s))
         case let .var(name: name):
             guard let type = env[name] else {
