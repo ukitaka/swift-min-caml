@@ -59,7 +59,7 @@ public indirect enum Expr: AutoTyped, AutoHashable, AutoEquatable {
     case fmul(lhs: Expr, rhs: Expr) // *
     case fdiv(lhs: Expr, rhs: Expr) // /
     case eq(lhs: Expr, rhs: Expr)   // ==
-    case le(lhs: Expr, rhs: Expr)   // <
+    case le(lhs: Expr, rhs: Expr)   // <=
     case `if`(cond: Expr, ifTrue:Expr, ifFalse:Expr)
     case `let`(name: TypedVar, bind: Expr, body: Expr)
     case `var`(name: Var)

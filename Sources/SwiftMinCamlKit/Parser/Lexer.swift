@@ -49,6 +49,13 @@ let lexer = Lexer(rules: [
     .string("*", (.identifier("*"), .MUL)),
     .string("/", (.identifier("/"), .DIV)),
     .string("=", (.identifier("="), .EQUAL)),
+    .string("-", (.identifier("-"), .MINUS)),
+    .string("!", (.identifier("!"), .NOT)),
+    .string("<>", (.identifier("<>"), .LESS_GREATER)),
+    .string("<", (.identifier("<"), .LESS)),
+    .string("<=", (.identifier("<="), .LESS_EQUAL)),
+    .string(">", (.identifier(">"), .GREATER)),
+    .string(">=", (.identifier(">="), .GREATER_EQUAL)),
 
     // Punctuation
     .string("<-", (.punctuation, .LEFT_ARROW)),

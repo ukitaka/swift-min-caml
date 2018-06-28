@@ -56,12 +56,52 @@ expr ::= simple_expr(e). {
     return e
 }
 
+expr ::= NOT expr(e). {
+    return .not(op: e)
+}
+
+expr ::= MINUS expr(e). {
+    switch e {
+        case let .float(f):
+            return .float(-f)
+        default:
+            return .neg(op: e)
+    }
+}
+
 expr ::= expr(lhs) ADD expr(rhs). {
     return .add(lhs: lhs, rhs: rhs)
 }
 
 expr ::= expr(lhs) SUB expr(rhs). {
     return .sub(lhs: lhs, rhs: rhs)
+}
+
+expr ::= expr(lhs) EQUAL expr(rhs). {
+    return .eq(lhs: lhs, rhs: rhs)
+}
+
+// <>
+expr ::= expr(lhs) LESS_GREATER expr(rhs). {
+    return .not(.eq(lhs: lhs, rhs: rhs))
+}
+
+// (lhs < rhs) <=> !(rhs <= lhs)
+expr ::= expr(lhs) LESS expr(rhs). {
+    return .not(.le(lhs: rhs, rhs: lhs))
+}
+
+// (lhs > rhs) <=> !(lhs <= rhs)
+expr ::= expr(lhs) GREATER expr(rhs). {
+    return .not(.le(lhs: lhs, rhs: rhs))
+}
+
+expr ::= expr(lhs) LESS_EQUAL expr(rhs). {
+    return .le(lhs: lhs, rhs: rhs)
+}
+
+expr ::= expr(lhs) GREATER_EQUAL expr(rhs). {
+    return .le(lhs: rhs, rhs: lhs)
 }
 
 expr ::= expr(lhs) MUL expr(rhs). {
