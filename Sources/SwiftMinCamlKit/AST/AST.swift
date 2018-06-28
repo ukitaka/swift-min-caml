@@ -26,6 +26,11 @@ public typealias TypeVar = Type
 public struct TypedVar: Hashable {
     var name: ID
     var type: Type
+    
+    init(name: ID, type: Type = Type.newTypeVar()) {
+        self.name = name
+        self.type = type
+    }
 }
 
 extension TypedVar {

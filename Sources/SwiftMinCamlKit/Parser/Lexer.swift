@@ -33,9 +33,9 @@ let lexer = Lexer(rules: [
     .string("if", (.keyword, .IF)),
     .string("then", (.keyword, .THEN)),
     .string("else", (.keyword, .ELSE)),
-//    .string("let", (.keyword, .LET)),
+    .string("let", (.keyword, .LET)),
 //    .string("rec", (.keyword, .REC)),
-//    .string("in", (.keyword, .IN)),
+    .string("in", (.keyword, .IN)),
 //    .string("Array.create", (.keyword, .ARRAY_CREATE)),
 
     // Identifier
@@ -63,8 +63,8 @@ let lexer = Lexer(rules: [
     // Punctuation
 //    .string("<-", (.punctuation, .LEFT_ARROW)),
     .string(".", (.punctuation, .DOT)),
-//    .string(",", (.punctuation, .COMMA)),
-    //    .string(";", (.punctuation, .SEMICOLON)),
+    .string(",", (.punctuation, .COMMA)),
+    .string(";", (.punctuation, .SEMICOLON)),
     .string("(", (.punctuation, .L_PAREN)),
     .string(")", (.punctuation, .R_PAREN)),
 

@@ -135,3 +135,15 @@ expr ::= expr(lhs) F_MUL expr(rhs). {
 expr ::= expr(lhs) F_DIV expr(rhs). {
     return .fdiv(lhs: lhs, rhs: rhs)
 }
+
+expr ::= LET IDENTIFIER(a) EQUAL expr(b) IN expr(c). {
+    return .let(name: TypedVar(name: a.asID()), bind: b, body: c)
+}
+
+
+
+
+
+
+
+
