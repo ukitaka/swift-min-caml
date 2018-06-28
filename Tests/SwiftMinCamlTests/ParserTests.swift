@@ -21,34 +21,28 @@ class ParserTest: XCTestCase {
     func testConst() {
         // integer
         let integer = self.parse(input: "1")
-        XCTAssertEqual(integer.asConst?.asInteger ?? 0, 1)
+        XCTAssertEqual(integer.asInt, 1)
         
         let integer2 = self.parse(input: "-10")
-        XCTAssertEqual(integer2.asConst?.asInteger ?? 0, -10)
+        XCTAssertEqual(integer2.asInt, -10)
         
         // double
         let double = self.parse(input: "1.2")
-        XCTAssertEqual(double.asConst?.asFloat ?? 0.0, 1.2)
+        XCTAssertEqual(double.asFloat, 1.2)
         
         let double2 = self.parse(input: "-3.4")
-        XCTAssertEqual(double2.asConst?.asFloat ?? 0.0, -3.4)
+        XCTAssertEqual(double2.asFloat, -3.4)
         
         // bool
         let bool = self.parse(input: "true")
-        XCTAssertEqual(bool.asConst?.asBool ?? false, true)
+        XCTAssertEqual(bool.asBool, true)
     }
     
-    func testArithOps() {
-        let input = "1+2*3"
-        let exp = self.parse(input: input)
-        XCTAssertTrue(exp.isArithOps)
-        let arithOps1 = exp.asArithOps!
-        XCTAssertEqual(arithOps1.ops, .add)
-        XCTAssertEqual(arithOps1.args.first?.asConst?.asInteger, 1)
-        let arithOps2 = arithOps1.args.last!.asArithOps!
-        XCTAssertEqual(arithOps2.ops, .mul)
-        XCTAssertEqual(arithOps2.args.first?.asConst?.asInteger, 2)
-        XCTAssertEqual(arithOps2.args.last?.asConst?.asInteger, 3)
+    func testAdd() {
+        let input = "1+2"
+        let exp = self.parse(input: input).asAdd!
+        XCTAssertEqual(exp.lhs, .int(1))
+        XCTAssertEqual(exp.rhs, .int(2))
     }
     
     func testVar() {
@@ -62,9 +56,9 @@ class ParserTest: XCTestCase {
     func testApply() {
         let input = "print_int 123"
         let exp = self.parse(input: input)
-        XCTAssertTrue(exp.isApply)
-        let a = exp.asApply!
-        XCTAssertEqual(a.function.rawValue, "print_int")
+        XCTAssertTrue(exp.isApp)
+        let a = exp.asApp!
+        XCTAssertEqual(a.function.asVar?.rawValue, "print_int")
     }
 
     func testLet() {
@@ -72,8 +66,8 @@ class ParserTest: XCTestCase {
         let exp = self.parse(input: input)
         XCTAssertTrue(exp.isLet)
         let l = exp.asLet!
-        XCTAssertEqual(l.varName, "x")
-        XCTAssertTrue(l.body.isArithOps)
+        XCTAssertEqual(l.name.name, "x")
+        XCTAssertTrue(l.body.isAdd)
     }
     
     func testIf() {
@@ -97,24 +91,24 @@ class ParserTest: XCTestCase {
     func testReadTuple() {
         let input = "let (x, y, z) = a in x"
         let exp = self.parse(input: input)
-        XCTAssertTrue(exp.isReadTuple)
+        XCTAssertTrue(exp.isLetTuple)
     }
     
     func testCreateArray() {
         let input = "Array.create 2 1"
         let exp = self.parse(input: input)
-        XCTAssertTrue(exp.isCreateArray)
+        XCTAssertTrue(exp.isArray)
     }
     
     func testReadArray() {
         let input = "a.(1)"
         let exp = self.parse(input: input)
-        XCTAssertTrue(exp.isReadArray)
+        XCTAssertTrue(exp.isGet)
     }
     
     func testWriteArray() {
         let input = "a.(1) <- 2"
         let exp = self.parse(input: input)
-        XCTAssertTrue(exp.isWriteArray)
+        XCTAssertTrue(exp.isPut)
     }
 }
