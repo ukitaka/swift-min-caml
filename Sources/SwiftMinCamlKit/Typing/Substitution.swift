@@ -92,6 +92,10 @@ extension Expr {
             return .add(lhs: lhs.apply(substitution), rhs: rhs.apply(substitution))
         case let .sub(lhs: lhs, rhs: rhs):
             return .sub(lhs: lhs.apply(substitution), rhs: rhs.apply(substitution))
+        case let .mul(lhs: lhs, rhs: rhs):
+            return .mul(lhs: lhs.apply(substitution), rhs: rhs.apply(substitution))
+        case let .div(lhs: lhs, rhs: rhs):
+            return .div(lhs: lhs.apply(substitution), rhs: rhs.apply(substitution))
         case let .fneg(op: op):
             return .fneg(op: op.apply(substitution))
         case let .fadd(lhs: lhs, rhs: rhs):

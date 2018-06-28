@@ -47,6 +47,8 @@ let lexer = Lexer(rules: [
     .string("<-", (.identifier("<-"), .LEFT_ARROW)),
     .string("+", (.identifier("+"), .ADD)),
     .string("-", (.identifier("-"), .SUB)),
+    .string("*.", (.identifier("*"), .MUL)),
+    .string("/.", (.identifier("/"), .DIV)),
     .string("-.", (.identifier("-"), .F_MINUS)),
     .string("+.", (.identifier("+"), .F_ADD)),
     .string("-.", (.identifier("-"), .F_SUB)),

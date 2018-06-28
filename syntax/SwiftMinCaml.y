@@ -27,7 +27,7 @@
 %left_associative COMMA.
 %left_associative EQUAL LESS_GREATER LESS GREATER LESS_EQUAL GREATER_EQUAL.
 %left_associative ADD SUB F_ADD F_SUB.
-%left_associative F_MUL F_DIV.
+%left_associative MUL DIV F_MUL F_DIV.
 %right_associative MINUS F_MINUS.
 %left_associative DOT.
 
@@ -88,6 +88,14 @@ expr ::= expr(lhs) ADD expr(rhs). {
 
 expr ::= expr(lhs) SUB expr(rhs). {
     return .sub(lhs: lhs, rhs: rhs)
+}
+
+expr ::= expr(lhs) MUL expr(rhs). {
+    return .mul(lhs: lhs, rhs: rhs)
+}
+
+expr ::= expr(lhs) DIV expr(rhs). {
+    return .div(lhs: lhs, rhs: rhs)
 }
 
 expr ::= expr(lhs) EQUAL expr(rhs). {

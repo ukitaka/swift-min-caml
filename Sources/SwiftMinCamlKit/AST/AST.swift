@@ -64,6 +64,8 @@ public indirect enum Expr: AutoHashable, AutoEquatable, AutoEnum {
     case neg(op: Expr)              // unary -
     case add(lhs: Expr, rhs: Expr)  // +
     case sub(lhs: Expr, rhs: Expr)  // -
+    case mul(lhs: Expr, rhs: Expr)  // *
+    case div(lhs: Expr, rhs: Expr)  // /
     case fneg(op: Expr)             // unary -
     case fadd(lhs: Expr, rhs: Expr) // +
     case fsub(lhs: Expr, rhs: Expr) // -

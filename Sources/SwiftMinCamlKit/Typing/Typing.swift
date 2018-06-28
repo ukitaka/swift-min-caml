@@ -90,6 +90,10 @@ enum Typing {
             return typeInfer(env: env, lhs: lhs, rhs: rhs, preferredType: .int)
         case let .sub(lhs: lhs, rhs: rhs):
             return typeInfer(env: env, lhs: lhs, rhs: rhs, preferredType: .int)
+        case let .mul(lhs: lhs, rhs: rhs):
+            return typeInfer(env: env, lhs: lhs, rhs: rhs, preferredType: .int)
+        case let .div(lhs: lhs, rhs: rhs):
+            return typeInfer(env: env, lhs: lhs, rhs: rhs, preferredType: .int)
         case let .fneg(op: op):
             return typeInfer(env: env, expr: op, preferredType: .int)
         case let .fadd(lhs: lhs, rhs: rhs):
