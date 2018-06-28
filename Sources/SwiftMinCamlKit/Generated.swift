@@ -374,15 +374,15 @@ public extension Expr {
 
     public struct LetRecExpr {
         public let funcDef: FuncDef
-        public let bind: Expr
+        public let body: Expr
     }
 
     public var asLetRec: LetRecExpr? {
         switch self {
-        case let .letRec(funcDef, bind):
+        case let .letRec(funcDef, body):
             return LetRecExpr(
                 funcDef: funcDef,
-                bind: bind
+                body: body
             )
         default:
             return nil
@@ -722,7 +722,7 @@ public func == (lhs: Expr, rhs: Expr) -> Bool {
         return lhs == rhs
     case let (.letRec(lhs), .letRec(rhs)):
         if lhs.funcDef != rhs.funcDef { return false }
-        if lhs.bind != rhs.bind { return false }
+        if lhs.body != rhs.body { return false }
         return true
     case let (.app(lhs), .app(rhs)):
         if lhs.function != rhs.function { return false }
@@ -874,7 +874,7 @@ extension Expr: Hashable {
         case let .var(data):
             return combineHashes([18, data.hashValue])
         case let .letRec(data):
-            return combineHashes([19, data.funcDef.hashValue, data.bind.hashValue])
+            return combineHashes([19, data.funcDef.hashValue, data.body.hashValue])
         case let .app(data):
             return combineHashes([20, data.function.hashValue, data.args.hashValue])
         case let .tuple(data):

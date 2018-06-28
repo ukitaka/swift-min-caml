@@ -526,7 +526,7 @@ class Parser: CitronParser {
             }
         case 26: /* expr ::= LET REC func_def(a) IN expr(b) */
             func codeBlockForRule26(a: FuncDef, b: Expr) throws -> Expr {
-                return .letRec(funcDef: a, bind: b)
+                return .letRec(funcDef: a, body: b)
             }
             if case let .yy38(a) = yySymbolOnStack(distanceFromTop: 2),
                 case let .yy6(b) = yySymbolOnStack(distanceFromTop: 0) {

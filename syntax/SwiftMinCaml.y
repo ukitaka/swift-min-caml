@@ -146,7 +146,7 @@ expr ::= LET IDENTIFIER(a) EQUAL expr(b) IN expr(c). {
 }
 
 expr ::= LET REC func_def(a) IN expr(b). {
-    return .letRec(funcDef: a, bind: b)
+    return .letRec(funcDef: a, body: b)
 }
 
 expr ::= simple_expr(a) actual_args(b). {

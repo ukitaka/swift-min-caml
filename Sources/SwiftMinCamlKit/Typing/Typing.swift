@@ -124,6 +124,13 @@ enum Typing {
             // update expr
             expr = .let(name: name.assign(type: bindType), bind: bind, body: body)
             return bodyType
+        case let .var(name: name):
+            guard let type = env[name] else {
+                fatalError("Uknown value: \(name)")
+            }
+            return type
+        case .letRec: // .letRec(funcDef: funcDef, body: body):
+            fatalError("not implemented yet")
         default:
             fatalError()
         }

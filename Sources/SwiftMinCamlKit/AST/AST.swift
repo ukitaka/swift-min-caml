@@ -74,7 +74,7 @@ public indirect enum Expr: AutoHashable, AutoEquatable, AutoEnum {
     case `if`(cond: Expr, ifTrue:Expr, ifFalse:Expr)
     case `let`(name: TypedVar, bind: Expr, body: Expr)
     case `var`(name: Var)
-    case letRec(funcDef: FuncDef, bind: Expr)
+    case letRec(funcDef: FuncDef, body: Expr)
     case app(function: Expr, args: [Expr])
     case tuple(elements: [Expr])
     case letTuple(vars: [TypedVar], binding: Expr, body: Expr)
