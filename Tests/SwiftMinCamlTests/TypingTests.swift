@@ -22,4 +22,19 @@ class TypingTests: XCTestCase {
         XCTAssertEqual(type, .int)
         XCTAssertEqual(checkedExpr.asLet?.name.type, .int)
     }
+    
+    func testLetRec() {
+        // if n == 0 then true else false
+        let body: Expr = Expr.if(
+            cond: .eq(lhs: .var(name: "n"), rhs: .int(0)),
+            ifTrue: .bool(true),
+            ifFalse: .bool(false)
+        )
+        let funcDef = FuncDef(name: TypedVar(name: "isZero"), args: [TypedVar(name: "n")], body: body)
+        let expr = Expr.letRec(funcDef: funcDef, body: .int(1))
+        let (checkedExpr, type) = Typing.type(env: [:], expr: expr)
+        XCTAssertEqual(type, .int)
+        XCTAssertEqual(checkedExpr.asLetRec?.funcDef.args.first?.type, .int)
+        XCTAssertEqual(checkedExpr.asLetRec?.funcDef.name.type, .bool)
+    }
 }

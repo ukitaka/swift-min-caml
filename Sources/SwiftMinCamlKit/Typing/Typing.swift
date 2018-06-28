@@ -64,6 +64,14 @@ enum Typing {
         return (s, lt.apply(s))
     }
 
+    private static func typeInfer(env: Env, lhs: Expr, rhs: Expr, returnType: Type) -> (Substitution, Type) {
+        let (ls, lt) = typeInfer(env: env, expr: lhs)
+        let (rs, rt) = typeInfer(env: env, expr: rhs)
+        let s = mostGeneralUnifier(lt, rt).merging(other: ls).merging(other: rs)
+        precondition(lt.apply(s) == rt.apply(s))
+        return (s, returnType)
+    }
+
     private static func typeInfer(env: Env, expr: Expr) -> (Substitution, Type) {
         switch expr {
         case .unit:
@@ -93,9 +101,9 @@ enum Typing {
         case let .fdiv(lhs: lhs, rhs: rhs):
             return typeInfer(env: env, lhs: lhs, rhs: rhs, preferredType: .int)
         case let .eq(lhs: lhs, rhs: rhs):
-            return typeInfer(env: env, lhs: lhs, rhs: rhs)
+            return typeInfer(env: env, lhs: lhs, rhs: rhs, returnType: .bool)
         case let .le(lhs: lhs, rhs: rhs): //MEMO: need to check lhs/rhs are both number.
-            return typeInfer(env: env, lhs: lhs, rhs: rhs)
+            return typeInfer(env: env, lhs: lhs, rhs: rhs, returnType: .bool)
         case let .if(cond, ifTrue, ifFalse):
             let (s1, _) = typeInfer(env: env, expr: cond, preferredType: .bool)
             let (s2, t2) = typeInfer(env: env, lhs: ifTrue, rhs: ifFalse)
@@ -113,8 +121,20 @@ enum Typing {
                 fatalError("Uknown value: \(name)")
             }
             return (Substitution(), type)
-        case .letRec: // .letRec(funcDef: funcDef, body: body):
-            fatalError("not implemented yet")
+        case let .letRec(funcDef: funcDef, body: body):
+            let name = funcDef.name
+            var env1 = env
+            env1.updateValue(name.type, forKey: name.name)
+            for arg in funcDef.args {
+                env1.updateValue(arg.type, forKey: arg.name)
+            }
+            let (s0, retType) = typeInfer(env: env1, expr: funcDef.body)
+            let s1 = s0.merging(other: mostGeneralUnifier(name.type, .func(args: funcDef.args.map { $0.type }, ret: retType)))
+            var env2 = env
+            env2.updateValue(retType, forKey: name.name)
+            let (bos, bot) = typeInfer(env: env2, expr: body.apply(s1))
+            let s2 = s1.merging(other: bos).merging(other: Substitution([name.type: retType]))
+            return (s2, bot.apply(s2))
         case .app: // var .app(function: function, args: args):
             fatalError("not implemented yet")
         case .tuple:
