@@ -11,7 +11,10 @@
 %nonterminal_type root Expr
 %nonterminal_type expr Expr
 %nonterminal_type simple_expr Expr
-%nonterminal_type var Expr
+%nonterminal_type func_def FuncDef
+%nonterminal_type formal_args "[TypedVar]"
+%nonterminal_type actual_args "[Expr]"
+
 
 // Associativity and precedences
 
@@ -140,10 +143,30 @@ expr ::= LET IDENTIFIER(a) EQUAL expr(b) IN expr(c). {
     return .let(name: TypedVar(name: a.asID()), bind: b, body: c)
 }
 
+expr ::= LET REC func_def(a) IN expr(b). {
+    return .letRec(funcDef: a, bind: b)
+}
 
+expr ::= simple_expr(a) actual_args(b). {
+    return .app(function: a, args: b)
+}
 
+func_def ::= IDENTIFIER(a) formal_args(b) EQUAL expr(c). {
+    return FuncDef(name: TypedVar(name: a.asID()), args: b, body: c)
+}
 
+formal_args ::= IDENTIFIER(a) formal_args(b). {
+    return [TypedVar(name: a.asID())] + b
+}
 
+formal_args ::= IDENTIFIER(a). {
+    return [TypedVar(name: a.asID())]
+}
 
+actual_args ::= actual_args(a) simple_expr(b). {
+    return a + [b]
+}
 
-
+actual_args ::= simple_expr(a). {
+    return [a]
+}

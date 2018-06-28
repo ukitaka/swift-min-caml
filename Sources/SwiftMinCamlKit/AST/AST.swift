@@ -48,7 +48,7 @@ public struct FuncDef: Hashable {
 }
 
 /// Expressions
-public indirect enum Expr: AutoTyped, AutoHashable, AutoEquatable {
+public indirect enum Expr: AutoHashable, AutoEquatable, AutoEnum {
     case unit
     case bool(Bool)
     case int(Int)
@@ -67,8 +67,8 @@ public indirect enum Expr: AutoTyped, AutoHashable, AutoEquatable {
     case `if`(cond: Expr, ifTrue:Expr, ifFalse:Expr)
     case `let`(name: TypedVar, bind: Expr, body: Expr)
     case `var`(name: Var)
-    case letRec(funcDecl: FuncDef, bind: Expr)
-    case app(function: ID, args: [Expr])
+    case letRec(funcDef: FuncDef, bind: Expr)
+    case app(function: Expr, args: [Expr])
     case tuple(elements: [Expr])
     case letTuple(vars: [Var], binding: Expr, body: Expr)
     case array(size: Expr, element: Expr)

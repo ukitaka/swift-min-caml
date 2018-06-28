@@ -1,6 +1,535 @@
 // Generated using Sourcery 0.11.2 — https://github.com/krzysztofzablocki/Sourcery
 // DO NOT EDIT
 
+public extension Expr {
+    public var isUnit: Bool {
+        switch self {
+        case .unit: return true
+        default: return false
+        }
+    }
+
+    public var isBool: Bool {
+        switch self {
+        case .bool: return true
+        default: return false
+        }
+    }
+
+    public var asBool: Bool? {
+        switch self {
+        case let .bool(bool):
+            return bool
+        default:
+            return nil
+        }
+    }
+
+    public var isInt: Bool {
+        switch self {
+        case .int: return true
+        default: return false
+        }
+    }
+
+    public var asInt: Int? {
+        switch self {
+        case let .int(int):
+            return int
+        default:
+            return nil
+        }
+    }
+
+    public var isFloat: Bool {
+        switch self {
+        case .float: return true
+        default: return false
+        }
+    }
+
+    public var asFloat: Double? {
+        switch self {
+        case let .float(float):
+            return float
+        default:
+            return nil
+        }
+    }
+
+    public var isNot: Bool {
+        switch self {
+        case .not: return true
+        default: return false
+        }
+    }
+
+    public var asNot: Expr? {
+        switch self {
+        case let .not(op):
+            return op
+        default:
+            return nil
+        }
+    }
+
+    public var isNeg: Bool {
+        switch self {
+        case .neg: return true
+        default: return false
+        }
+    }
+
+    public var asNeg: Expr? {
+        switch self {
+        case let .neg(op):
+            return op
+        default:
+            return nil
+        }
+    }
+
+    public var isAdd: Bool {
+        switch self {
+        case .add: return true
+        default: return false
+        }
+    }
+
+    public struct AddExpr {
+        public let lhs: Expr
+        public let rhs: Expr
+    }
+
+    public var asAdd: AddExpr? {
+        switch self {
+        case let .add(lhs, rhs):
+            return AddExpr(
+                lhs: lhs,
+                rhs: rhs
+            )
+        default:
+            return nil
+        }
+    }
+
+    public var isSub: Bool {
+        switch self {
+        case .sub: return true
+        default: return false
+        }
+    }
+
+    public struct SubExpr {
+        public let lhs: Expr
+        public let rhs: Expr
+    }
+
+    public var asSub: SubExpr? {
+        switch self {
+        case let .sub(lhs, rhs):
+            return SubExpr(
+                lhs: lhs,
+                rhs: rhs
+            )
+        default:
+            return nil
+        }
+    }
+
+    public var isFneg: Bool {
+        switch self {
+        case .fneg: return true
+        default: return false
+        }
+    }
+
+    public var asFneg: Expr? {
+        switch self {
+        case let .fneg(op):
+            return op
+        default:
+            return nil
+        }
+    }
+
+    public var isFadd: Bool {
+        switch self {
+        case .fadd: return true
+        default: return false
+        }
+    }
+
+    public struct FaddExpr {
+        public let lhs: Expr
+        public let rhs: Expr
+    }
+
+    public var asFadd: FaddExpr? {
+        switch self {
+        case let .fadd(lhs, rhs):
+            return FaddExpr(
+                lhs: lhs,
+                rhs: rhs
+            )
+        default:
+            return nil
+        }
+    }
+
+    public var isFsub: Bool {
+        switch self {
+        case .fsub: return true
+        default: return false
+        }
+    }
+
+    public struct FsubExpr {
+        public let lhs: Expr
+        public let rhs: Expr
+    }
+
+    public var asFsub: FsubExpr? {
+        switch self {
+        case let .fsub(lhs, rhs):
+            return FsubExpr(
+                lhs: lhs,
+                rhs: rhs
+            )
+        default:
+            return nil
+        }
+    }
+
+    public var isFmul: Bool {
+        switch self {
+        case .fmul: return true
+        default: return false
+        }
+    }
+
+    public struct FmulExpr {
+        public let lhs: Expr
+        public let rhs: Expr
+    }
+
+    public var asFmul: FmulExpr? {
+        switch self {
+        case let .fmul(lhs, rhs):
+            return FmulExpr(
+                lhs: lhs,
+                rhs: rhs
+            )
+        default:
+            return nil
+        }
+    }
+
+    public var isFdiv: Bool {
+        switch self {
+        case .fdiv: return true
+        default: return false
+        }
+    }
+
+    public struct FdivExpr {
+        public let lhs: Expr
+        public let rhs: Expr
+    }
+
+    public var asFdiv: FdivExpr? {
+        switch self {
+        case let .fdiv(lhs, rhs):
+            return FdivExpr(
+                lhs: lhs,
+                rhs: rhs
+            )
+        default:
+            return nil
+        }
+    }
+
+    public var isEq: Bool {
+        switch self {
+        case .eq: return true
+        default: return false
+        }
+    }
+
+    public struct EqExpr {
+        public let lhs: Expr
+        public let rhs: Expr
+    }
+
+    public var asEq: EqExpr? {
+        switch self {
+        case let .eq(lhs, rhs):
+            return EqExpr(
+                lhs: lhs,
+                rhs: rhs
+            )
+        default:
+            return nil
+        }
+    }
+
+    public var isLe: Bool {
+        switch self {
+        case .le: return true
+        default: return false
+        }
+    }
+
+    public struct LeExpr {
+        public let lhs: Expr
+        public let rhs: Expr
+    }
+
+    public var asLe: LeExpr? {
+        switch self {
+        case let .le(lhs, rhs):
+            return LeExpr(
+                lhs: lhs,
+                rhs: rhs
+            )
+        default:
+            return nil
+        }
+    }
+
+    public var isIf: Bool {
+        switch self {
+        case .if: return true
+        default: return false
+        }
+    }
+
+    public struct IfExpr {
+        public let cond: Expr
+        public let ifTrue: Expr
+        public let ifFalse: Expr
+    }
+
+    public var asIf: IfExpr? {
+        switch self {
+        case let .if(cond, ifTrue, ifFalse):
+            return IfExpr(
+                cond: cond,
+                ifTrue: ifTrue,
+                ifFalse: ifFalse
+            )
+        default:
+            return nil
+        }
+    }
+
+    public var isLet: Bool {
+        switch self {
+        case .let: return true
+        default: return false
+        }
+    }
+
+    public struct LetExpr {
+        public let name: TypedVar
+        public let bind: Expr
+        public let body: Expr
+    }
+
+    public var asLet: LetExpr? {
+        switch self {
+        case let .let(name, bind, body):
+            return LetExpr(
+                name: name,
+                bind: bind,
+                body: body
+            )
+        default:
+            return nil
+        }
+    }
+
+    public var isVar: Bool {
+        switch self {
+        case .var: return true
+        default: return false
+        }
+    }
+
+    public var asVar: Var? {
+        switch self {
+        case let .var(name):
+            return name
+        default:
+            return nil
+        }
+    }
+
+    public var isLetRec: Bool {
+        switch self {
+        case .letRec: return true
+        default: return false
+        }
+    }
+
+    public struct LetRecExpr {
+        public let funcDef: FuncDef
+        public let bind: Expr
+    }
+
+    public var asLetRec: LetRecExpr? {
+        switch self {
+        case let .letRec(funcDef, bind):
+            return LetRecExpr(
+                funcDef: funcDef,
+                bind: bind
+            )
+        default:
+            return nil
+        }
+    }
+
+    public var isApp: Bool {
+        switch self {
+        case .app: return true
+        default: return false
+        }
+    }
+
+    public struct AppExpr {
+        public let function: Expr
+        public let args: [Expr]
+    }
+
+    public var asApp: AppExpr? {
+        switch self {
+        case let .app(function, args):
+            return AppExpr(
+                function: function,
+                args: args
+            )
+        default:
+            return nil
+        }
+    }
+
+    public var isTuple: Bool {
+        switch self {
+        case .tuple: return true
+        default: return false
+        }
+    }
+
+    public var asTuple: [Expr]? {
+        switch self {
+        case let .tuple(elements):
+            return elements
+        default:
+            return nil
+        }
+    }
+
+    public var isLetTuple: Bool {
+        switch self {
+        case .letTuple: return true
+        default: return false
+        }
+    }
+
+    public struct LetTupleExpr {
+        public let vars: [Var]
+        public let binding: Expr
+        public let body: Expr
+    }
+
+    public var asLetTuple: LetTupleExpr? {
+        switch self {
+        case let .letTuple(vars, binding, body):
+            return LetTupleExpr(
+                vars: vars,
+                binding: binding,
+                body: body
+            )
+        default:
+            return nil
+        }
+    }
+
+    public var isArray: Bool {
+        switch self {
+        case .array: return true
+        default: return false
+        }
+    }
+
+    public struct ArrayExpr {
+        public let size: Expr
+        public let element: Expr
+    }
+
+    public var asArray: ArrayExpr? {
+        switch self {
+        case let .array(size, element):
+            return ArrayExpr(
+                size: size,
+                element: element
+            )
+        default:
+            return nil
+        }
+    }
+
+    public var isGet: Bool {
+        switch self {
+        case .get: return true
+        default: return false
+        }
+    }
+
+    public struct GetExpr {
+        public let array: Expr
+        public let index: Expr
+    }
+
+    public var asGet: GetExpr? {
+        switch self {
+        case let .get(array, index):
+            return GetExpr(
+                array: array,
+                index: index
+            )
+        default:
+            return nil
+        }
+    }
+
+    public var isPut: Bool {
+        switch self {
+        case .put: return true
+        default: return false
+        }
+    }
+
+    public struct PutExpr {
+        public let array: Expr
+        public let index: Expr
+        public let value: Expr
+    }
+
+    public var asPut: PutExpr? {
+        switch self {
+        case let .put(array, index, value):
+            return PutExpr(
+                array: array,
+                index: index,
+                value: value
+            )
+        default:
+            return nil
+        }
+    }
+}
+
 public extension Type {
     public var isUnit: Bool {
         switch self {
@@ -192,7 +721,7 @@ public func == (lhs: Expr, rhs: Expr) -> Bool {
     case let (.var(lhs), .var(rhs)):
         return lhs == rhs
     case let (.letRec(lhs), .letRec(rhs)):
-        if lhs.funcDecl != rhs.funcDecl { return false }
+        if lhs.funcDef != rhs.funcDef { return false }
         if lhs.bind != rhs.bind { return false }
         return true
     case let (.app(lhs), .app(rhs)):
@@ -345,7 +874,7 @@ extension Expr: Hashable {
         case let .var(data):
             return combineHashes([18, data.hashValue])
         case let .letRec(data):
-            return combineHashes([19, data.funcDecl.hashValue, data.bind.hashValue])
+            return combineHashes([19, data.funcDef.hashValue, data.bind.hashValue])
         case let .app(data):
             return combineHashes([20, data.function.hashValue, data.args.hashValue])
         case let .tuple(data):

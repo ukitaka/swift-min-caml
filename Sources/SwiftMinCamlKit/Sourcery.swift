@@ -13,6 +13,3 @@ public protocol AutoHashable { }
 
 /// AutoEnum
 public protocol AutoEnum { }
-
-/// AutoTyped
-public protocol AutoTyped { }
