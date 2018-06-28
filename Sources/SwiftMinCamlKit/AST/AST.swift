@@ -94,3 +94,15 @@ public indirect enum Type: AutoEquatable, AutoHashable, AutoEnum {
     case array(element: Type)
     case typeVar(name: String)
 }
+
+
+
+extension Type {
+    private static var counter: Int = 0
+    static func newTypeVar() -> Type {
+        defer {
+            counter += 1
+        }
+        return .typeVar(name: "TypeVar\(counter)")
+    }
+}
