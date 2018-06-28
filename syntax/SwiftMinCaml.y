@@ -161,6 +161,18 @@ expr ::= LET L_PAREN pat(p) R_PAREN EQUAL expr(a) IN expr(b). {
     return .letTuple(vars: p, binding: a, body: b)
 }
 
+expr ::= simple_expr(a) DOT L_PAREN expr(b) R_PAREN LEFT_ARROW expr(c). {
+    return .put(array: a, index: b, value: c)
+}
+
+expr ::= expr(a) SEMICOLON expr(b). {
+    return .let(name: TypedVar.tmpVar(), bind: a, body: b)
+}
+
+expr ::= ARRAY_CREATE simple_expr(num) simple_expr(element). {
+    return .array(size: num, element: element)
+}
+
 func_def ::= IDENTIFIER(a) formal_args(b) EQUAL expr(c). {
     return FuncDef(name: TypedVar(name: a.asID()), args: b, body: c)
 }

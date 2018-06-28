@@ -34,6 +34,13 @@ public struct TypedVar: Hashable {
 }
 
 extension TypedVar {
+    private static var counter: Int = 0
+    
+    static func tmpVar(type: Type = .unit) -> TypedVar {
+        defer { counter += 1 }
+        return TypedVar(name: ID(rawValue: "tmp\(counter)"), type: type)
+    }
+    
     func assign(type: Type) -> TypedVar {
         precondition(self.type.isTypeVar)
         return TypedVar(name: self.name, type: type)

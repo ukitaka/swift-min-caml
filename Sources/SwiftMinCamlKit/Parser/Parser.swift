@@ -47,6 +47,8 @@ class Parser: CitronParser {
         case THEN = 28
         case ELSE = 29
         case REC = 30
+        case LEFT_ARROW = 31
+        case ARRAY_CREATE = 32
     }
 
     typealias CitronToken = Token
@@ -54,107 +56,119 @@ class Parser: CitronParser {
     enum CitronSymbol {
         case yyBaseOfStack
         case yy0(CitronToken)
-        case yy26(FuncDef)
-        case yy36([Expr])
-        case yy50([TypedVar])
-        case yy78(Expr)
+        case yy2([TypedVar])
+        case yy6(Expr)
+        case yy10([Expr])
+        case yy38(FuncDef)
     }
 
     typealias CitronResult = Expr
 
     // Counts
 
-    let yyNumberOfSymbols: Int = 39
-    let yyNumberOfStates: Int = 73
+    let yyNumberOfSymbols: Int = 41
+    let yyNumberOfStates: Int = 83
 
     // Action tables
 
     let yyLookaheadAction: [(CitronSymbolCode, CitronParsingAction)] = [
-        /*   0 */ (1, .SH(2)), (16, .SH(15)), (17, .SH(14)), (5, .SH(65)), (5, .SH(13)),
-        /*   5 */ (6, .SH(25)), (7, .SH(23)), (8, .SH(21)), (9, .SH(20)), (10, .SH(19)),
-        /*  10 */ (11, .SH(18)), (12, .SH(28)), (13, .SH(27)), (14, .SH(17)), (15, .SH(16)),
-        /*  15 */ (16, .SH(15)), (17, .SH(14)), (1, .SH(7)), (26, .SH(64)), (33, .SH(62)),
-        /*  20 */ (22, .SH(66)), (5, .SH(13)), (6, .SH(25)), (7, .SH(23)), (8, .SH(21)),
-        /*  25 */ (9, .SH(20)), (10, .SH(19)), (11, .SH(18)), (12, .SH(28)), (13, .SH(27)),
-        /*  30 */ (14, .SH(17)), (15, .SH(16)), (16, .SH(15)), (17, .SH(14)), (5, .SH(13)),
-        /*  35 */ (6, .SH(25)), (7, .SH(23)), (8, .SH(21)), (9, .SH(20)), (10, .SH(19)),
-        /*  40 */ (11, .SH(18)), (12, .SH(28)), (13, .SH(27)), (14, .SH(17)), (15, .SH(16)),
-        /*  45 */ (16, .SH(15)), (17, .SH(14)), (20, .SH(71)), (21, .SH(1)), (38, .SH(59)),
-        /*  50 */ (23, .SR(3)), (24, .SR(4)), (25, .SR(5)), (26, .SR(6)), (26, .SH(32)),
-        /*  55 */ (35, .RD(31)), (35, .SH(67)), (21, .SH(1)), (29, .SH(10)), (23, .SR(3)),
-        /*  60 */ (24, .SR(4)), (25, .SR(5)), (26, .SR(6)), (26, .SH(33)), (5, .SH(13)),
-        /*  65 */ (6, .SH(25)), (7, .SH(23)), (8, .SH(21)), (9, .SH(20)), (10, .SH(19)),
-        /*  70 */ (11, .SH(18)), (12, .SH(28)), (13, .SH(27)), (14, .SH(17)), (15, .SH(16)),
-        /*  75 */ (16, .SH(15)), (17, .SH(14)), (12, .SH(28)), (13, .SH(27)), (14, .SH(17)),
-        /*  80 */ (15, .SH(16)), (16, .SH(15)), (17, .SH(14)), (31, .ACCEPT), (32, .SH(41)),
-        /*  85 */ (33, .SH(29)), (20, .SH(71)), (28, .SH(11)), (34, .SH(68)), (37, .SH(69)),
-        /*  90 */ (26, .SR(38)), (5, .SH(63)), (1, .SH(5)), (5, .SH(13)), (6, .SH(25)),
-        /*  95 */ (7, .SH(23)), (8, .SH(21)), (9, .SH(20)), (10, .SH(19)), (11, .SH(18)),
-        /* 100 */ (12, .SH(28)), (13, .SH(27)), (14, .SH(17)), (15, .SH(16)), (16, .SH(15)),
-        /* 105 */ (17, .SH(14)), (33, .SH(72)), (26, .SR(37)), (6, .SH(3)), (36, .SH(30)),
-        /* 110 */ (22, .SR(7)), (5, .SH(13)), (6, .SH(25)), (7, .SH(23)), (8, .SH(21)),
-        /* 115 */ (9, .SH(20)), (10, .SH(19)), (11, .SH(18)), (12, .SH(28)), (13, .SH(27)),
-        /* 120 */ (14, .SH(17)), (15, .SH(16)), (16, .SH(15)), (17, .SH(14)), (0, .RD(0)),
-        /* 125 */ (6, .SH(4)), (5, .SH(6)), (39, .RD(2)), (22, .SR(1)), (5, .SH(13)),
-        /* 130 */ (6, .SH(25)), (7, .SH(23)), (8, .SH(21)), (9, .SH(20)), (10, .SH(19)),
-        /* 135 */ (11, .SH(18)), (12, .SH(28)), (13, .SH(27)), (14, .SH(17)), (15, .SH(16)),
-        /* 140 */ (16, .SH(15)), (17, .SH(14)), (5, .SH(13)), (6, .SH(25)), (7, .SH(23)),
-        /* 145 */ (8, .SH(21)), (9, .SH(20)), (10, .SH(19)), (11, .SH(18)), (12, .SH(28)),
-        /* 150 */ (13, .SH(27)), (14, .SH(17)), (15, .SH(16)), (16, .SH(15)), (17, .SH(14)),
-        /* 155 */ (6, .SH(25)), (7, .SH(23)), (8, .SH(21)), (9, .SH(20)), (10, .SH(19)),
-        /* 160 */ (11, .SH(18)), (12, .SH(28)), (13, .SH(27)), (14, .SH(17)), (15, .SH(16)),
-        /* 165 */ (16, .SH(15)), (17, .SH(14)), (2, .SH(56)), (6, .SH(8)), (4, .SH(12)),
-        /* 170 */ (32, .SH(40)), (33, .SH(29)), (32, .SH(42)), (33, .SH(29)), (21, .SH(26)),
-        /* 175 */ (37, .SH(69)), (39, .RD(2)), (37, .SH(69)), (39, .RD(2)), (39, .RD(2)),
-        /* 180 */ (32, .SH(35)), (33, .SH(29)), (39, .RD(2)), (18, .SH(22)), (19, .SH(9)),
-        /* 185 */ (37, .SH(69)), (21, .SH(1)), (22, .SR(2)), (23, .SR(3)), (24, .SR(4)),
-        /* 190 */ (25, .SR(5)), (26, .SR(6)), (27, .SH(24)), (2, .SH(56)), (39, .RD(2)),
-        /* 195 */ (4, .SH(12)), (32, .SH(43)), (33, .SH(29)), (32, .SH(44)), (33, .SH(29)),
-        /* 200 */ (39, .RD(2)), (37, .SH(69)), (39, .RD(2)), (37, .SH(69)), (39, .RD(2)),
-        /* 205 */ (39, .RD(2)), (32, .SH(48)), (33, .SH(29)), (39, .RD(2)), (18, .SH(22)),
-        /* 210 */ (19, .SH(9)), (37, .SH(69)), (21, .SH(1)), (39, .RD(2)), (23, .SR(3)),
-        /* 215 */ (24, .SR(4)), (25, .SR(5)), (26, .SR(6)), (27, .SH(24)), (32, .SH(45)),
-        /* 220 */ (33, .SH(29)), (32, .SH(36)), (33, .SH(29)), (39, .RD(2)), (37, .SH(69)),
-        /* 225 */ (39, .RD(2)), (37, .SH(69)), (39, .RD(2)), (32, .RD(20)), (33, .SH(29)),
-        /* 230 */ (32, .SH(46)), (33, .SH(29)), (39, .RD(2)), (37, .SH(69)), (39, .RD(2)),
-        /* 235 */ (37, .SH(69)), (32, .SH(37)), (33, .SH(29)), (39, .RD(2)), (32, .SH(38)),
-        /* 240 */ (33, .SH(29)), (37, .SH(69)), (32, .SH(49)), (33, .SH(29)), (37, .SH(69)),
-        /* 245 */ (32, .RD(24)), (33, .SH(29)), (37, .SH(69)), (32, .RD(23)), (33, .SH(29)),
-        /* 250 */ (37, .SH(69)), (32, .SH(60)), (33, .SH(29)), (37, .SH(69)), (32, .SH(61)),
-        /* 255 */ (33, .SH(29)), (37, .SH(69)), (32, .SH(52)), (33, .SH(29)), (37, .SH(69)),
-        /* 260 */ (39, .RD(2)), (39, .RD(2)), (37, .SH(69)), (32, .SH(53)), (33, .SH(29)),
-        /* 265 */ (39, .RD(2)), (32, .SH(54)), (33, .SH(29)), (37, .SH(69)), (32, .SH(55)),
-        /* 270 */ (33, .SH(29)), (37, .SH(69)), (32, .RD(10)), (33, .SH(29)), (37, .SH(69)),
-        /* 275 */ (32, .SH(51)), (33, .SH(29)), (37, .SH(69)), (32, .SH(47)), (33, .SH(29)),
-        /* 280 */ (37, .SH(69)), (32, .SH(50)), (33, .SH(29)), (37, .SH(69)), (32, .SH(39)),
-        /* 285 */ (33, .SH(29)), (37, .SH(69)), (32, .SH(58)), (33, .SH(29)), (37, .SH(69)),
-        /* 290 */ (32, .SH(57)), (33, .SH(29)), (37, .SH(69)), (21, .SH(31)), (39, .RD(2)),
-        /* 295 */ (37, .SH(69)), (39, .RD(2)), (39, .RD(2)), (26, .SH(70)), (39, .RD(2)),
-        /* 300 */ (39, .RD(2)), (39, .RD(2)), (30, .SH(34)),
+        /*   0 */ (3, .SH(16)), (35, .SH(78)), (5, .SH(15)), (6, .SH(28)), (7, .SH(26)),
+        /*   5 */ (8, .SH(24)), (9, .SH(23)), (10, .SH(22)), (11, .SH(21)), (12, .SH(31)),
+        /*  10 */ (13, .SH(30)), (14, .SH(20)), (15, .SH(19)), (16, .SH(18)), (17, .SH(17)),
+        /*  15 */ (35, .SH(69)), (1, .SH(4)), (5, .SH(74)), (3, .SH(16)), (22, .SH(70)),
+        /*  20 */ (5, .SH(15)), (6, .SH(28)), (7, .SH(26)), (8, .SH(24)), (9, .SH(23)),
+        /*  25 */ (10, .SH(22)), (11, .SH(21)), (12, .SH(31)), (13, .SH(30)), (14, .SH(20)),
+        /*  30 */ (15, .SH(19)), (16, .SH(18)), (17, .SH(17)), (1, .SH(9)), (22, .SH(75)),
+        /*  35 */ (3, .SH(16)), (35, .SH(33)), (5, .SH(15)), (6, .SH(28)), (7, .SH(26)),
+        /*  40 */ (8, .SH(24)), (9, .SH(23)), (10, .SH(22)), (11, .SH(21)), (12, .SH(31)),
+        /*  45 */ (13, .SH(30)), (14, .SH(20)), (15, .SH(19)), (16, .SH(18)), (17, .SH(17)),
+        /*  50 */ (3, .SH(16)), (26, .SH(73)), (5, .SH(15)), (6, .SH(28)), (7, .SH(26)),
+        /*  55 */ (8, .SH(24)), (9, .SH(23)), (10, .SH(22)), (11, .SH(21)), (12, .SH(31)),
+        /*  60 */ (13, .SH(30)), (14, .SH(20)), (15, .SH(19)), (16, .SH(18)), (17, .SH(17)),
+        /*  65 */ (20, .SH(71)), (21, .SH(1)), (40, .SH(66)), (23, .SR(3)), (24, .SR(4)),
+        /*  70 */ (25, .SR(5)), (26, .SR(6)), (33, .ACCEPT), (34, .SH(47)), (35, .SH(32)),
+        /*  75 */ (26, .SH(37)), (29, .SH(12)), (37, .RD(34)), (39, .SH(79)), (37, .SH(76)),
+        /*  80 */ (3, .SH(16)), (26, .SH(38)), (5, .SH(15)), (6, .SH(28)), (7, .SH(26)),
+        /*  85 */ (8, .SH(24)), (9, .SH(23)), (10, .SH(22)), (11, .SH(21)), (12, .SH(31)),
+        /*  90 */ (13, .SH(30)), (14, .SH(20)), (15, .SH(19)), (16, .SH(18)), (17, .SH(17)),
+        /*  95 */ (12, .SH(31)), (13, .SH(30)), (14, .SH(20)), (15, .SH(19)), (16, .SH(18)),
+        /* 100 */ (17, .SH(17)), (34, .SH(46)), (35, .SH(32)), (34, .RD(30)), (35, .SH(32)),
+        /* 105 */ (28, .SH(13)), (39, .SH(79)), (35, .SH(82)), (39, .SH(79)), (3, .SH(16)),
+        /* 110 */ (38, .SH(34)), (5, .SH(15)), (6, .SH(28)), (7, .SH(26)), (8, .SH(24)),
+        /* 115 */ (9, .SH(23)), (10, .SH(22)), (11, .SH(21)), (12, .SH(31)), (13, .SH(30)),
+        /* 120 */ (14, .SH(20)), (15, .SH(19)), (16, .SH(18)), (17, .SH(17)), (16, .SH(18)),
+        /* 125 */ (17, .SH(17)), (36, .SH(77)), (3, .SH(16)), (22, .SR(7)), (5, .SH(15)),
+        /* 130 */ (6, .SH(28)), (7, .SH(26)), (8, .SH(24)), (9, .SH(23)), (10, .SH(22)),
+        /* 135 */ (11, .SH(21)), (12, .SH(31)), (13, .SH(30)), (14, .SH(20)), (15, .SH(19)),
+        /* 140 */ (16, .SH(18)), (17, .SH(17)), (0, .RD(0)), (20, .SH(81)), (31, .SH(2)),
+        /* 145 */ (3, .SH(16)), (22, .SR(1)), (5, .SH(15)), (6, .SH(28)), (7, .SH(26)),
+        /* 150 */ (8, .SH(24)), (9, .SH(23)), (10, .SH(22)), (11, .SH(21)), (12, .SH(31)),
+        /* 155 */ (13, .SH(30)), (14, .SH(20)), (15, .SH(19)), (16, .SH(18)), (17, .SH(17)),
+        /* 160 */ (3, .SH(16)), (21, .SH(3)), (5, .SH(15)), (6, .SH(28)), (7, .SH(26)),
+        /* 165 */ (8, .SH(24)), (9, .SH(23)), (10, .SH(22)), (11, .SH(21)), (12, .SH(31)),
+        /* 170 */ (13, .SH(30)), (14, .SH(20)), (15, .SH(19)), (16, .SH(18)), (17, .SH(17)),
+        /* 175 */ (5, .SH(15)), (6, .SH(28)), (7, .SH(26)), (8, .SH(24)), (9, .SH(23)),
+        /* 180 */ (10, .SH(22)), (11, .SH(21)), (12, .SH(31)), (13, .SH(30)), (14, .SH(20)),
+        /* 185 */ (15, .SH(19)), (16, .SH(18)), (17, .SH(17)), (2, .SH(63)), (26, .SR(41)),
+        /* 190 */ (4, .SH(14)), (6, .SH(28)), (7, .SH(26)), (8, .SH(24)), (9, .SH(23)),
+        /* 195 */ (10, .SH(22)), (11, .SH(21)), (12, .SH(31)), (13, .SH(30)), (14, .SH(20)),
+        /* 200 */ (15, .SH(19)), (16, .SH(18)), (17, .SH(17)), (5, .SH(72)), (18, .SH(25)),
+        /* 205 */ (19, .SH(11)), (26, .SR(40)), (21, .SH(1)), (22, .SR(2)), (23, .SR(3)),
+        /* 210 */ (24, .SR(4)), (25, .SR(5)), (26, .SR(6)), (27, .SH(27)), (2, .SH(63)),
+        /* 215 */ (6, .SH(5)), (4, .SH(14)), (6, .SH(6)), (32, .SH(35)), (20, .SH(81)),
+        /* 220 */ (21, .SH(1)), (1, .SH(7)), (23, .SR(3)), (24, .SR(4)), (25, .SR(5)),
+        /* 225 */ (26, .SR(6)), (5, .SH(8)), (34, .SH(40)), (35, .SH(32)), (6, .SH(10)),
+        /* 230 */ (18, .SH(25)), (19, .SH(11)), (39, .SH(79)), (21, .SH(1)), (21, .SH(29)),
+        /* 235 */ (23, .SR(3)), (24, .SR(4)), (25, .SR(5)), (26, .SR(6)), (27, .SH(27)),
+        /* 240 */ (41, .RD(2)), (41, .RD(2)), (41, .RD(2)), (41, .RD(2)), (32, .SH(35)),
+        /* 245 */ (21, .SH(1)), (41, .RD(2)), (23, .SR(3)), (24, .SR(4)), (25, .SR(5)),
+        /* 250 */ (26, .SR(6)), (34, .SH(48)), (35, .SH(32)), (34, .SH(41)), (35, .SH(32)),
+        /* 255 */ (41, .RD(2)), (39, .SH(79)), (41, .RD(2)), (39, .SH(79)), (34, .SH(49)),
+        /* 260 */ (35, .SH(32)), (41, .RD(2)), (34, .SH(50)), (35, .SH(32)), (39, .SH(79)),
+        /* 265 */ (34, .SH(55)), (35, .SH(32)), (39, .SH(79)), (34, .SH(51)), (35, .SH(32)),
+        /* 270 */ (39, .SH(79)), (34, .SH(42)), (35, .SH(32)), (39, .SH(79)), (34, .RD(20)),
+        /* 275 */ (35, .SH(32)), (39, .SH(79)), (41, .RD(2)), (41, .RD(2)), (39, .SH(79)),
+        /* 280 */ (34, .SH(54)), (35, .SH(32)), (34, .SH(43)), (35, .SH(32)), (41, .RD(2)),
+        /* 285 */ (39, .SH(79)), (41, .RD(2)), (39, .SH(79)), (34, .SH(44)), (35, .SH(32)),
+        /* 290 */ (41, .RD(2)), (34, .SH(56)), (35, .SH(32)), (39, .SH(79)), (34, .SH(52)),
+        /* 295 */ (35, .SH(32)), (39, .SH(79)), (34, .RD(24)), (35, .SH(32)), (39, .SH(79)),
+        /* 300 */ (34, .RD(23)), (35, .SH(32)), (39, .SH(79)), (34, .SH(67)), (35, .SH(32)),
+        /* 305 */ (39, .SH(79)), (34, .SH(68)), (35, .SH(32)), (39, .SH(79)), (34, .SH(59)),
+        /* 310 */ (35, .SH(32)), (39, .SH(79)), (41, .RD(2)), (41, .RD(2)), (39, .SH(79)),
+        /* 315 */ (34, .SH(60)), (35, .SH(32)), (34, .SH(61)), (35, .SH(32)), (41, .RD(2)),
+        /* 320 */ (39, .SH(79)), (41, .RD(2)), (39, .SH(79)), (34, .SH(62)), (35, .SH(32)),
+        /* 325 */ (41, .RD(2)), (34, .RD(10)), (35, .SH(32)), (39, .SH(79)), (34, .SH(58)),
+        /* 330 */ (35, .SH(32)), (39, .SH(79)), (34, .SH(53)), (35, .SH(32)), (39, .SH(79)),
+        /* 335 */ (34, .SH(57)), (35, .SH(32)), (39, .SH(79)), (34, .SH(45)), (35, .SH(32)),
+        /* 340 */ (39, .SH(79)), (34, .SH(65)), (35, .SH(32)), (39, .SH(79)), (34, .SH(64)),
+        /* 345 */ (35, .SH(32)), (39, .SH(79)), (41, .RD(2)), (21, .SH(36)), (39, .SH(79)),
+        /* 350 */ (41, .RD(2)), (41, .RD(2)), (41, .RD(2)), (26, .SH(80)), (41, .RD(2)),
+        /* 355 */ (41, .RD(2)), (41, .RD(2)), (30, .SH(39)),
     ]
 
-    let yyShiftUseDefault: Int = 303
-    let yyShiftOffsetMin: Int = -15
-    let yyShiftOffsetMax: Int = 272
+    let yyShiftUseDefault: Int = 358
+    let yyShiftOffsetMin: Int = -3
+    let yyShiftOffsetMax: Int = 327
     let yyShiftOffset: [Int] = [
-        /*     0 */ 191, 165, 191, 191, 191, 191, 191, 191, 191, 191,
-        /*    10 */ 191, 191, 191, 191, 191, 191, 191, 191, 191, 191,
-        /*    20 */ 191, 191, 191, 191, 191, 191, 191, 191, 191, 27,
-        /*    30 */ 36, -8, 28, 28, 37, -1, 16, 29, 59, 88,
-        /*    40 */ 106, 124, 137, 137, 137, 137, 137, 137, 149, 149,
-        /*    50 */ 65, 65, 65, 65, 65, 65, 272, -15, -15, -2,
-        /*    60 */ -15, -15, 66, 64, 86, 81, 102, 119, 91, 121,
-        /*    70 */ 162, 153, 66,
+        /*     0 */ 212, 186, 212, 212, 212, 212, 212, 212, 212, 212,
+        /*    10 */ 212, 212, 212, 212, 212, 212, 212, 212, 212, 212,
+        /*    20 */ 212, 212, 212, 212, 212, 212, 212, 212, 212, 212,
+        /*    30 */ 212, 212, 45, 199, 224, 224, 25, 49, 49, 55,
+        /*    40 */ -3, 15, 32, 47, 77, 106, 124, 142, 157, 157,
+        /*    50 */ 157, 157, 157, 157, 170, 185, 185, 83, 83, 83,
+        /*    60 */ 83, 83, 83, 327, 108, 108, 12, 108, 108, 123,
+        /*    70 */ 113, 140, 163, 198, 180, 209, 211, 220, 123, 221,
+        /*    80 */ 223, 213, 123,
     ]
 
-    let yyReduceUseDefault: Int = -15
-    let yyReduceOffsetMin: Int = -14
-    let yyReduceOffsetMax: Int = 258
+    let yyReduceUseDefault: Int = -35
+    let yyReduceOffsetMin: Int = -34
+    let yyReduceOffsetMax: Int = 310
     let yyReduceOffset: [Int] = [
-        /*     0 */ 52, 138, 140, 148, 164, 166, 174, 187, 189, 196,
-        /*    10 */ 198, 204, 207, 210, 213, 216, 219, 222, 225, 231,
-        /*    20 */ 234, 237, 240, 243, 246, 249, 252, 255, 258, 73,
-        /*    30 */ -14, 11, 20, 21, 54,
+        /*     0 */ 39, 67, 69, 193, 217, 219, 225, 228, 231, 234,
+        /*    10 */ 237, 240, 246, 248, 254, 257, 260, 263, 266, 269,
+        /*    20 */ 272, 275, 281, 283, 289, 292, 295, 298, 301, 304,
+        /*    30 */ 307, 310, 72, -34, -20, 1, 27, 40, 42, 90,
     ]
 
     let yyDefaultAction: [CitronParsingAction] = [
@@ -163,16 +177,18 @@ class Parser: CitronParser {
         /*    10 */ .ERROR, .ERROR, .ERROR, .ERROR, .ERROR,
         /*    15 */ .ERROR, .ERROR, .ERROR, .ERROR, .ERROR,
         /*    20 */ .ERROR, .ERROR, .ERROR, .ERROR, .ERROR,
-        /*    25 */ .ERROR, .ERROR, .ERROR, .ERROR, .RD(8),
-        /*    30 */ .RD(27), .ERROR, .RD(32), .ERROR, .ERROR,
-        /*    35 */ .ERROR, .ERROR, .ERROR, .ERROR, .ERROR,
-        /*    40 */ .ERROR, .ERROR, .RD(29), .RD(30), .RD(26),
-        /*    45 */ .RD(25), .RD(19), .RD(9), .RD(35), .RD(36),
-        /*    50 */ .RD(13), .RD(14), .RD(18), .RD(17), .RD(16),
-        /*    55 */ .RD(15), .ERROR, .RD(11), .RD(12), .ERROR,
-        /*    60 */ .RD(22), .RD(21), .RD(33), .ERROR, .ERROR,
-        /*    65 */ .ERROR, .ERROR, .ERROR, .ERROR, .RD(28),
-        /*    70 */ .ERROR, .ERROR, .RD(34),
+        /*    25 */ .ERROR, .ERROR, .ERROR, .ERROR, .ERROR,
+        /*    30 */ .ERROR, .ERROR, .RD(8), .ERROR, .RD(27),
+        /*    35 */ .ERROR, .ERROR, .RD(35), .ERROR, .ERROR,
+        /*    40 */ .ERROR, .ERROR, .ERROR, .ERROR, .ERROR,
+        /*    45 */ .ERROR, .ERROR, .ERROR, .RD(29), .RD(33),
+        /*    50 */ .RD(26), .RD(25), .RD(31), .RD(9), .RD(19),
+        /*    55 */ .RD(38), .RD(39), .RD(13), .RD(14), .RD(18),
+        /*    60 */ .RD(17), .RD(16), .RD(15), .ERROR, .RD(11),
+        /*    65 */ .RD(12), .ERROR, .RD(22), .RD(21), .RD(36),
+        /*    70 */ .RD(7), .ERROR, .ERROR, .ERROR, .ERROR,
+        /*    75 */ .ERROR, .ERROR, .ERROR, .RD(32), .RD(28),
+        /*    80 */ .ERROR, .ERROR, .RD(37),
     ]
 
     // Fallback
@@ -187,45 +203,48 @@ class Parser: CitronParser {
     // Rules
 
     let yyRuleInfo: [(lhs: CitronSymbolCode, nrhs: UInt)] = [
-        (lhs: 31, nrhs: 1),
-        (lhs: 33, nrhs: 3),
-        (lhs: 33, nrhs: 2),
         (lhs: 33, nrhs: 1),
-        (lhs: 33, nrhs: 1),
-        (lhs: 33, nrhs: 1),
-        (lhs: 33, nrhs: 1),
-        (lhs: 33, nrhs: 5),
-        (lhs: 32, nrhs: 1),
-        (lhs: 32, nrhs: 2),
-        (lhs: 32, nrhs: 2),
-        (lhs: 32, nrhs: 3),
-        (lhs: 32, nrhs: 3),
-        (lhs: 32, nrhs: 3),
-        (lhs: 32, nrhs: 3),
-        (lhs: 32, nrhs: 3),
-        (lhs: 32, nrhs: 3),
-        (lhs: 32, nrhs: 3),
-        (lhs: 32, nrhs: 3),
-        (lhs: 32, nrhs: 6),
-        (lhs: 32, nrhs: 2),
-        (lhs: 32, nrhs: 3),
-        (lhs: 32, nrhs: 3),
-        (lhs: 32, nrhs: 3),
-        (lhs: 32, nrhs: 3),
-        (lhs: 32, nrhs: 6),
-        (lhs: 32, nrhs: 5),
-        (lhs: 32, nrhs: 2),
-        (lhs: 32, nrhs: 1),
-        (lhs: 32, nrhs: 8),
-        (lhs: 34, nrhs: 4),
+        (lhs: 35, nrhs: 3),
         (lhs: 35, nrhs: 2),
         (lhs: 35, nrhs: 1),
-        (lhs: 36, nrhs: 2),
-        (lhs: 36, nrhs: 1),
-        (lhs: 37, nrhs: 3),
-        (lhs: 37, nrhs: 3),
-        (lhs: 38, nrhs: 3),
-        (lhs: 38, nrhs: 3),
+        (lhs: 35, nrhs: 1),
+        (lhs: 35, nrhs: 1),
+        (lhs: 35, nrhs: 1),
+        (lhs: 35, nrhs: 5),
+        (lhs: 34, nrhs: 1),
+        (lhs: 34, nrhs: 2),
+        (lhs: 34, nrhs: 2),
+        (lhs: 34, nrhs: 3),
+        (lhs: 34, nrhs: 3),
+        (lhs: 34, nrhs: 3),
+        (lhs: 34, nrhs: 3),
+        (lhs: 34, nrhs: 3),
+        (lhs: 34, nrhs: 3),
+        (lhs: 34, nrhs: 3),
+        (lhs: 34, nrhs: 3),
+        (lhs: 34, nrhs: 6),
+        (lhs: 34, nrhs: 2),
+        (lhs: 34, nrhs: 3),
+        (lhs: 34, nrhs: 3),
+        (lhs: 34, nrhs: 3),
+        (lhs: 34, nrhs: 3),
+        (lhs: 34, nrhs: 6),
+        (lhs: 34, nrhs: 5),
+        (lhs: 34, nrhs: 2),
+        (lhs: 34, nrhs: 1),
+        (lhs: 34, nrhs: 8),
+        (lhs: 34, nrhs: 7),
+        (lhs: 34, nrhs: 3),
+        (lhs: 34, nrhs: 3),
+        (lhs: 36, nrhs: 4),
+        (lhs: 37, nrhs: 2),
+        (lhs: 37, nrhs: 1),
+        (lhs: 38, nrhs: 2),
+        (lhs: 38, nrhs: 1),
+        (lhs: 39, nrhs: 3),
+        (lhs: 39, nrhs: 3),
+        (lhs: 40, nrhs: 3),
+        (lhs: 40, nrhs: 3),
     ]
 
     // Stack
@@ -245,9 +264,10 @@ class Parser: CitronParser {
         "F_MUL", "F_DIV", "MINUS", "F_MINUS",
         "DOT", "L_PAREN", "R_PAREN", "BOOL",
         "INT", "FLOAT", "IDENTIFIER", "NOT",
-        "THEN", "ELSE", "REC", "root",
-        "expr", "simple_expr", "func_def", "formal_args",
-        "actual_args", "elems", "pat",
+        "THEN", "ELSE", "REC", "LEFT_ARROW",
+        "ARRAY_CREATE", "root", "expr", "simple_expr",
+        "func_def", "formal_args", "actual_args", "elems",
+        "pat",
     ]
     let yyRuleText: [String] = [
         /*   0 */ "root ::= expr(e)",
@@ -280,15 +300,18 @@ class Parser: CitronParser {
         /*  27 */ "expr ::= simple_expr(a) actual_args(b)",
         /*  28 */ "expr ::= elems(e)",
         /*  29 */ "expr ::= LET L_PAREN pat(p) R_PAREN EQUAL expr(a) IN expr(b)",
-        /*  30 */ "func_def ::= IDENTIFIER(a) formal_args(b) EQUAL expr(c)",
-        /*  31 */ "formal_args ::= IDENTIFIER(a) formal_args(b)",
-        /*  32 */ "formal_args ::= IDENTIFIER(a)",
-        /*  33 */ "actual_args ::= actual_args(a) simple_expr(b)",
-        /*  34 */ "actual_args ::= simple_expr(a)",
-        /*  35 */ "elems ::= elems(a) COMMA expr(b)",
-        /*  36 */ "elems ::= expr(a) COMMA expr(b)",
-        /*  37 */ "pat ::= pat(a) COMMA IDENTIFIER(b)",
-        /*  38 */ "pat ::= IDENTIFIER(a) COMMA IDENTIFIER(b)",
+        /*  30 */ "expr ::= simple_expr(a) DOT L_PAREN expr(b) R_PAREN LEFT_ARROW expr(c)",
+        /*  31 */ "expr ::= expr(a) SEMICOLON expr(b)",
+        /*  32 */ "expr ::= ARRAY_CREATE simple_expr(num) simple_expr(element)",
+        /*  33 */ "func_def ::= IDENTIFIER(a) formal_args(b) EQUAL expr(c)",
+        /*  34 */ "formal_args ::= IDENTIFIER(a) formal_args(b)",
+        /*  35 */ "formal_args ::= IDENTIFIER(a)",
+        /*  36 */ "actual_args ::= actual_args(a) simple_expr(b)",
+        /*  37 */ "actual_args ::= simple_expr(a)",
+        /*  38 */ "elems ::= elems(a) COMMA expr(b)",
+        /*  39 */ "elems ::= expr(a) COMMA expr(b)",
+        /*  40 */ "pat ::= pat(a) COMMA IDENTIFIER(b)",
+        /*  41 */ "pat ::= IDENTIFIER(a) COMMA IDENTIFIER(b)",
     ]
 
     // Function definitions
@@ -303,70 +326,70 @@ class Parser: CitronParser {
             func codeBlockForRule00(e: Expr) throws -> Expr {
                 return e
             }
-            if case let .yy78(e) = yySymbolOnStack(distanceFromTop: 0) {
-                return .yy78(try codeBlockForRule00(e: e))
+            if case let .yy6(e) = yySymbolOnStack(distanceFromTop: 0) {
+                return .yy6(try codeBlockForRule00(e: e))
             }
         case 1: /* simple_expr ::= L_PAREN expr(e) R_PAREN */
             func codeBlockForRule01(e: Expr) throws -> Expr {
                 return e
             }
-            if case let .yy78(e) = yySymbolOnStack(distanceFromTop: 1) {
-                return .yy78(try codeBlockForRule01(e: e))
+            if case let .yy6(e) = yySymbolOnStack(distanceFromTop: 1) {
+                return .yy6(try codeBlockForRule01(e: e))
             }
         case 2: /* simple_expr ::= L_PAREN R_PAREN */
             func codeBlockForRule02() throws -> Expr {
                 return .unit
             }
-            return .yy78(try codeBlockForRule02())
+            return .yy6(try codeBlockForRule02())
         case 3: /* simple_expr ::= BOOL(t) */
             func codeBlockForRule03(t: Token) throws -> Expr {
                 return .bool(t.asBool())
             }
             if case let .yy0(t) = yySymbolOnStack(distanceFromTop: 0) {
-                return .yy78(try codeBlockForRule03(t: t))
+                return .yy6(try codeBlockForRule03(t: t))
             }
         case 4: /* simple_expr ::= INT(t) */
             func codeBlockForRule04(t: Token) throws -> Expr {
                 return .int(t.asInt())
             }
             if case let .yy0(t) = yySymbolOnStack(distanceFromTop: 0) {
-                return .yy78(try codeBlockForRule04(t: t))
+                return .yy6(try codeBlockForRule04(t: t))
             }
         case 5: /* simple_expr ::= FLOAT(t) */
             func codeBlockForRule05(t: Token) throws -> Expr {
                 return .float(t.asFloat())
             }
             if case let .yy0(t) = yySymbolOnStack(distanceFromTop: 0) {
-                return .yy78(try codeBlockForRule05(t: t))
+                return .yy6(try codeBlockForRule05(t: t))
             }
         case 6: /* simple_expr ::= IDENTIFIER(t) */
             func codeBlockForRule06(t: Token) throws -> Expr {
                 return .var(name: t.asID())
             }
             if case let .yy0(t) = yySymbolOnStack(distanceFromTop: 0) {
-                return .yy78(try codeBlockForRule06(t: t))
+                return .yy6(try codeBlockForRule06(t: t))
             }
         case 7: /* simple_expr ::= simple_expr(e1) DOT L_PAREN expr(e2) R_PAREN */
             func codeBlockForRule07(e1: Expr, e2: Expr) throws -> Expr {
                 return .get(array: e1, index: e2)
             }
-            if case let .yy78(e1) = yySymbolOnStack(distanceFromTop: 4),
-                case let .yy78(e2) = yySymbolOnStack(distanceFromTop: 1) {
-                return .yy78(try codeBlockForRule07(e1: e1, e2: e2))
+            if case let .yy6(e1) = yySymbolOnStack(distanceFromTop: 4),
+                case let .yy6(e2) = yySymbolOnStack(distanceFromTop: 1) {
+                return .yy6(try codeBlockForRule07(e1: e1, e2: e2))
             }
         case 8: /* expr ::= simple_expr(e) */
             func codeBlockForRule08(e: Expr) throws -> Expr {
                 return e
             }
-            if case let .yy78(e) = yySymbolOnStack(distanceFromTop: 0) {
-                return .yy78(try codeBlockForRule08(e: e))
+            if case let .yy6(e) = yySymbolOnStack(distanceFromTop: 0) {
+                return .yy6(try codeBlockForRule08(e: e))
             }
         case 9: /* expr ::= NOT expr(e) */
             func codeBlockForRule09(e: Expr) throws -> Expr {
                 return .not(op: e)
             }
-            if case let .yy78(e) = yySymbolOnStack(distanceFromTop: 0) {
-                return .yy78(try codeBlockForRule09(e: e))
+            if case let .yy6(e) = yySymbolOnStack(distanceFromTop: 0) {
+                return .yy6(try codeBlockForRule09(e: e))
             }
         case 10: /* expr ::= MINUS expr(e) */
             func codeBlockForRule10(e: Expr) throws -> Expr {
@@ -377,232 +400,257 @@ class Parser: CitronParser {
                     return .neg(op: e)
                 }
             }
-            if case let .yy78(e) = yySymbolOnStack(distanceFromTop: 0) {
-                return .yy78(try codeBlockForRule10(e: e))
+            if case let .yy6(e) = yySymbolOnStack(distanceFromTop: 0) {
+                return .yy6(try codeBlockForRule10(e: e))
             }
         case 11: /* expr ::= expr(lhs) ADD expr(rhs) */
             func codeBlockForRule11(lhs: Expr, rhs: Expr) throws -> Expr {
                 return .add(lhs: lhs, rhs: rhs)
             }
-            if case let .yy78(lhs) = yySymbolOnStack(distanceFromTop: 2),
-                case let .yy78(rhs) = yySymbolOnStack(distanceFromTop: 0) {
-                return .yy78(try codeBlockForRule11(lhs: lhs, rhs: rhs))
+            if case let .yy6(lhs) = yySymbolOnStack(distanceFromTop: 2),
+                case let .yy6(rhs) = yySymbolOnStack(distanceFromTop: 0) {
+                return .yy6(try codeBlockForRule11(lhs: lhs, rhs: rhs))
             }
         case 12: /* expr ::= expr(lhs) SUB expr(rhs) */
             func codeBlockForRule12(lhs: Expr, rhs: Expr) throws -> Expr {
                 return .sub(lhs: lhs, rhs: rhs)
             }
-            if case let .yy78(lhs) = yySymbolOnStack(distanceFromTop: 2),
-                case let .yy78(rhs) = yySymbolOnStack(distanceFromTop: 0) {
-                return .yy78(try codeBlockForRule12(lhs: lhs, rhs: rhs))
+            if case let .yy6(lhs) = yySymbolOnStack(distanceFromTop: 2),
+                case let .yy6(rhs) = yySymbolOnStack(distanceFromTop: 0) {
+                return .yy6(try codeBlockForRule12(lhs: lhs, rhs: rhs))
             }
         case 13: /* expr ::= expr(lhs) EQUAL expr(rhs) */
             func codeBlockForRule13(lhs: Expr, rhs: Expr) throws -> Expr {
                 return .eq(lhs: lhs, rhs: rhs)
             }
-            if case let .yy78(lhs) = yySymbolOnStack(distanceFromTop: 2),
-                case let .yy78(rhs) = yySymbolOnStack(distanceFromTop: 0) {
-                return .yy78(try codeBlockForRule13(lhs: lhs, rhs: rhs))
+            if case let .yy6(lhs) = yySymbolOnStack(distanceFromTop: 2),
+                case let .yy6(rhs) = yySymbolOnStack(distanceFromTop: 0) {
+                return .yy6(try codeBlockForRule13(lhs: lhs, rhs: rhs))
             }
         case 14: /* expr ::= expr(lhs) LESS_GREATER expr(rhs) */
             func codeBlockForRule14(lhs: Expr, rhs: Expr) throws -> Expr {
                 return .not(op: .eq(lhs: lhs, rhs: rhs))
             }
-            if case let .yy78(lhs) = yySymbolOnStack(distanceFromTop: 2),
-                case let .yy78(rhs) = yySymbolOnStack(distanceFromTop: 0) {
-                return .yy78(try codeBlockForRule14(lhs: lhs, rhs: rhs))
+            if case let .yy6(lhs) = yySymbolOnStack(distanceFromTop: 2),
+                case let .yy6(rhs) = yySymbolOnStack(distanceFromTop: 0) {
+                return .yy6(try codeBlockForRule14(lhs: lhs, rhs: rhs))
             }
         case 15: /* expr ::= expr(lhs) LESS expr(rhs) */
             func codeBlockForRule15(lhs: Expr, rhs: Expr) throws -> Expr {
                 return .not(op: .le(lhs: rhs, rhs: lhs))
             }
-            if case let .yy78(lhs) = yySymbolOnStack(distanceFromTop: 2),
-                case let .yy78(rhs) = yySymbolOnStack(distanceFromTop: 0) {
-                return .yy78(try codeBlockForRule15(lhs: lhs, rhs: rhs))
+            if case let .yy6(lhs) = yySymbolOnStack(distanceFromTop: 2),
+                case let .yy6(rhs) = yySymbolOnStack(distanceFromTop: 0) {
+                return .yy6(try codeBlockForRule15(lhs: lhs, rhs: rhs))
             }
         case 16: /* expr ::= expr(lhs) GREATER expr(rhs) */
             func codeBlockForRule16(lhs: Expr, rhs: Expr) throws -> Expr {
                 return .not(op: .le(lhs: lhs, rhs: rhs))
             }
-            if case let .yy78(lhs) = yySymbolOnStack(distanceFromTop: 2),
-                case let .yy78(rhs) = yySymbolOnStack(distanceFromTop: 0) {
-                return .yy78(try codeBlockForRule16(lhs: lhs, rhs: rhs))
+            if case let .yy6(lhs) = yySymbolOnStack(distanceFromTop: 2),
+                case let .yy6(rhs) = yySymbolOnStack(distanceFromTop: 0) {
+                return .yy6(try codeBlockForRule16(lhs: lhs, rhs: rhs))
             }
         case 17: /* expr ::= expr(lhs) LESS_EQUAL expr(rhs) */
             func codeBlockForRule17(lhs: Expr, rhs: Expr) throws -> Expr {
                 return .le(lhs: lhs, rhs: rhs)
             }
-            if case let .yy78(lhs) = yySymbolOnStack(distanceFromTop: 2),
-                case let .yy78(rhs) = yySymbolOnStack(distanceFromTop: 0) {
-                return .yy78(try codeBlockForRule17(lhs: lhs, rhs: rhs))
+            if case let .yy6(lhs) = yySymbolOnStack(distanceFromTop: 2),
+                case let .yy6(rhs) = yySymbolOnStack(distanceFromTop: 0) {
+                return .yy6(try codeBlockForRule17(lhs: lhs, rhs: rhs))
             }
         case 18: /* expr ::= expr(lhs) GREATER_EQUAL expr(rhs) */
             func codeBlockForRule18(lhs: Expr, rhs: Expr) throws -> Expr {
                 return .le(lhs: rhs, rhs: lhs)
             }
-            if case let .yy78(lhs) = yySymbolOnStack(distanceFromTop: 2),
-                case let .yy78(rhs) = yySymbolOnStack(distanceFromTop: 0) {
-                return .yy78(try codeBlockForRule18(lhs: lhs, rhs: rhs))
+            if case let .yy6(lhs) = yySymbolOnStack(distanceFromTop: 2),
+                case let .yy6(rhs) = yySymbolOnStack(distanceFromTop: 0) {
+                return .yy6(try codeBlockForRule18(lhs: lhs, rhs: rhs))
             }
         case 19: /* expr ::= IF expr(a) THEN expr(b) ELSE expr(c) */
             func codeBlockForRule19(a: Expr, b: Expr, c: Expr) throws -> Expr {
                 return .if(cond: a, ifTrue: b, ifFalse: c)
             }
-            if case let .yy78(a) = yySymbolOnStack(distanceFromTop: 4),
-                case let .yy78(b) = yySymbolOnStack(distanceFromTop: 2),
-                case let .yy78(c) = yySymbolOnStack(distanceFromTop: 0) {
-                return .yy78(try codeBlockForRule19(a: a, b: b, c: c))
+            if case let .yy6(a) = yySymbolOnStack(distanceFromTop: 4),
+                case let .yy6(b) = yySymbolOnStack(distanceFromTop: 2),
+                case let .yy6(c) = yySymbolOnStack(distanceFromTop: 0) {
+                return .yy6(try codeBlockForRule19(a: a, b: b, c: c))
             }
         case 20: /* expr ::= F_MINUS expr(e) */
             func codeBlockForRule20(e: Expr) throws -> Expr {
                 return .fneg(op: e)
             }
-            if case let .yy78(e) = yySymbolOnStack(distanceFromTop: 0) {
-                return .yy78(try codeBlockForRule20(e: e))
+            if case let .yy6(e) = yySymbolOnStack(distanceFromTop: 0) {
+                return .yy6(try codeBlockForRule20(e: e))
             }
         case 21: /* expr ::= expr(lhs) F_ADD expr(rhs) */
             func codeBlockForRule21(lhs: Expr, rhs: Expr) throws -> Expr {
                 return .fadd(lhs: lhs, rhs: rhs)
             }
-            if case let .yy78(lhs) = yySymbolOnStack(distanceFromTop: 2),
-                case let .yy78(rhs) = yySymbolOnStack(distanceFromTop: 0) {
-                return .yy78(try codeBlockForRule21(lhs: lhs, rhs: rhs))
+            if case let .yy6(lhs) = yySymbolOnStack(distanceFromTop: 2),
+                case let .yy6(rhs) = yySymbolOnStack(distanceFromTop: 0) {
+                return .yy6(try codeBlockForRule21(lhs: lhs, rhs: rhs))
             }
         case 22: /* expr ::= expr(lhs) F_SUB expr(rhs) */
             func codeBlockForRule22(lhs: Expr, rhs: Expr) throws -> Expr {
                 return .fsub(lhs: lhs, rhs: rhs)
             }
-            if case let .yy78(lhs) = yySymbolOnStack(distanceFromTop: 2),
-                case let .yy78(rhs) = yySymbolOnStack(distanceFromTop: 0) {
-                return .yy78(try codeBlockForRule22(lhs: lhs, rhs: rhs))
+            if case let .yy6(lhs) = yySymbolOnStack(distanceFromTop: 2),
+                case let .yy6(rhs) = yySymbolOnStack(distanceFromTop: 0) {
+                return .yy6(try codeBlockForRule22(lhs: lhs, rhs: rhs))
             }
         case 23: /* expr ::= expr(lhs) F_MUL expr(rhs) */
             func codeBlockForRule23(lhs: Expr, rhs: Expr) throws -> Expr {
                 return .fmul(lhs: lhs, rhs: rhs)
             }
-            if case let .yy78(lhs) = yySymbolOnStack(distanceFromTop: 2),
-                case let .yy78(rhs) = yySymbolOnStack(distanceFromTop: 0) {
-                return .yy78(try codeBlockForRule23(lhs: lhs, rhs: rhs))
+            if case let .yy6(lhs) = yySymbolOnStack(distanceFromTop: 2),
+                case let .yy6(rhs) = yySymbolOnStack(distanceFromTop: 0) {
+                return .yy6(try codeBlockForRule23(lhs: lhs, rhs: rhs))
             }
         case 24: /* expr ::= expr(lhs) F_DIV expr(rhs) */
             func codeBlockForRule24(lhs: Expr, rhs: Expr) throws -> Expr {
                 return .fdiv(lhs: lhs, rhs: rhs)
             }
-            if case let .yy78(lhs) = yySymbolOnStack(distanceFromTop: 2),
-                case let .yy78(rhs) = yySymbolOnStack(distanceFromTop: 0) {
-                return .yy78(try codeBlockForRule24(lhs: lhs, rhs: rhs))
+            if case let .yy6(lhs) = yySymbolOnStack(distanceFromTop: 2),
+                case let .yy6(rhs) = yySymbolOnStack(distanceFromTop: 0) {
+                return .yy6(try codeBlockForRule24(lhs: lhs, rhs: rhs))
             }
         case 25: /* expr ::= LET IDENTIFIER(a) EQUAL expr(b) IN expr(c) */
             func codeBlockForRule25(a: Token, b: Expr, c: Expr) throws -> Expr {
                 return .let(name: TypedVar(name: a.asID()), bind: b, body: c)
             }
             if case let .yy0(a) = yySymbolOnStack(distanceFromTop: 4),
-                case let .yy78(b) = yySymbolOnStack(distanceFromTop: 2),
-                case let .yy78(c) = yySymbolOnStack(distanceFromTop: 0) {
-                return .yy78(try codeBlockForRule25(a: a, b: b, c: c))
+                case let .yy6(b) = yySymbolOnStack(distanceFromTop: 2),
+                case let .yy6(c) = yySymbolOnStack(distanceFromTop: 0) {
+                return .yy6(try codeBlockForRule25(a: a, b: b, c: c))
             }
         case 26: /* expr ::= LET REC func_def(a) IN expr(b) */
             func codeBlockForRule26(a: FuncDef, b: Expr) throws -> Expr {
                 return .letRec(funcDef: a, bind: b)
             }
-            if case let .yy26(a) = yySymbolOnStack(distanceFromTop: 2),
-                case let .yy78(b) = yySymbolOnStack(distanceFromTop: 0) {
-                return .yy78(try codeBlockForRule26(a: a, b: b))
+            if case let .yy38(a) = yySymbolOnStack(distanceFromTop: 2),
+                case let .yy6(b) = yySymbolOnStack(distanceFromTop: 0) {
+                return .yy6(try codeBlockForRule26(a: a, b: b))
             }
         case 27: /* expr ::= simple_expr(a) actual_args(b) */
             func codeBlockForRule27(a: Expr, b: [Expr]) throws -> Expr {
                 return .app(function: a, args: b)
             }
-            if case let .yy78(a) = yySymbolOnStack(distanceFromTop: 1),
-                case let .yy36(b) = yySymbolOnStack(distanceFromTop: 0) {
-                return .yy78(try codeBlockForRule27(a: a, b: b))
+            if case let .yy6(a) = yySymbolOnStack(distanceFromTop: 1),
+                case let .yy10(b) = yySymbolOnStack(distanceFromTop: 0) {
+                return .yy6(try codeBlockForRule27(a: a, b: b))
             }
         case 28: /* expr ::= elems(e) */
             func codeBlockForRule28(e: [Expr]) throws -> Expr {
                 return .tuple(elements: e)
             }
-            if case let .yy36(e) = yySymbolOnStack(distanceFromTop: 0) {
-                return .yy78(try codeBlockForRule28(e: e))
+            if case let .yy10(e) = yySymbolOnStack(distanceFromTop: 0) {
+                return .yy6(try codeBlockForRule28(e: e))
             }
         case 29: /* expr ::= LET L_PAREN pat(p) R_PAREN EQUAL expr(a) IN expr(b) */
             func codeBlockForRule29(p: [TypedVar], a: Expr, b: Expr) throws -> Expr {
                 return .letTuple(vars: p, binding: a, body: b)
             }
-            if case let .yy50(p) = yySymbolOnStack(distanceFromTop: 5),
-                case let .yy78(a) = yySymbolOnStack(distanceFromTop: 2),
-                case let .yy78(b) = yySymbolOnStack(distanceFromTop: 0) {
-                return .yy78(try codeBlockForRule29(p: p, a: a, b: b))
+            if case let .yy2(p) = yySymbolOnStack(distanceFromTop: 5),
+                case let .yy6(a) = yySymbolOnStack(distanceFromTop: 2),
+                case let .yy6(b) = yySymbolOnStack(distanceFromTop: 0) {
+                return .yy6(try codeBlockForRule29(p: p, a: a, b: b))
             }
-        case 30: /* func_def ::= IDENTIFIER(a) formal_args(b) EQUAL expr(c) */
-            func codeBlockForRule30(a: Token, b: [TypedVar], c: Expr) throws -> FuncDef {
+        case 30: /* expr ::= simple_expr(a) DOT L_PAREN expr(b) R_PAREN LEFT_ARROW expr(c) */
+            func codeBlockForRule30(a: Expr, b: Expr, c: Expr) throws -> Expr {
+                return .put(array: a, index: b, value: c)
+            }
+            if case let .yy6(a) = yySymbolOnStack(distanceFromTop: 6),
+                case let .yy6(b) = yySymbolOnStack(distanceFromTop: 3),
+                case let .yy6(c) = yySymbolOnStack(distanceFromTop: 0) {
+                return .yy6(try codeBlockForRule30(a: a, b: b, c: c))
+            }
+        case 31: /* expr ::= expr(a) SEMICOLON expr(b) */
+            func codeBlockForRule31(a: Expr, b: Expr) throws -> Expr {
+                return .let(name: TypedVar.tmpVar(), bind: a, body: b)
+            }
+            if case let .yy6(a) = yySymbolOnStack(distanceFromTop: 2),
+                case let .yy6(b) = yySymbolOnStack(distanceFromTop: 0) {
+                return .yy6(try codeBlockForRule31(a: a, b: b))
+            }
+        case 32: /* expr ::= ARRAY_CREATE simple_expr(num) simple_expr(element) */
+            func codeBlockForRule32(num: Expr, element: Expr) throws -> Expr {
+                return .array(size: num, element: element)
+            }
+            if case let .yy6(num) = yySymbolOnStack(distanceFromTop: 1),
+                case let .yy6(element) = yySymbolOnStack(distanceFromTop: 0) {
+                return .yy6(try codeBlockForRule32(num: num, element: element))
+            }
+        case 33: /* func_def ::= IDENTIFIER(a) formal_args(b) EQUAL expr(c) */
+            func codeBlockForRule33(a: Token, b: [TypedVar], c: Expr) throws -> FuncDef {
                 return FuncDef(name: TypedVar(name: a.asID()), args: b, body: c)
             }
             if case let .yy0(a) = yySymbolOnStack(distanceFromTop: 3),
-                case let .yy50(b) = yySymbolOnStack(distanceFromTop: 2),
-                case let .yy78(c) = yySymbolOnStack(distanceFromTop: 0) {
-                return .yy26(try codeBlockForRule30(a: a, b: b, c: c))
+                case let .yy2(b) = yySymbolOnStack(distanceFromTop: 2),
+                case let .yy6(c) = yySymbolOnStack(distanceFromTop: 0) {
+                return .yy38(try codeBlockForRule33(a: a, b: b, c: c))
             }
-        case 31: /* formal_args ::= IDENTIFIER(a) formal_args(b) */
-            func codeBlockForRule31(a: Token, b: [TypedVar]) throws -> [TypedVar] {
+        case 34: /* formal_args ::= IDENTIFIER(a) formal_args(b) */
+            func codeBlockForRule34(a: Token, b: [TypedVar]) throws -> [TypedVar] {
                 return [TypedVar(name: a.asID())] + b
             }
             if case let .yy0(a) = yySymbolOnStack(distanceFromTop: 1),
-                case let .yy50(b) = yySymbolOnStack(distanceFromTop: 0) {
-                return .yy50(try codeBlockForRule31(a: a, b: b))
+                case let .yy2(b) = yySymbolOnStack(distanceFromTop: 0) {
+                return .yy2(try codeBlockForRule34(a: a, b: b))
             }
-        case 32: /* formal_args ::= IDENTIFIER(a) */
-            func codeBlockForRule32(a: Token) throws -> [TypedVar] {
+        case 35: /* formal_args ::= IDENTIFIER(a) */
+            func codeBlockForRule35(a: Token) throws -> [TypedVar] {
                 return [TypedVar(name: a.asID())]
             }
             if case let .yy0(a) = yySymbolOnStack(distanceFromTop: 0) {
-                return .yy50(try codeBlockForRule32(a: a))
+                return .yy2(try codeBlockForRule35(a: a))
             }
-        case 33: /* actual_args ::= actual_args(a) simple_expr(b) */
-            func codeBlockForRule33(a: [Expr], b: Expr) throws -> [Expr] {
+        case 36: /* actual_args ::= actual_args(a) simple_expr(b) */
+            func codeBlockForRule36(a: [Expr], b: Expr) throws -> [Expr] {
                 return a + [b]
             }
-            if case let .yy36(a) = yySymbolOnStack(distanceFromTop: 1),
-                case let .yy78(b) = yySymbolOnStack(distanceFromTop: 0) {
-                return .yy36(try codeBlockForRule33(a: a, b: b))
+            if case let .yy10(a) = yySymbolOnStack(distanceFromTop: 1),
+                case let .yy6(b) = yySymbolOnStack(distanceFromTop: 0) {
+                return .yy10(try codeBlockForRule36(a: a, b: b))
             }
-        case 34: /* actual_args ::= simple_expr(a) */
-            func codeBlockForRule34(a: Expr) throws -> [Expr] {
+        case 37: /* actual_args ::= simple_expr(a) */
+            func codeBlockForRule37(a: Expr) throws -> [Expr] {
                 return [a]
             }
-            if case let .yy78(a) = yySymbolOnStack(distanceFromTop: 0) {
-                return .yy36(try codeBlockForRule34(a: a))
+            if case let .yy6(a) = yySymbolOnStack(distanceFromTop: 0) {
+                return .yy10(try codeBlockForRule37(a: a))
             }
-        case 35: /* elems ::= elems(a) COMMA expr(b) */
-            func codeBlockForRule35(a: [Expr], b: Expr) throws -> [Expr] {
+        case 38: /* elems ::= elems(a) COMMA expr(b) */
+            func codeBlockForRule38(a: [Expr], b: Expr) throws -> [Expr] {
                 return a + [b]
             }
-            if case let .yy36(a) = yySymbolOnStack(distanceFromTop: 2),
-                case let .yy78(b) = yySymbolOnStack(distanceFromTop: 0) {
-                return .yy36(try codeBlockForRule35(a: a, b: b))
+            if case let .yy10(a) = yySymbolOnStack(distanceFromTop: 2),
+                case let .yy6(b) = yySymbolOnStack(distanceFromTop: 0) {
+                return .yy10(try codeBlockForRule38(a: a, b: b))
             }
-        case 36: /* elems ::= expr(a) COMMA expr(b) */
-            func codeBlockForRule36(a: Expr, b: Expr) throws -> [Expr] {
+        case 39: /* elems ::= expr(a) COMMA expr(b) */
+            func codeBlockForRule39(a: Expr, b: Expr) throws -> [Expr] {
                 return [a, b]
             }
-            if case let .yy78(a) = yySymbolOnStack(distanceFromTop: 2),
-                case let .yy78(b) = yySymbolOnStack(distanceFromTop: 0) {
-                return .yy36(try codeBlockForRule36(a: a, b: b))
+            if case let .yy6(a) = yySymbolOnStack(distanceFromTop: 2),
+                case let .yy6(b) = yySymbolOnStack(distanceFromTop: 0) {
+                return .yy10(try codeBlockForRule39(a: a, b: b))
             }
-        case 37: /* pat ::= pat(a) COMMA IDENTIFIER(b) */
-            func codeBlockForRule37(a: [TypedVar], b: Token) throws -> [TypedVar] {
+        case 40: /* pat ::= pat(a) COMMA IDENTIFIER(b) */
+            func codeBlockForRule40(a: [TypedVar], b: Token) throws -> [TypedVar] {
                 return a + [TypedVar(name: b.asID())]
             }
-            if case let .yy50(a) = yySymbolOnStack(distanceFromTop: 2),
+            if case let .yy2(a) = yySymbolOnStack(distanceFromTop: 2),
                 case let .yy0(b) = yySymbolOnStack(distanceFromTop: 0) {
-                return .yy50(try codeBlockForRule37(a: a, b: b))
+                return .yy2(try codeBlockForRule40(a: a, b: b))
             }
-        case 38: /* pat ::= IDENTIFIER(a) COMMA IDENTIFIER(b) */
-            func codeBlockForRule38(a: Token, b: Token) throws -> [TypedVar] {
+        case 41: /* pat ::= IDENTIFIER(a) COMMA IDENTIFIER(b) */
+            func codeBlockForRule41(a: Token, b: Token) throws -> [TypedVar] {
                 return [TypedVar(name: a.asID()), TypedVar(name: b.asID())]
             }
             if case let .yy0(a) = yySymbolOnStack(distanceFromTop: 2),
                 case let .yy0(b) = yySymbolOnStack(distanceFromTop: 0) {
-                return .yy50(try codeBlockForRule38(a: a, b: b))
+                return .yy2(try codeBlockForRule41(a: a, b: b))
             }
         default:
             fatalError("Can't invoke code block for rule number \(ruleNumber) - no such rule")
@@ -616,7 +664,7 @@ class Parser: CitronParser {
     }
 
     func yyUnwrapResultFromSymbol(_ symbol: CitronSymbol) -> CitronResult {
-        if case let .yy78(result) = symbol {
+        if case let .yy6(result) = symbol {
             return result
         } else {
             fatalError("Unexpected mismatch in result type")
