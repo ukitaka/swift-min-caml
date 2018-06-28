@@ -437,7 +437,7 @@ public extension Expr {
     }
 
     public struct LetTupleExpr {
-        public let vars: [Var]
+        public let vars: [TypedVar]
         public let binding: Expr
         public let body: Expr
     }

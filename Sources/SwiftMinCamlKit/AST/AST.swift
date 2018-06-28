@@ -70,7 +70,7 @@ public indirect enum Expr: AutoHashable, AutoEquatable, AutoEnum {
     case letRec(funcDef: FuncDef, bind: Expr)
     case app(function: Expr, args: [Expr])
     case tuple(elements: [Expr])
-    case letTuple(vars: [Var], binding: Expr, body: Expr)
+    case letTuple(vars: [TypedVar], binding: Expr, body: Expr)
     case array(size: Expr, element: Expr)
     case get(array: Expr, index: Expr)
     case put(array: Expr, index: Expr, value: Expr)

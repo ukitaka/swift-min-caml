@@ -14,6 +14,8 @@
 %nonterminal_type func_def FuncDef
 %nonterminal_type formal_args "[TypedVar]"
 %nonterminal_type actual_args "[Expr]"
+%nonterminal_type elems "[Expr]"
+%nonterminal_type pat "[TypedVar]"
 
 
 // Associativity and precedences
@@ -151,6 +153,14 @@ expr ::= simple_expr(a) actual_args(b). {
     return .app(function: a, args: b)
 }
 
+expr ::= elems(e). {
+    return .tuple(elements: e)
+}
+
+expr ::= LET L_PAREN pat(p) R_PAREN EQUAL expr(a) IN expr(b). {
+    return .letTuple(vars: p, binding: a, body: b)
+}
+
 func_def ::= IDENTIFIER(a) formal_args(b) EQUAL expr(c). {
     return FuncDef(name: TypedVar(name: a.asID()), args: b, body: c)
 }
@@ -169,4 +179,20 @@ actual_args ::= actual_args(a) simple_expr(b). {
 
 actual_args ::= simple_expr(a). {
     return [a]
+}
+
+elems ::= elems(a) COMMA expr(b). {
+    return a + [b]
+}
+
+elems ::= expr(a) COMMA expr(b). {
+    return [a, b]
+}
+
+pat ::= pat(a) COMMA IDENTIFIER(b). {
+    return a + [TypedVar(name: b.asID())]
+}
+
+pat ::= IDENTIFIER(a) COMMA IDENTIFIER(b). {
+    return [TypedVar(name: a.asID()), TypedVar(name: b.asID())]
 }
