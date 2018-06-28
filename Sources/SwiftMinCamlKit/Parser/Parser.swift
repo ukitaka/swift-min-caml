@@ -21,9 +21,13 @@ class Parser: CitronParser {
         case SUB = 2
         case MUL = 3
         case DIV = 4
-        case INT = 5
-        case FLOAT = 6
+        case L_PAREN = 5
+        case R_PAREN = 6
         case BOOL = 7
+        case INT = 8
+        case FLOAT = 9
+        case IDENTIFIER = 10
+        case DOT = 11
     }
 
     typealias CitronToken = Token
@@ -31,42 +35,50 @@ class Parser: CitronParser {
     enum CitronSymbol {
         case yyBaseOfStack
         case yy0(CitronToken)
-        case yy4(Expr)
+        case yy28(Expr)
     }
 
     typealias CitronResult = Expr
 
     // Counts
 
-    let yyNumberOfSymbols: Int = 10
-    let yyNumberOfStates: Int = 8
+    let yyNumberOfSymbols: Int = 16
+    let yyNumberOfStates: Int = 14
 
     // Action tables
 
     let yyLookaheadAction: [(CitronSymbolCode, CitronParsingAction)] = [
-        /*   0 */ (0, .RD(0)), (1, .SH(4)), (2, .SH(3)), (3, .SH(2)), (4, .SH(1)),
-        /*   5 */ (9, .RD(7)), (5, .SR(1)), (6, .SR(2)), (7, .SR(3)), (10, .RD(2)),
-        /*  10 */ (8, .ACCEPT), (9, .SH(5)), (3, .SH(2)), (4, .SH(1)), (9, .RD(6)),
-        /*  15 */ (9, .SH(6)), (9, .SH(7)),
+        /*   0 */ (5, .SH(1)), (6, .SR(2)), (7, .SR(3)), (8, .SR(4)), (9, .SR(5)),
+        /*   5 */ (10, .SR(6)), (5, .SH(1)), (5, .SH(4)), (7, .SR(3)), (8, .SR(4)),
+        /*  10 */ (9, .SR(5)), (10, .SR(6)), (1, .SH(6)), (2, .SH(5)), (3, .SH(3)),
+        /*  15 */ (4, .SH(2)), (11, .SH(12)), (6, .SR(7)), (16, .RD(2)), (1, .SH(6)),
+        /*  20 */ (2, .SH(5)), (3, .SH(3)), (4, .SH(2)), (16, .RD(2)), (6, .SR(1)),
+        /*  25 */ (0, .RD(0)), (1, .SH(6)), (2, .SH(5)), (3, .SH(3)), (4, .SH(2)),
+        /*  30 */ (3, .SH(3)), (4, .SH(2)), (12, .ACCEPT), (13, .SH(9)), (14, .SH(13)),
+        /*  35 */ (13, .SH(8)), (14, .SH(13)), (16, .RD(2)), (16, .RD(2)), (13, .RD(12)),
+        /*  40 */ (14, .SH(13)), (13, .RD(11)), (14, .SH(13)), (13, .SH(7)), (14, .SH(13)),
+        /*  45 */ (16, .RD(2)), (13, .SH(11)), (14, .SH(13)), (13, .SH(10)), (14, .SH(13)),
     ]
 
-    let yyShiftUseDefault: Int = 17
-    let yyShiftOffsetMin: Int = 0
-    let yyShiftOffsetMax: Int = 9
+    let yyShiftUseDefault: Int = 50
+    let yyShiftOffsetMin: Int = -5
+    let yyShiftOffsetMax: Int = 27
     let yyShiftOffset: [Int] = [
-        /*     0 */ 1, 1, 1, 1, 1, 0, 9, 9,
+        /*     0 */ 1, -5, 1, 1, 1, 1, 1, 11, 18, 25,
+        /*    10 */ 27, 27, 2, 5,
     ]
 
-    let yyReduceUseDefault: Int = -5
-    let yyReduceOffsetMin: Int = -4
-    let yyReduceOffsetMax: Int = 7
+    let yyReduceUseDefault: Int = -1
+    let yyReduceOffsetMin: Int = 0
+    let yyReduceOffsetMax: Int = 35
     let yyReduceOffset: [Int] = [
-        /*     0 */ 2, -4, 5, 6, 7,
+        /*     0 */ 20, 22, 26, 28, 30, 33, 35,
     ]
 
     let yyDefaultAction: [CitronParsingAction] = [
         /*     0 */ .ERROR, .ERROR, .ERROR, .ERROR, .ERROR,
-        /*     5 */ .ERROR, .RD(5), .RD(4),
+        /*     5 */ .ERROR, .ERROR, .ERROR, .ERROR, .ERROR,
+        /*    10 */ .RD(9), .RD(10), .ERROR, .RD(8),
     ]
 
     // Fallback
@@ -81,14 +93,19 @@ class Parser: CitronParser {
     // Rules
 
     let yyRuleInfo: [(lhs: CitronSymbolCode, nrhs: UInt)] = [
-        (lhs: 8, nrhs: 1),
-        (lhs: 9, nrhs: 1),
-        (lhs: 9, nrhs: 1),
-        (lhs: 9, nrhs: 1),
-        (lhs: 9, nrhs: 3),
-        (lhs: 9, nrhs: 3),
-        (lhs: 9, nrhs: 3),
-        (lhs: 9, nrhs: 3),
+        (lhs: 12, nrhs: 1),
+        (lhs: 14, nrhs: 3),
+        (lhs: 14, nrhs: 2),
+        (lhs: 14, nrhs: 1),
+        (lhs: 14, nrhs: 1),
+        (lhs: 14, nrhs: 1),
+        (lhs: 14, nrhs: 1),
+        (lhs: 14, nrhs: 5),
+        (lhs: 13, nrhs: 1),
+        (lhs: 13, nrhs: 3),
+        (lhs: 13, nrhs: 3),
+        (lhs: 13, nrhs: 3),
+        (lhs: 13, nrhs: 3),
     ]
 
     // Stack
@@ -102,18 +119,24 @@ class Parser: CitronParser {
     var isTracingEnabled: Bool = false
     let yySymbolName: [String] = [
         "$", "ADD", "SUB", "MUL",
-        "DIV", "INT", "FLOAT", "BOOL",
-        "root", "expr",
+        "DIV", "L_PAREN", "R_PAREN", "BOOL",
+        "INT", "FLOAT", "IDENTIFIER", "DOT",
+        "root", "expr", "simple_expr", "var",
     ]
     let yyRuleText: [String] = [
         /*   0 */ "root ::= expr(e)",
-        /*   1 */ "expr ::= INT(t)",
-        /*   2 */ "expr ::= FLOAT(t)",
-        /*   3 */ "expr ::= BOOL(t)",
-        /*   4 */ "expr ::= expr(lhs) ADD expr(rhs)",
-        /*   5 */ "expr ::= expr(lhs) SUB expr(rhs)",
-        /*   6 */ "expr ::= expr(lhs) MUL expr(rhs)",
-        /*   7 */ "expr ::= expr(lhs) DIV expr(rhs)",
+        /*   1 */ "simple_expr ::= L_PAREN expr(e) R_PAREN",
+        /*   2 */ "simple_expr ::= L_PAREN R_PAREN",
+        /*   3 */ "simple_expr ::= BOOL(t)",
+        /*   4 */ "simple_expr ::= INT(t)",
+        /*   5 */ "simple_expr ::= FLOAT(t)",
+        /*   6 */ "simple_expr ::= IDENTIFIER(t)",
+        /*   7 */ "simple_expr ::= simple_expr(e1) DOT L_PAREN expr(e2) R_PAREN",
+        /*   8 */ "expr ::= simple_expr(e)",
+        /*   9 */ "expr ::= expr(lhs) ADD expr(rhs)",
+        /*  10 */ "expr ::= expr(lhs) SUB expr(rhs)",
+        /*  11 */ "expr ::= expr(lhs) MUL expr(rhs)",
+        /*  12 */ "expr ::= expr(lhs) DIV expr(rhs)",
     ]
 
     // Function definitions
@@ -125,64 +148,98 @@ class Parser: CitronParser {
     func yyInvokeCodeBlockForRule(ruleNumber: CitronRuleNumber) throws -> CitronSymbol {
         switch ruleNumber {
         case 0: /* root ::= expr(e) */
-            func codeBlockForRule0(e: Expr) throws -> Expr {
+            func codeBlockForRule00(e: Expr) throws -> Expr {
                 return e
             }
-            if case let .yy4(e) = yySymbolOnStack(distanceFromTop: 0) {
-                return .yy4(try codeBlockForRule0(e: e))
+            if case let .yy28(e) = yySymbolOnStack(distanceFromTop: 0) {
+                return .yy28(try codeBlockForRule00(e: e))
             }
-        case 1: /* expr ::= INT(t) */
-            func codeBlockForRule1(t: Token) throws -> Expr {
-                return .int(t.asInt())
+        case 1: /* simple_expr ::= L_PAREN expr(e) R_PAREN */
+            func codeBlockForRule01(e: Expr) throws -> Expr {
+                return e
             }
-            if case let .yy0(t) = yySymbolOnStack(distanceFromTop: 0) {
-                return .yy4(try codeBlockForRule1(t: t))
+            if case let .yy28(e) = yySymbolOnStack(distanceFromTop: 1) {
+                return .yy28(try codeBlockForRule01(e: e))
             }
-        case 2: /* expr ::= FLOAT(t) */
-            func codeBlockForRule2(t: Token) throws -> Expr {
-                return .float(t.asFloat())
+        case 2: /* simple_expr ::= L_PAREN R_PAREN */
+            func codeBlockForRule02() throws -> Expr {
+                return .unit
             }
-            if case let .yy0(t) = yySymbolOnStack(distanceFromTop: 0) {
-                return .yy4(try codeBlockForRule2(t: t))
-            }
-        case 3: /* expr ::= BOOL(t) */
-            func codeBlockForRule3(t: Token) throws -> Expr {
+            return .yy28(try codeBlockForRule02())
+        case 3: /* simple_expr ::= BOOL(t) */
+            func codeBlockForRule03(t: Token) throws -> Expr {
                 return .bool(t.asBool())
             }
             if case let .yy0(t) = yySymbolOnStack(distanceFromTop: 0) {
-                return .yy4(try codeBlockForRule3(t: t))
+                return .yy28(try codeBlockForRule03(t: t))
             }
-        case 4: /* expr ::= expr(lhs) ADD expr(rhs) */
-            func codeBlockForRule4(lhs: Expr, rhs: Expr) throws -> Expr {
+        case 4: /* simple_expr ::= INT(t) */
+            func codeBlockForRule04(t: Token) throws -> Expr {
+                return .int(t.asInt())
+            }
+            if case let .yy0(t) = yySymbolOnStack(distanceFromTop: 0) {
+                return .yy28(try codeBlockForRule04(t: t))
+            }
+        case 5: /* simple_expr ::= FLOAT(t) */
+            func codeBlockForRule05(t: Token) throws -> Expr {
+                return .float(t.asFloat())
+            }
+            if case let .yy0(t) = yySymbolOnStack(distanceFromTop: 0) {
+                return .yy28(try codeBlockForRule05(t: t))
+            }
+        case 6: /* simple_expr ::= IDENTIFIER(t) */
+            func codeBlockForRule06(t: Token) throws -> Expr {
+                return .var(name: t.asID())
+            }
+            if case let .yy0(t) = yySymbolOnStack(distanceFromTop: 0) {
+                return .yy28(try codeBlockForRule06(t: t))
+            }
+        case 7: /* simple_expr ::= simple_expr(e1) DOT L_PAREN expr(e2) R_PAREN */
+            func codeBlockForRule07(e1: Expr, e2: Expr) throws -> Expr {
+                return .get(array: e1, index: e2)
+            }
+            if case let .yy28(e1) = yySymbolOnStack(distanceFromTop: 4),
+                case let .yy28(e2) = yySymbolOnStack(distanceFromTop: 1) {
+                return .yy28(try codeBlockForRule07(e1: e1, e2: e2))
+            }
+        case 8: /* expr ::= simple_expr(e) */
+            func codeBlockForRule08(e: Expr) throws -> Expr {
+                return e
+            }
+            if case let .yy28(e) = yySymbolOnStack(distanceFromTop: 0) {
+                return .yy28(try codeBlockForRule08(e: e))
+            }
+        case 9: /* expr ::= expr(lhs) ADD expr(rhs) */
+            func codeBlockForRule09(lhs: Expr, rhs: Expr) throws -> Expr {
                 return .add(lhs: lhs, rhs: rhs)
             }
-            if case let .yy4(lhs) = yySymbolOnStack(distanceFromTop: 2),
-                case let .yy4(rhs) = yySymbolOnStack(distanceFromTop: 0) {
-                return .yy4(try codeBlockForRule4(lhs: lhs, rhs: rhs))
+            if case let .yy28(lhs) = yySymbolOnStack(distanceFromTop: 2),
+                case let .yy28(rhs) = yySymbolOnStack(distanceFromTop: 0) {
+                return .yy28(try codeBlockForRule09(lhs: lhs, rhs: rhs))
             }
-        case 5: /* expr ::= expr(lhs) SUB expr(rhs) */
-            func codeBlockForRule5(lhs: Expr, rhs: Expr) throws -> Expr {
+        case 10: /* expr ::= expr(lhs) SUB expr(rhs) */
+            func codeBlockForRule10(lhs: Expr, rhs: Expr) throws -> Expr {
                 return .sub(lhs: lhs, rhs: rhs)
             }
-            if case let .yy4(lhs) = yySymbolOnStack(distanceFromTop: 2),
-                case let .yy4(rhs) = yySymbolOnStack(distanceFromTop: 0) {
-                return .yy4(try codeBlockForRule5(lhs: lhs, rhs: rhs))
+            if case let .yy28(lhs) = yySymbolOnStack(distanceFromTop: 2),
+                case let .yy28(rhs) = yySymbolOnStack(distanceFromTop: 0) {
+                return .yy28(try codeBlockForRule10(lhs: lhs, rhs: rhs))
             }
-        case 6: /* expr ::= expr(lhs) MUL expr(rhs) */
-            func codeBlockForRule6(lhs: Expr, rhs: Expr) throws -> Expr {
+        case 11: /* expr ::= expr(lhs) MUL expr(rhs) */
+            func codeBlockForRule11(lhs: Expr, rhs: Expr) throws -> Expr {
                 return .sub(lhs: lhs, rhs: rhs)
             }
-            if case let .yy4(lhs) = yySymbolOnStack(distanceFromTop: 2),
-                case let .yy4(rhs) = yySymbolOnStack(distanceFromTop: 0) {
-                return .yy4(try codeBlockForRule6(lhs: lhs, rhs: rhs))
+            if case let .yy28(lhs) = yySymbolOnStack(distanceFromTop: 2),
+                case let .yy28(rhs) = yySymbolOnStack(distanceFromTop: 0) {
+                return .yy28(try codeBlockForRule11(lhs: lhs, rhs: rhs))
             }
-        case 7: /* expr ::= expr(lhs) DIV expr(rhs) */
-            func codeBlockForRule7(lhs: Expr, rhs: Expr) throws -> Expr {
+        case 12: /* expr ::= expr(lhs) DIV expr(rhs) */
+            func codeBlockForRule12(lhs: Expr, rhs: Expr) throws -> Expr {
                 return .div(lhs: lhs, rhs: rhs)
             }
-            if case let .yy4(lhs) = yySymbolOnStack(distanceFromTop: 2),
-                case let .yy4(rhs) = yySymbolOnStack(distanceFromTop: 0) {
-                return .yy4(try codeBlockForRule7(lhs: lhs, rhs: rhs))
+            if case let .yy28(lhs) = yySymbolOnStack(distanceFromTop: 2),
+                case let .yy28(rhs) = yySymbolOnStack(distanceFromTop: 0) {
+                return .yy28(try codeBlockForRule12(lhs: lhs, rhs: rhs))
             }
         default:
             fatalError("Can't invoke code block for rule number \(ruleNumber) - no such rule")
@@ -196,7 +253,7 @@ class Parser: CitronParser {
     }
 
     func yyUnwrapResultFromSymbol(_ symbol: CitronSymbol) -> CitronResult {
-        if case let .yy4(result) = symbol {
+        if case let .yy28(result) = symbol {
             return result
         } else {
             fatalError("Unexpected mismatch in result type")

@@ -54,8 +54,8 @@ let lexer = Lexer(rules: [
     .string("<-", (.punctuation, .LEFT_ARROW)),
     .string(".", (.punctuation, .DOT)),
     .string(",", (.punctuation, .COMMA)),
-    .string("(", (.punctuation, .L_BR)),
-    .string(")", (.punctuation, .R_BR)),
+    .string("(", (.punctuation, .L_PAREN)),
+    .string(")", (.punctuation, .R_PAREN)),
 
     // Whitespace
     .regexPattern("\\s", { _ in nil })

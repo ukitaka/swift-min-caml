@@ -42,10 +42,10 @@ extension Token {
         }
     }
     
-    func asIdentifier() -> String {
+    func asID() -> ID {
         switch self {
         case let .identifier(id):
-            return id
+            return ID(rawValue: id)
         default:
             fatalError("\(self) is not identifier.")
         }
