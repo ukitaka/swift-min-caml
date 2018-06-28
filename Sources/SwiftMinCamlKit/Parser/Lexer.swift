@@ -44,6 +44,7 @@ let lexer = Lexer(rules: [
     }),
 
     // Operators
+    .string("<-", (.identifier("<-"), .LEFT_ARROW)),
     .string("+", (.identifier("+"), .ADD)),
     .string("-", (.identifier("-"), .SUB)),
     .string("-.", (.identifier("-"), .F_MINUS)),
@@ -61,7 +62,6 @@ let lexer = Lexer(rules: [
     .string(">=", (.identifier(">="), .GREATER_EQUAL)),
 
     // Punctuation
-    .string("<-", (.punctuation, .LEFT_ARROW)),
     .string(".", (.punctuation, .DOT)),
     .string(",", (.punctuation, .COMMA)),
     .string(";", (.punctuation, .SEMICOLON)),
