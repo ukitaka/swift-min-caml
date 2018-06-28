@@ -16,49 +16,80 @@ extension Type {
     }
 }
 
-typealias Context = [Var: Type]
+typealias Env = [Var: Type]
 
 enum Typing {
-    static func type(expr: Expr) -> TypedExpr {
-        let constraintType = expr.constraintTyping()
-        var context: Context = [:] //TODO: add builtin functions
-        return unify(typedExpr: constraintType, context: &context)
+    static func type(expr: Expr) -> Expr {
+        var env: Env = [:] //TODO: add builtin functions
+        //return unify(expr: expr, env: &env)
+        fatalError()
+    }
+    
+    private static func mostGeneralUnifier(_ type1: Type, _ type2: Type) -> Substitution {
+        switch (type1, type2) {
+        case let (.func(args: args1, ret: ret1), .func(args: args2, ret: ret2)):
+            let s1: Substitution = zip(args1, args2).map(mostGeneralUnifier).reduce(Substitution(), Substitution.merging)
+            let s2 = mostGeneralUnifier(ret1.apply(s1), ret2.apply(s1))
+            return s1.merging(other: s2)
+        case let (.tuple(elements: elements1), .tuple(elements: elements2)):
+            return zip(elements1, elements2).map(mostGeneralUnifier).reduce(Substitution(), Substitution.merging)
+        case let (.array(element: element1), .array(element: element2)):
+            return mostGeneralUnifier(element1, element2)
+        default:
+            return Substitution()
+        }
     }
 
-    private static func unify(typedExpr: TypedExpr, context: inout Context) -> TypedExpr {
-        precondition(typedExpr.type.isTypeVar)
-        switch typedExpr {
-        case let .const(const, _):
-            return .const(const: const, type: typed(const: const))
+    private static func g(expr: Expr, env: Env) -> Type {
+        switch expr {
+        case .unit:
+            return .unit
+        case .int:
+            return .int
+        case .float:
+            return .float
+        case .bool:
+            return .bool
+        default:
+            fatalError()
+        }
+            /*
+        case let .not(op: op):
+            fatalError()
+        case let .add(lhs: lhs, rhs: rhs):
+            let lhs = unify(expr: lhs, env: &env)
+            let rhs = unify(expr: rhs, env: &env)
+            return .add(lhs: lhs, rhs: rhs)
+        case let .sub(lhs: lhs, rhs: rhs):
+            let lhs = unify(expr: lhs, env: &env)
+            let rhs = unify(expr: rhs, env: &env)
+            return .add(lhs: lhs, rhs: rhs)
+        case let .mul(lhs: lhs, rhs: rhs):
+            let lhs = unify(expr: lhs, env: &env)
+            let rhs = unify(expr: rhs, env: &env)
+            return .add(lhs: lhs, rhs: rhs)
+        case let .div(lhs: lhs, rhs: rhs):
+            let lhs = unify(expr: lhs, env: &env)
+            let rhs = unify(expr: rhs, env: &env)
+            return .add(lhs: lhs, rhs: rhs)
 
-        case let .arithOps(ops, args, _):
-            let lhs = unify(typedExpr: args.first!, context: &context)
-            let rhs = unify(typedExpr: args.last!, context: &context)
-            precondition(lhs.type == rhs.type)
-            return .arithOps(ops: ops,
-                             args: [lhs, rhs],
-                             type: lhs.type)
+        case let .`if`(cond, ifTrue, ifFalse):
+            let cond = unify(expr: cond, env: &env)
+            let ifTrue = unify(expr: ifTrue, env: &env)
+            let ifFalse = unify(expr: ifFalse, env: &env)
+            return .if(cond: cond,
+                       ifTrue: ifTrue,
+                       ifFalse: ifFalse)
 
-        case let .`if`(cond, ifTrue, ifFalse, _):
-            let typedCond = unify(typedExpr: cond, context: &context)
-            let typedIfTrue = unify(typedExpr: ifTrue, context: &context)
-            let typedIfFalse = unify(typedExpr: ifFalse, context: &context)
-            precondition(typedCond.type == .bool)
-            precondition(typedIfTrue.type == typedIfFalse.type)
-            return .if(cond: typedCond,
-                       ifTrue: typedIfTrue,
-                       ifFalse: typedIfFalse,
-                       type: typedIfTrue.type)
-
-        case let .`let`(varName, bind, body, _):
-            let typedBind = unify(typedExpr: bind, context: &context)
-            context[varName] = typedBind.type
-            let typedBody = unify(typedExpr: body, context: &context)
-            context.removeValue(forKey: varName)
+        case let .`let`(typedVar, bind, body):
+            let typedBind = unify(expr: bind, env: &env)
+            env[typedVar.name] = typedBind
+            let typedBody = unify(expr: body, env: &env)
+            env.removeValue(forKey: varName)
             return .let(varName: varName, bind: typedBind, body: typedBody, type: typedBody.type)
 
         case let .`var`(variable, _):
-            guard let type = context[variable] else {
+            guard let type = env[variable] else {
                 fatalError("Unknown variable: \(variable)")
             }
             return .var(variable: variable, type: type)
@@ -67,26 +98,26 @@ enum Typing {
             fatalError("Not implemeneted yet")
 
         case let .apply(function, args, _):
-            guard let functionType = context[function]?.asFunc else {
+            guard let functionType = env[function]?.asFunc else {
                 fatalError("Unknown function: \(function)")
             }
-            let typedArgs = args.map { unify(typedExpr: $0, context: &context) }
+            let typedArgs = args.map { unify(expr: $0, env: &env) }
             precondition(typedArgs.map { $0.type } == functionType.args)
             return .apply(function: function, args: typedArgs, type: functionType.ret)
 
         case let .tuple(elements, _):
-            let typeElements = elements.map { unify(typedExpr: $0, context: &context) }
+            let typeElements = elements.map { unify(expr: $0, env: &env) }
             return .tuple(elements: typeElements, type: .tuple(elements: typeElements.map { $0.type }))
 
         case let .readTuple(vars, bindings, body, _):
-            let typedBindings = unify(typedExpr: bindings, context: &context)
+            let typedBindings = unify(expr: bindings, env: &env)
             precondition(typedBindings.type.isTuple)
             for (v, t) in zip(vars, typedBindings.type.asTuple!) {
-                context[v] = t
+                env[v] = t
             }
-            let typedBody = unify(typedExpr: body, context: &context)
+            let typedBody = unify(expr: body, env: &env)
             for v in vars {
-                context.removeValue(forKey: v)
+                env.removeValue(forKey: v)
             }
             return .readTuple(vars: vars, bindings: typedBindings, body: typedBody, type: typedBody.type)
 
@@ -97,16 +128,6 @@ enum Typing {
         case .writeArray: // let .writeArray(array, index, value, type):
             fatalError("Not implemeneted yet")
         }
-    }
-
-    private static func typed(const: Const) -> Type {
-        switch const {
-        case .bool:
-            return .bool
-        case .float:
-            return .float
-        case .integer:
-            return .int
-        }
+ */
     }
 }

@@ -19,10 +19,20 @@ public extension Tagged where Tag == IDTag, RawValue == String {
     }
 }
 
+/// TypeVar
+public typealias TypeVar = Type
+
 /// TypedVar
 public struct TypedVar: Hashable {
     var name: ID
     var type: Type
+}
+
+extension TypedVar {
+    func assign(type: Type) -> TypedVar {
+        precondition(self.type.isTypeVar)
+        return TypedVar(name: self.name, type: type)
+    }
 }
 
 /// FuncDef
