@@ -131,58 +131,18 @@ enum Typing {
             return type
         case .letRec: // .letRec(funcDef: funcDef, body: body):
             fatalError("not implemented yet")
-        default:
-            fatalError()
+        case .app: // var .app(function: function, args: args):
+            fatalError("not implemented yet")
+        case .tuple:
+            fatalError("not implemented yet")
+        case .letTuple:
+            fatalError("not implemented yet")
+        case .array:
+            fatalError("not implemented yet")
+        case .get:
+            fatalError("not implemented yet")
+        case .put:
+            fatalError("not implemented yet")
         }
-            /*
-
-        case var .`let`(typedVar, bind, body):
-            let typedBind = unify(expr: bind, env: &env)
-            env[typedVar.name] = typedBind
-            let typedBody = unify(expr: body, env: &env)
-            env.removeValue(forKey: varName)
-            return .let(varName: varName, bind: typedBind, body: typedBody, type: typedBody.type)
-
-        case var .`var`(variable, _):
-            guard let type = env[variable] else {
-                fatalError("Unknown variable: \(variable)")
-            }
-            return .var(variable: variable, type: type)
-
-        case .letRec: // let .letRec(name, args, bind, body, type):
-            fatalError("Not implemeneted yet")
-
-        case var .apply(function, args, _):
-            guard let functionType = env[function]?.asFunc else {
-                fatalError("Unknown function: \(function)")
-            }
-            let typedArgs = args.map { unify(expr: $0, env: &env) }
-            precondition(typedArgs.map { $0.type } == functionType.args)
-            return .apply(function: function, args: typedArgs, type: functionType.ret)
-
-        case var .tuple(elements, _):
-            let typeElements = elements.map { unify(expr: $0, env: &env) }
-            return .tuple(elements: typeElements, type: .tuple(elements: typeElements.map { $0.type }))
-
-        case var .readTuple(vars, bindings, body, _):
-            let typedBindings = unify(expr: bindings, env: &env)
-            precondition(typedBindings.type.isTuple)
-            for (v, t) in zip(vars, typedBindings.type.asTuple!) {
-                env[v] = t
-            }
-            let typedBody = unify(expr: body, env: &env)
-            for v in vars {
-                env.removeValue(forKey: v)
-            }
-            return .readTuple(vars: vars, bindings: typedBindings, body: typedBody, type: typedBody.type)
-
-        case .createArray: // let .createArray(size, element, type):
-            fatalError("Not implemeneted yet")
-        case .readArray: // let .readArray(array, index, type):
-            fatalError("Not implemeneted yet")
-        case .writeArray: // let .writeArray(array, index, value, type):
-            fatalError("Not implemeneted yet")
-        }
- */
     }
 }
