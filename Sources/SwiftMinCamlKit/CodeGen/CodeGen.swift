@@ -75,24 +75,6 @@ public struct CodeGen {
             }
             b.sub(context.readReg(offset: 2), context.readReg(offset: 1))
             context.releaseReg()
-        case let .mul(lhs: lhs, rhs: rhs):
-            if labelOf(node: lhs) > labelOf(node: rhs) {
-                genExpr(expr: lhs, context: context)
-                genExpr(expr: rhs, context: context)
-            } else {
-                genExpr(expr: rhs, context: context)
-                genExpr(expr: lhs, context: context)
-            }
-            if context.readReg(offset: 2) == .rax {
-                b.mul(context.readReg(offset: 1))
-            } else {
-                b.push(.rax)
-                b.mov(.rax, context.readReg(offset: 2))
-                b.mul(context.readReg(offset: 1))
-                b.mov(context.readReg(offset: 2), .rax)
-                b.pop(.rax)
-            }
-            context.releaseReg()
         case let .let(name: name, bind: bind, body: body):
             return genLet(name: name, bind: bind, body: body, context: context)
         default:
@@ -134,10 +116,8 @@ public struct CodeGen {
         case .var, .int, .bool, .float:
             return 1
         case let .add(lhs: lhs, rhs: rhs),
-             let .sub(lhs: lhs, rhs: rhs),
-             let .mul(lhs: lhs, rhs: rhs),
-             let .div(lhs: lhs, rhs: rhs):
-            
+             let .sub(lhs: lhs, rhs: rhs):
+
             let (left, right) = (labelOf(node: lhs), labelOf(node: rhs))
             let maxLabel = max(left, right)
             

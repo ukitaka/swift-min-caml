@@ -83,17 +83,17 @@ expr ::= expr(lhs) EQUAL expr(rhs). {
 
 // <>
 expr ::= expr(lhs) LESS_GREATER expr(rhs). {
-    return .not(.eq(lhs: lhs, rhs: rhs))
+    return .not(op: .eq(lhs: lhs, rhs: rhs))
 }
 
 // (lhs < rhs) <=> !(rhs <= lhs)
 expr ::= expr(lhs) LESS expr(rhs). {
-    return .not(.le(lhs: rhs, rhs: lhs))
+    return .not(op: .le(lhs: rhs, rhs: lhs))
 }
 
 // (lhs > rhs) <=> !(lhs <= rhs)
 expr ::= expr(lhs) GREATER expr(rhs). {
-    return .not(.le(lhs: lhs, rhs: rhs))
+    return .not(op: .le(lhs: lhs, rhs: rhs))
 }
 
 expr ::= expr(lhs) LESS_EQUAL expr(rhs). {
@@ -108,10 +108,22 @@ expr ::= IF expr(a) THEN expr(b) ELSE expr(c). {
     return .if(cond: a, ifTrue:b, ifFalse:c)
 }
 
-expr ::= expr(lhs) MUL expr(rhs). {
-    return .sub(lhs: lhs, rhs: rhs)
+expr ::= F_MINUS expr(e). {
+    return .fneg(op: e)
 }
 
-expr ::= expr(lhs) DIV expr(rhs). {
-    return .div(lhs: lhs, rhs: rhs)
+expr ::= expr(lhs) F_ADD expr(rhs). {
+    return .fadd(lhs: lhs, rhs: rhs)
+}
+
+expr ::= expr(lhs) F_SUB expr(rhs). {
+    return .fsub(lhs: lhs, rhs: rhs)
+}
+
+expr ::= expr(lhs) F_MUL expr(rhs). {
+    return .fmul(lhs: lhs, rhs: rhs)
+}
+
+expr ::= expr(lhs) F_DIV expr(rhs). {
+    return .fdiv(lhs: lhs, rhs: rhs)
 }

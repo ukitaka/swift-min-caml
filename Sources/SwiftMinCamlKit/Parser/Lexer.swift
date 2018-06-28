@@ -46,8 +46,11 @@ let lexer = Lexer(rules: [
     // Operators
     .string("+", (.identifier("+"), .ADD)),
     .string("-", (.identifier("-"), .SUB)),
-    .string("*", (.identifier("*"), .MUL)),
-    .string("/", (.identifier("/"), .DIV)),
+    .string("-.", (.identifier("-"), .F_MINUS)),
+    .string("+.", (.identifier("+"), .F_ADD)),
+    .string("-.", (.identifier("-"), .F_SUB)),
+    .string("*.", (.identifier("*"), .F_MUL)),
+    .string("/.", (.identifier("/"), .F_DIV)),
     .string("=", (.identifier("="), .EQUAL)),
     .string("-", (.identifier("-"), .MINUS)),
     .string("!", (.identifier("!"), .NOT)),
