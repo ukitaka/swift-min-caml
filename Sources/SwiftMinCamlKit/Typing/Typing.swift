@@ -19,8 +19,8 @@ extension Type {
 typealias Env = [Var: Type]
 
 enum Typing {
-    static func type(env: Env, expr: Expr) -> Type {
-        fatalError()
+    static func type(env: Env, expr: inout Expr) -> Type {
+        return typeInfer(env: env, expr: &expr)
     }
     
     private static func mostGeneralUnifier(_ type1: Type, _ type2: Type) -> Substitution {
@@ -33,60 +33,110 @@ enum Typing {
             return zip(elements1, elements2).map(mostGeneralUnifier).reduce(Substitution(), Substitution.merging)
         case let (.array(element: element1), .array(element: element2)):
             return mostGeneralUnifier(element1, element2)
-        default:
+        case (.unit, .unit), (.bool, .bool), (.int, .int), (.float, .float):
             return Substitution()
+        case (.typeVar, _):
+            if type1 == type2 {
+                return Substitution()
+            } else {
+                return Substitution([type1:type2])
+            }
+        case (_, .typeVar):
+            if type1 == type2 {
+                return Substitution()
+            } else {
+                return Substitution([type2:type1])
+            }
+        default:
+            fatalError("Cannot find most general unifier. type1: \(type1), type2: \(type2)")
         }
     }
+    
+    @discardableResult
+    private static func unify(env: Env, expr: inout Expr, type: Type) -> Type {
+        let t = typeInfer(env: env, expr: &expr)
+        let s = mostGeneralUnifier(type, t)
+        return t.apply(s)
+    }
+    
+    @discardableResult
+    private static func unify(env: Env, lhs: inout Expr, rhs: inout Expr) -> Type {
+        let l = typeInfer(env: env, expr: &lhs)
+        let r = typeInfer(env: env, expr: &rhs)
+        let s = mostGeneralUnifier(l, r)
+        return l.apply(s) // or r.apply(s)
+    }
 
-    private static func typeInfer(env: Env, expr: Expr) -> (Substitution, Type) {
+    private static func typeInfer(env: Env, expr: inout Expr) -> Type {
         switch expr {
         case .unit:
-            return (Substitution(), .unit)
-        case .int:
-            return (Substitution(), .int)
-        case .float:
-            return (Substitution(), .float)
+            return .unit
         case .bool:
-            return (Substitution(), .bool)
+            return .bool
+        case .int:
+            return .int
+        case .float:
+            return .float
+        case var .not(op: op):
+            return unify(env: env, expr: &op, type: .bool)
+        case var .neg(op: op):
+            return unify(env: env, expr: &op, type: .int)
+        case var .add(lhs: lhs, rhs: rhs):
+            unify(env: env, expr: &lhs, type: .int)
+            unify(env: env, expr: &rhs, type: .int)
+            return .int
+        case var .sub(lhs: lhs, rhs: rhs):
+            unify(env: env, expr: &lhs, type: .int)
+            unify(env: env, expr: &rhs, type: .int)
+            return .int
+        case var .fneg(op: op):
+            return unify(env: env, expr: &op, type: .float)
+        case var .fadd(lhs: lhs, rhs: rhs):
+            unify(env: env, expr: &lhs, type: .float)
+            unify(env: env, expr: &rhs, type: .float)
+            return .float
+        case var .fsub(lhs: lhs, rhs: rhs):
+            unify(env: env, expr: &lhs, type: .float)
+            unify(env: env, expr: &rhs, type: .float)
+            return .float
+        case var .fmul(lhs: lhs, rhs: rhs):
+            unify(env: env, expr: &lhs, type: .float)
+            unify(env: env, expr: &rhs, type: .float)
+            return .float
+        case var .fdiv(lhs: lhs, rhs: rhs):
+            unify(env: env, expr: &lhs, type: .float)
+            unify(env: env, expr: &rhs, type: .float)
+            return .float
+        case var .eq(lhs: lhs, rhs: rhs):
+             unify(env: env, lhs: &lhs, rhs: &rhs)
+            return .bool
+        case var .le(lhs: lhs, rhs: rhs): //MEMO: need to check lhs/rhs are both number.
+            unify(env: env, lhs: &lhs, rhs: &rhs)
+            return .bool
+        case var .if(cond, ifTrue, ifFalse):
+            unify(env: env, expr: &cond, type: .bool)
+            return unify(env: env, lhs: &ifTrue, rhs: &ifFalse)
+        case .let(let name, var bind, var body):
+            let bindType = unify(env: env, expr: &bind, type: name.type)
+            var env = env
+            env.updateValue(bindType, forKey: name.name)
+            let bodyType = typeInfer(env: env, expr: &body)
+            // update expr
+            expr = .let(name: name.assign(type: bindType), bind: bind, body: body)
+            return bodyType
         default:
             fatalError()
         }
             /*
-        case let .not(op: op):
-            fatalError()
-        case let .add(lhs: lhs, rhs: rhs):
-            let lhs = unify(expr: lhs, env: &env)
-            let rhs = unify(expr: rhs, env: &env)
-            return .add(lhs: lhs, rhs: rhs)
-        case let .sub(lhs: lhs, rhs: rhs):
-            let lhs = unify(expr: lhs, env: &env)
-            let rhs = unify(expr: rhs, env: &env)
-            return .add(lhs: lhs, rhs: rhs)
-        case let .mul(lhs: lhs, rhs: rhs):
-            let lhs = unify(expr: lhs, env: &env)
-            let rhs = unify(expr: rhs, env: &env)
-            return .add(lhs: lhs, rhs: rhs)
-        case let .div(lhs: lhs, rhs: rhs):
-            let lhs = unify(expr: lhs, env: &env)
-            let rhs = unify(expr: rhs, env: &env)
-            return .add(lhs: lhs, rhs: rhs)
 
-        case let .`if`(cond, ifTrue, ifFalse):
-            let cond = unify(expr: cond, env: &env)
-            let ifTrue = unify(expr: ifTrue, env: &env)
-            let ifFalse = unify(expr: ifFalse, env: &env)
-            return .if(cond: cond,
-                       ifTrue: ifTrue,
-                       ifFalse: ifFalse)
-
-        case let .`let`(typedVar, bind, body):
+        case var .`let`(typedVar, bind, body):
             let typedBind = unify(expr: bind, env: &env)
             env[typedVar.name] = typedBind
             let typedBody = unify(expr: body, env: &env)
             env.removeValue(forKey: varName)
             return .let(varName: varName, bind: typedBind, body: typedBody, type: typedBody.type)
 
-        case let .`var`(variable, _):
+        case var .`var`(variable, _):
             guard let type = env[variable] else {
                 fatalError("Unknown variable: \(variable)")
             }
@@ -95,7 +145,7 @@ enum Typing {
         case .letRec: // let .letRec(name, args, bind, body, type):
             fatalError("Not implemeneted yet")
 
-        case let .apply(function, args, _):
+        case var .apply(function, args, _):
             guard let functionType = env[function]?.asFunc else {
                 fatalError("Unknown function: \(function)")
             }
@@ -103,11 +153,11 @@ enum Typing {
             precondition(typedArgs.map { $0.type } == functionType.args)
             return .apply(function: function, args: typedArgs, type: functionType.ret)
 
-        case let .tuple(elements, _):
+        case var .tuple(elements, _):
             let typeElements = elements.map { unify(expr: $0, env: &env) }
             return .tuple(elements: typeElements, type: .tuple(elements: typeElements.map { $0.type }))
 
-        case let .readTuple(vars, bindings, body, _):
+        case var .readTuple(vars, bindings, body, _):
             let typedBindings = unify(expr: bindings, env: &env)
             precondition(typedBindings.type.isTuple)
             for (v, t) in zip(vars, typedBindings.type.asTuple!) {

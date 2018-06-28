@@ -15,8 +15,9 @@ public struct Driver {
         try! lexer.tokenize(input) { (t, c) in
             try! parser.consume(token: t, code: c)
         }
-        let expr = try! parser.endParsing()
-        let _ = Typing.type(env: [:], expr: expr)
+        var expr = try! parser.endParsing()
+        let type = Typing.type(env: [:], expr: &expr)
+        print(type)
         let output = CodeGen().gen(expr: expr)
         return output
     }
