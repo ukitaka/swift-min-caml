@@ -614,7 +614,9 @@ class Parser: CitronParser {
             }
         case 35: /* func_def ::= IDENTIFIER(a) formal_args(b) EQUAL expr(c) */
             func codeBlockForRule35(a: Token, b: [TypedVar], c: Expr) throws -> FuncDef {
-                return FuncDef(name: TypedVar(name: a.asID()), args: b, body: c)
+                let count: Int = b.count
+                let type: Type = .func(args: Type.newTypeVars(n: count), ret: Type.newTypeVar())
+                return FuncDef(name: TypedVar(name: a.asID(), type: type), args: b, body: c)
             }
             if case let .yy0(a) = yySymbolOnStack(distanceFromTop: 3),
                 case let .yy32(b) = yySymbolOnStack(distanceFromTop: 2),

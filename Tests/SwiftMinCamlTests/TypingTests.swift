@@ -37,4 +37,22 @@ class TypingTests: XCTestCase {
         XCTAssertEqual(checkedExpr.asLetRec?.funcDef.args.first?.type, .int)
         XCTAssertEqual(checkedExpr.asLetRec?.funcDef.name.type, .bool)
     }
+    
+    func testCall() {
+        // let rec fac n = if n == 0 then 0 else n + (fac n - 1)
+        let body: Expr = Expr.if(
+            cond: .eq(lhs: .var(name: "n"), rhs: .int(0)),
+            ifTrue: .int(0),
+            ifFalse: .add(lhs: .var(name: "n"),
+                          rhs: .app(function: .var(name: "fac"), args: [ .sub(lhs: .var(name: "n"), rhs: .int(1)) ]))
+        )
+        let funcType: Type = Type.func(args: TypeVar.newTypeVars(n: 1), ret: TypeVar.newTypeVar())
+        let funcDef = FuncDef(name: TypedVar(name: "fac", type: funcType), args: [TypedVar(name: "n")], body: body)
+        let expr = Expr.letRec(funcDef: funcDef, body: .app(function: .var(name: "fac"), args: [.int(8)]))
+        print(expr)
+        let (checkedExpr, type) = Typing.type(env: [:], expr: expr)
+        XCTAssertEqual(type, .int)
+        XCTAssertEqual(checkedExpr.asLetRec?.funcDef.args.first?.type, .int)
+        XCTAssertEqual(checkedExpr.asLetRec?.funcDef.name.type, .int)
+    }
 }

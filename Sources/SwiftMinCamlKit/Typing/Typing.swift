@@ -139,8 +139,19 @@ enum Typing {
             let (bos, bot) = typeInfer(env: env2, expr: body.apply(s1))
             let s2 = s1.merging(other: bos).merging(other: Substitution([name.type: retType]))
             return (s2, bot.apply(s2))
-        case .app: // var .app(function: function, args: args):
-            fatalError("not implemented yet")
+        case let .app(function: function, args: args):
+            let (s1, f) = typeInfer(env: env, expr: function)
+            guard let funcType = f.asFunc else {
+                fatalError("\(f) is not a function type.")
+            }
+            let a = args.map { arg in typeInfer(env: env, expr: arg) }
+            let s2 = a.map { $0.0 }.reduce(Substitution(), Substitution.merging)
+            let types = a.map { $0.1 }
+            
+            let s3 = zip(funcType.args, types)
+                .map(mostGeneralUnifier)
+                .reduce(Substitution(), Substitution.merging)
+            return (s1.merging(other: s2).merging(other: s3), funcType.ret)
         case .tuple:
             fatalError("not implemented yet")
         case .letTuple:

@@ -182,7 +182,9 @@ expr ::= ARRAY_CREATE simple_expr(num) simple_expr(element). {
 }
 
 func_def ::= IDENTIFIER(a) formal_args(b) EQUAL expr(c). {
-    return FuncDef(name: TypedVar(name: a.asID()), args: b, body: c)
+    let count: Int = b.count
+    let type: Type = .func(args: Type.newTypeVars(n: count), ret: Type.newTypeVar())
+    return FuncDef(name: TypedVar(name: a.asID(), type: type), args: b, body: c)
 }
 
 formal_args ::= IDENTIFIER(a) formal_args(b). {
