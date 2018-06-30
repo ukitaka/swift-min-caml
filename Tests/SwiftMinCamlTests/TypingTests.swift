@@ -77,4 +77,11 @@ class TypingTests: XCTestCase {
         let (_, type) = Typing.type(env: [:], expr: expr)
         XCTAssertEqual(type, .array(element: .int))
     }
+    
+    func testGet() {
+        let arr = Expr.array(size: .int(10), element: .int(0))
+        let expr = Expr.get(array: arr, index: .int(4))
+        let (_, type) = Typing.type(env: [:], expr: expr)
+        XCTAssertEqual(type, .int)
+    }
 }
