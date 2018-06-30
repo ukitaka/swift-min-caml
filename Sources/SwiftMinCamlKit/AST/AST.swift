@@ -109,6 +109,7 @@ extension Type {
     }
     
     static func newTypeVars(n: Int) -> [Type] {
-        return (0...n).map { _ in newTypeVar() }
+        return (1...n).map { _ in newTypeVar() }
     }
 }
+

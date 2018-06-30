@@ -38,6 +38,12 @@ struct Substitution {
     
 }
 
+extension Substitution: CustomStringConvertible {
+    var description: String {
+        return map.map { "\($0.key) => \($0.value)" }.joined(separator: "\n")
+    }
+}
+
 extension Type {
     func apply(_ substitution: Substitution) -> Type {
         switch self {
