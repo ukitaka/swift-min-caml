@@ -96,7 +96,14 @@ extension Optimizer {
             }
             return (.var(name: name), type)
         case .letRec(let funcDef, let body):
-            fatalError()
+            var env = env
+            env.updateValue(funcDef.name.type, forKey: funcDef.name.name)
+            let (boe, bot) = kNormal(env, body)
+            for arg in funcDef.args {
+                env.updateValue(arg.type, forKey: arg.name)
+            }
+            let (bie, _) = kNormal(env, funcDef.body)
+            return (.letRec(funcDef: NormalizedFuncDef(name: funcDef.name, args: funcDef.args, body: bie), body: boe), bot)
         case .app(let function, let args):
             fatalError()
         case .tuple(let elements):

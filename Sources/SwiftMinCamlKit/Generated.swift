@@ -964,7 +964,7 @@ public extension NormalizedExpr {
     }
 
     public struct LetRecNormalizedExpr {
-        public let funcDef: FuncDef
+        public let funcDef: NormalizedFuncDef
         public let body: NormalizedExpr
     }
 

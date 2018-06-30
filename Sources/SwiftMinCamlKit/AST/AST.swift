@@ -92,6 +92,13 @@ public indirect enum Expr: AutoHashable, AutoEquatable, AutoEnum {
     case put(array: Expr, index: Expr, value: Expr)
 }
 
+/// Normalized FuncDef
+public struct NormalizedFuncDef: Hashable {
+    var name: TypedVar
+    var args: [TypedVar]
+    var body: NormalizedExpr
+}
+
 /// Normalized expression
 public indirect enum NormalizedExpr: AutoHashable, AutoEquatable, AutoEnum {
     case unit
@@ -112,7 +119,7 @@ public indirect enum NormalizedExpr: AutoHashable, AutoEquatable, AutoEnum {
     case ifLE(lhs: Var, rhs: Var, ifTrue:NormalizedExpr, ifFalse:NormalizedExpr) // if `lhs` <= `rhs` then `ifTrue` else `ifFalse`
     case `let`(name: TypedVar, bind: NormalizedExpr, body: NormalizedExpr)
     case `var`(name: Var)
-    case letRec(funcDef: FuncDef, body: NormalizedExpr)
+    case letRec(funcDef: NormalizedFuncDef, body: NormalizedExpr)
     case app(function: ID, args: [Var])
     case tuple(elements: [Var])
     case letTuple(vars: [TypedVar], binding: Var, body: NormalizedExpr)
