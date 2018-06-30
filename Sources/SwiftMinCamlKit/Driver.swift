@@ -16,8 +16,9 @@ public struct Driver {
             try! parser.consume(token: t, code: c)
         }
         let expr = try! parser.endParsing()
-        let (checkedExpr, type) = Typing.type(env: [:], expr: expr)
-        print(type)
+        let (checkedExpr, _) = Typing.type(env: [:], expr: expr)
+        let (normalizedExpr, _) = Optimizer.kNormal([:], checkedExpr)
+        print(normalizedExpr)
         let output = CodeGen().gen(expr: checkedExpr)
         return output
     }

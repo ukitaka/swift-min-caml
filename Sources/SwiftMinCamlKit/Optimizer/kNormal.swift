@@ -6,7 +6,7 @@
 //
 
 extension Optimizer {
-    func kNormal(_ env: Env, _ expr: Expr) -> (NormalizedExpr, Type) {
+    static func kNormal(_ env: Env, _ expr: Expr) -> (NormalizedExpr, Type) {
         switch expr {
         case .unit:
             return (.unit, .unit)
@@ -176,7 +176,7 @@ extension Optimizer {
         }
     }
             
-    private func insertLet(_ e: (expr: NormalizedExpr, type: Type), _ k: (Var) -> (NormalizedExpr, Type)) -> (NormalizedExpr, Type) {
+    private static func insertLet(_ e: (expr: NormalizedExpr, type: Type), _ k: (Var) -> (NormalizedExpr, Type)) -> (NormalizedExpr, Type) {
         switch e.expr {
         case let .var(name: name):
             return k(name)
