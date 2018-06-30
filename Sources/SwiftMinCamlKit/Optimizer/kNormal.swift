@@ -109,7 +109,14 @@ extension Optimizer {
         case .tuple(let elements):
             fatalError()
         case .letTuple(let vars, let binding, let body):
-            fatalError()
+            return insertLet(kNormal(env, binding)) { bie in
+                var env = env
+                for v in vars {
+                    env.updateValue(v.type, forKey: v.name)
+                }
+                let (boe, bot) = kNormal(env, body)
+                return (.letTuple(vars: vars, binding: bie, body: boe), bot)
+            }
         case .array(let size, let element):
             return insertLet(kNormal(env, size)) { s in
                 let (ee, et) = kNormal(env, element)
