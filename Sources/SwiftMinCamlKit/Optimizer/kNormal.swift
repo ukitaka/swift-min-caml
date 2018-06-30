@@ -6,7 +6,7 @@
 //
 
 extension Optimizer {
-    func kNormal(env: Env, expr: Expr) -> (NormalizedExpr, Type) {
+    func kNormal(_ env: Env, _ expr: Expr) -> (NormalizedExpr, Type) {
         switch expr {
         case .unit:
             return (.unit, .unit)
@@ -17,27 +17,59 @@ extension Optimizer {
         case let .float(v):
             return (.float(v), .float)
         case .not(let op):
-            return kNormal(env: env, expr: .if(cond: op, ifTrue: .bool(false), ifFalse: .bool(true)))
+            return kNormal(env, .if(cond: op, ifTrue: .bool(false), ifFalse: .bool(true)))
         case .neg(let op):
-            return insertLet(kNormal(env: env, expr: op)) { x in (.neg(op: x), .int) }
+            return insertLet(kNormal(env, op)) { x in (.neg(op: x), .int) }
         case .add(let lhs, let rhs):
-            fatalError()
+            return insertLet(kNormal(env, lhs)) { x in
+                insertLet(kNormal(env, rhs)) { y in
+                    (.add(lhs: x, rhs: y), .int)
+                }
+            }
         case .sub(let lhs, let rhs):
-            fatalError()
+            return insertLet(kNormal(env, lhs)) { x in
+                insertLet(kNormal(env, rhs)) { y in
+                    (.sub(lhs: x, rhs: y), .int)
+                }
+            }
         case .mul(let lhs, let rhs):
-            fatalError()
+            return insertLet(kNormal(env, lhs)) { x in
+                insertLet(kNormal(env, rhs)) { y in
+                    (.mul(lhs: x, rhs: y), .int)
+                }
+            }
         case .div(let lhs, let rhs):
-            fatalError()
+            return insertLet(kNormal(env, lhs)) { x in
+                insertLet(kNormal(env, rhs)) { y in
+                    (.div(lhs: x, rhs: y), .int)
+                }
+            }
         case .fneg(let op):
-            fatalError()
+            return insertLet(kNormal(env, op)) { x in (.fneg(op: x), .float) }
         case .fadd(let lhs, let rhs):
-            fatalError()
+            return insertLet(kNormal(env, lhs)) { x in
+                insertLet(kNormal(env, rhs)) { y in
+                    (.fadd(lhs: x, rhs: y), .float)
+                }
+            }
         case .fsub(let lhs, let rhs):
-            fatalError()
+            return insertLet(kNormal(env, lhs)) { x in
+                insertLet(kNormal(env, rhs)) { y in
+                    (.fsub(lhs: x, rhs: y), .float)
+                }
+            }
         case .fmul(let lhs, let rhs):
-            fatalError()
+            return insertLet(kNormal(env, lhs)) { x in
+                insertLet(kNormal(env, rhs)) { y in
+                    (.fmul(lhs: x, rhs: y), .float)
+                }
+            }
         case .fdiv(let lhs, let rhs):
-            fatalError()
+            return insertLet(kNormal(env, lhs)) { x in
+                insertLet(kNormal(env, rhs)) { y in
+                    (.fdiv(lhs: x, rhs: y), .float)
+                }
+            }
         case .eq(let lhs, let rhs):
             fatalError()
         case .le(let lhs, let rhs):
