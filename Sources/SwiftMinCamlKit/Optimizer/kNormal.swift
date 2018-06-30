@@ -70,10 +70,18 @@ extension Optimizer {
                     (.fdiv(lhs: x, rhs: y), .float)
                 }
             }
-        case .eq(let lhs, let rhs):
-            fatalError()
-        case .le(let lhs, let rhs):
-            fatalError()
+        case .eq, .le:
+            return kNormal(env, .if(cond: expr, ifTrue: .bool(true), ifFalse: .bool(false)))
+        case .if(.not(let cond), let ifTrue, let ifFalse):
+            return kNormal(env, .if(cond: cond, ifTrue: ifFalse, ifFalse: ifTrue))
+        case let .if(.eq(lhs: lhs, rhs: rhs), ifTrue, ifFalse):
+            return insertLet(kNormal(env, lhs)) { l in
+                insertLet(kNormal(env, rhs)) { r in
+                    let (ite, itt) = kNormal(env, ifTrue)
+                    let (ife, _) = kNormal(env, ifFalse)
+                    return (.ifLE(lhs: l, rhs: r, ifTrue: ite, ifFalse: ife), itt)
+                }
+            }
         case .if(let cond, let ifTrue, let ifFalse):
             fatalError()
         case .let(let name, let bind, let body):
