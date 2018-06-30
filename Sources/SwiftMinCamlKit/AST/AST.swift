@@ -112,3 +112,26 @@ extension Type {
         return (0...n).map { _ in newTypeVar() }
     }
 }
+
+extension Type: CustomStringConvertible {
+    public var description: String {
+        switch self {
+        case .unit:
+            return "Unit"
+        case .int:
+            return "Int"
+        case .float:
+            return "Float"
+        case .bool:
+            return "Bool"
+        case .func(let args, let ret):
+            return "(" + args.map { $0.description }.joined(separator: ",") + ") -> " + ret.description
+        case .tuple(let elements):
+            return "(" + elements.map { $0.description }.joined(separator: ",") + ")"
+        case .array(let element):
+            return "[\(element)]"
+        case .typeVar(let name):
+            return name
+        }
+    }
+}
