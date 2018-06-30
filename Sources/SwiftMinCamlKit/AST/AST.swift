@@ -85,6 +85,37 @@ public indirect enum Expr: AutoHashable, AutoEquatable, AutoEnum {
     case put(array: Expr, index: Expr, value: Expr)
 }
 
+/// Normalized expression
+public indirect enum NormalizedExpr: AutoHashable, AutoEquatable, AutoEnum {
+    case unit
+    case int(Int)
+    case float(Double)
+    case not(op: Var)               // !
+    case neg(op: Var)               // unary -
+    case add(lhs: Var, rhs: Var)    // +
+    case sub(lhs: Var, rhs: Var)    // -
+    case mul(lhs: Var, rhs: Var)    // *
+    case div(lhs: Var, rhs: Var)    // /
+    case fneg(op: Var)              // unary -
+    case fadd(lhs: Var, rhs: Var)   // +
+    case fsub(lhs: Var, rhs: Var)   // -
+    case fmul(lhs: Var, rhs: Var)   // *
+    case fdiv(lhs: Var, rhs: Var)   // /
+    case ifEq(lhs: Var, rhs: Var, ifTrue:Expr, ifFalse:Expr) // if `lhs` == `rhs` then `ifTrue` else `ifFalse`
+    case ifLE(lhs: Var, rhs: Var, ifTrue:Expr, ifFalse:Expr) // if `lhs` <= `rhs` then `ifTrue` else `ifFalse`
+    case `let`(name: TypedVar, bind: Expr, body: Expr)
+    case `var`(name: Var)
+    case letRec(funcDef: FuncDef, body: Expr)
+    case app(function: ID, args: [Var])
+    case tuple(elements: [Var])
+    case letTuple(vars: [TypedVar], binding: Var, body: Expr)
+    case array(size: Var, element: Var)
+    case get(array: Var, index: Var)
+    case put(array: Var, index: Var, value: Expr)
+    case extArray(elements: [Var])
+    case extFunApp(function: ID, args: [Var])
+}
+
 // Type
 public indirect enum Type: AutoEquatable, AutoHashable, AutoEnum {
     case unit
@@ -96,8 +127,6 @@ public indirect enum Type: AutoEquatable, AutoHashable, AutoEnum {
     case array(element: Type)
     case typeVar(name: String)
 }
-
-
 
 extension Type {
     private static var counter: Int = 0
@@ -112,4 +141,3 @@ extension Type {
         return (1...n).map { _ in newTypeVar() }
     }
 }
-

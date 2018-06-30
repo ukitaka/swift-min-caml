@@ -578,6 +578,589 @@ public extension Expr {
     }
 }
 
+public extension NormalizedExpr {
+    public var isUnit: Bool {
+        switch self {
+        case .unit: return true
+        default: return false
+        }
+    }
+
+    public var isInt: Bool {
+        switch self {
+        case .int: return true
+        default: return false
+        }
+    }
+
+    public var asInt: Int? {
+        switch self {
+        case let .int(int):
+            return int
+        default:
+            return nil
+        }
+    }
+
+    public var isFloat: Bool {
+        switch self {
+        case .float: return true
+        default: return false
+        }
+    }
+
+    public var asFloat: Double? {
+        switch self {
+        case let .float(float):
+            return float
+        default:
+            return nil
+        }
+    }
+
+    public var isNot: Bool {
+        switch self {
+        case .not: return true
+        default: return false
+        }
+    }
+
+    public var asNot: Var? {
+        switch self {
+        case let .not(op):
+            return op
+        default:
+            return nil
+        }
+    }
+
+    public var isNeg: Bool {
+        switch self {
+        case .neg: return true
+        default: return false
+        }
+    }
+
+    public var asNeg: Var? {
+        switch self {
+        case let .neg(op):
+            return op
+        default:
+            return nil
+        }
+    }
+
+    public var isAdd: Bool {
+        switch self {
+        case .add: return true
+        default: return false
+        }
+    }
+
+    public struct AddNormalizedExpr {
+        public let lhs: Var
+        public let rhs: Var
+    }
+
+    public var asAdd: AddNormalizedExpr? {
+        switch self {
+        case let .add(lhs, rhs):
+            return AddNormalizedExpr(
+                lhs: lhs,
+                rhs: rhs
+            )
+        default:
+            return nil
+        }
+    }
+
+    public var isSub: Bool {
+        switch self {
+        case .sub: return true
+        default: return false
+        }
+    }
+
+    public struct SubNormalizedExpr {
+        public let lhs: Var
+        public let rhs: Var
+    }
+
+    public var asSub: SubNormalizedExpr? {
+        switch self {
+        case let .sub(lhs, rhs):
+            return SubNormalizedExpr(
+                lhs: lhs,
+                rhs: rhs
+            )
+        default:
+            return nil
+        }
+    }
+
+    public var isMul: Bool {
+        switch self {
+        case .mul: return true
+        default: return false
+        }
+    }
+
+    public struct MulNormalizedExpr {
+        public let lhs: Var
+        public let rhs: Var
+    }
+
+    public var asMul: MulNormalizedExpr? {
+        switch self {
+        case let .mul(lhs, rhs):
+            return MulNormalizedExpr(
+                lhs: lhs,
+                rhs: rhs
+            )
+        default:
+            return nil
+        }
+    }
+
+    public var isDiv: Bool {
+        switch self {
+        case .div: return true
+        default: return false
+        }
+    }
+
+    public struct DivNormalizedExpr {
+        public let lhs: Var
+        public let rhs: Var
+    }
+
+    public var asDiv: DivNormalizedExpr? {
+        switch self {
+        case let .div(lhs, rhs):
+            return DivNormalizedExpr(
+                lhs: lhs,
+                rhs: rhs
+            )
+        default:
+            return nil
+        }
+    }
+
+    public var isFneg: Bool {
+        switch self {
+        case .fneg: return true
+        default: return false
+        }
+    }
+
+    public var asFneg: Var? {
+        switch self {
+        case let .fneg(op):
+            return op
+        default:
+            return nil
+        }
+    }
+
+    public var isFadd: Bool {
+        switch self {
+        case .fadd: return true
+        default: return false
+        }
+    }
+
+    public struct FaddNormalizedExpr {
+        public let lhs: Var
+        public let rhs: Var
+    }
+
+    public var asFadd: FaddNormalizedExpr? {
+        switch self {
+        case let .fadd(lhs, rhs):
+            return FaddNormalizedExpr(
+                lhs: lhs,
+                rhs: rhs
+            )
+        default:
+            return nil
+        }
+    }
+
+    public var isFsub: Bool {
+        switch self {
+        case .fsub: return true
+        default: return false
+        }
+    }
+
+    public struct FsubNormalizedExpr {
+        public let lhs: Var
+        public let rhs: Var
+    }
+
+    public var asFsub: FsubNormalizedExpr? {
+        switch self {
+        case let .fsub(lhs, rhs):
+            return FsubNormalizedExpr(
+                lhs: lhs,
+                rhs: rhs
+            )
+        default:
+            return nil
+        }
+    }
+
+    public var isFmul: Bool {
+        switch self {
+        case .fmul: return true
+        default: return false
+        }
+    }
+
+    public struct FmulNormalizedExpr {
+        public let lhs: Var
+        public let rhs: Var
+    }
+
+    public var asFmul: FmulNormalizedExpr? {
+        switch self {
+        case let .fmul(lhs, rhs):
+            return FmulNormalizedExpr(
+                lhs: lhs,
+                rhs: rhs
+            )
+        default:
+            return nil
+        }
+    }
+
+    public var isFdiv: Bool {
+        switch self {
+        case .fdiv: return true
+        default: return false
+        }
+    }
+
+    public struct FdivNormalizedExpr {
+        public let lhs: Var
+        public let rhs: Var
+    }
+
+    public var asFdiv: FdivNormalizedExpr? {
+        switch self {
+        case let .fdiv(lhs, rhs):
+            return FdivNormalizedExpr(
+                lhs: lhs,
+                rhs: rhs
+            )
+        default:
+            return nil
+        }
+    }
+
+    public var isIfEq: Bool {
+        switch self {
+        case .ifEq: return true
+        default: return false
+        }
+    }
+
+    public struct IfEqNormalizedExpr {
+        public let lhs: Var
+        public let rhs: Var
+        public let ifTrue: Expr
+        public let ifFalse: Expr
+    }
+
+    public var asIfEq: IfEqNormalizedExpr? {
+        switch self {
+        case let .ifEq(lhs, rhs, ifTrue, ifFalse):
+            return IfEqNormalizedExpr(
+                lhs: lhs,
+                rhs: rhs,
+                ifTrue: ifTrue,
+                ifFalse: ifFalse
+            )
+        default:
+            return nil
+        }
+    }
+
+    public var isIfLE: Bool {
+        switch self {
+        case .ifLE: return true
+        default: return false
+        }
+    }
+
+    public struct IfLENormalizedExpr {
+        public let lhs: Var
+        public let rhs: Var
+        public let ifTrue: Expr
+        public let ifFalse: Expr
+    }
+
+    public var asIfLE: IfLENormalizedExpr? {
+        switch self {
+        case let .ifLE(lhs, rhs, ifTrue, ifFalse):
+            return IfLENormalizedExpr(
+                lhs: lhs,
+                rhs: rhs,
+                ifTrue: ifTrue,
+                ifFalse: ifFalse
+            )
+        default:
+            return nil
+        }
+    }
+
+    public var isLet: Bool {
+        switch self {
+        case .let: return true
+        default: return false
+        }
+    }
+
+    public struct LetNormalizedExpr {
+        public let name: TypedVar
+        public let bind: Expr
+        public let body: Expr
+    }
+
+    public var asLet: LetNormalizedExpr? {
+        switch self {
+        case let .let(name, bind, body):
+            return LetNormalizedExpr(
+                name: name,
+                bind: bind,
+                body: body
+            )
+        default:
+            return nil
+        }
+    }
+
+    public var isVar: Bool {
+        switch self {
+        case .var: return true
+        default: return false
+        }
+    }
+
+    public var asVar: Var? {
+        switch self {
+        case let .var(name):
+            return name
+        default:
+            return nil
+        }
+    }
+
+    public var isLetRec: Bool {
+        switch self {
+        case .letRec: return true
+        default: return false
+        }
+    }
+
+    public struct LetRecNormalizedExpr {
+        public let funcDef: FuncDef
+        public let body: Expr
+    }
+
+    public var asLetRec: LetRecNormalizedExpr? {
+        switch self {
+        case let .letRec(funcDef, body):
+            return LetRecNormalizedExpr(
+                funcDef: funcDef,
+                body: body
+            )
+        default:
+            return nil
+        }
+    }
+
+    public var isApp: Bool {
+        switch self {
+        case .app: return true
+        default: return false
+        }
+    }
+
+    public struct AppNormalizedExpr {
+        public let function: ID
+        public let args: [Var]
+    }
+
+    public var asApp: AppNormalizedExpr? {
+        switch self {
+        case let .app(function, args):
+            return AppNormalizedExpr(
+                function: function,
+                args: args
+            )
+        default:
+            return nil
+        }
+    }
+
+    public var isTuple: Bool {
+        switch self {
+        case .tuple: return true
+        default: return false
+        }
+    }
+
+    public var asTuple: [Var]? {
+        switch self {
+        case let .tuple(elements):
+            return elements
+        default:
+            return nil
+        }
+    }
+
+    public var isLetTuple: Bool {
+        switch self {
+        case .letTuple: return true
+        default: return false
+        }
+    }
+
+    public struct LetTupleNormalizedExpr {
+        public let vars: [TypedVar]
+        public let binding: Var
+        public let body: Expr
+    }
+
+    public var asLetTuple: LetTupleNormalizedExpr? {
+        switch self {
+        case let .letTuple(vars, binding, body):
+            return LetTupleNormalizedExpr(
+                vars: vars,
+                binding: binding,
+                body: body
+            )
+        default:
+            return nil
+        }
+    }
+
+    public var isArray: Bool {
+        switch self {
+        case .array: return true
+        default: return false
+        }
+    }
+
+    public struct ArrayNormalizedExpr {
+        public let size: Var
+        public let element: Var
+    }
+
+    public var asArray: ArrayNormalizedExpr? {
+        switch self {
+        case let .array(size, element):
+            return ArrayNormalizedExpr(
+                size: size,
+                element: element
+            )
+        default:
+            return nil
+        }
+    }
+
+    public var isGet: Bool {
+        switch self {
+        case .get: return true
+        default: return false
+        }
+    }
+
+    public struct GetNormalizedExpr {
+        public let array: Var
+        public let index: Var
+    }
+
+    public var asGet: GetNormalizedExpr? {
+        switch self {
+        case let .get(array, index):
+            return GetNormalizedExpr(
+                array: array,
+                index: index
+            )
+        default:
+            return nil
+        }
+    }
+
+    public var isPut: Bool {
+        switch self {
+        case .put: return true
+        default: return false
+        }
+    }
+
+    public struct PutNormalizedExpr {
+        public let array: Var
+        public let index: Var
+        public let value: Expr
+    }
+
+    public var asPut: PutNormalizedExpr? {
+        switch self {
+        case let .put(array, index, value):
+            return PutNormalizedExpr(
+                array: array,
+                index: index,
+                value: value
+            )
+        default:
+            return nil
+        }
+    }
+
+    public var isExtArray: Bool {
+        switch self {
+        case .extArray: return true
+        default: return false
+        }
+    }
+
+    public var asExtArray: [Var]? {
+        switch self {
+        case let .extArray(elements):
+            return elements
+        default:
+            return nil
+        }
+    }
+
+    public var isExtFunApp: Bool {
+        switch self {
+        case .extFunApp: return true
+        default: return false
+        }
+    }
+
+    public struct ExtFunAppNormalizedExpr {
+        public let function: ID
+        public let args: [Var]
+    }
+
+    public var asExtFunApp: ExtFunAppNormalizedExpr? {
+        switch self {
+        case let .extFunApp(function, args):
+            return ExtFunAppNormalizedExpr(
+                function: function,
+                args: args
+            )
+        default:
+            return nil
+        }
+    }
+}
+
 public extension Type {
     public var isUnit: Bool {
         switch self {
@@ -808,6 +1391,112 @@ public func == (lhs: Expr, rhs: Expr) -> Bool {
     }
 }
 
+// MARK: - NormalizedExpr AutoEquatable
+
+extension NormalizedExpr: Equatable {}
+public func == (lhs: NormalizedExpr, rhs: NormalizedExpr) -> Bool {
+    switch (lhs, rhs) {
+    case (.unit, .unit):
+        return true
+    case let (.int(lhs), .int(rhs)):
+        return lhs == rhs
+    case let (.float(lhs), .float(rhs)):
+        return lhs == rhs
+    case let (.not(lhs), .not(rhs)):
+        return lhs == rhs
+    case let (.neg(lhs), .neg(rhs)):
+        return lhs == rhs
+    case let (.add(lhs), .add(rhs)):
+        if lhs.lhs != rhs.lhs { return false }
+        if lhs.rhs != rhs.rhs { return false }
+        return true
+    case let (.sub(lhs), .sub(rhs)):
+        if lhs.lhs != rhs.lhs { return false }
+        if lhs.rhs != rhs.rhs { return false }
+        return true
+    case let (.mul(lhs), .mul(rhs)):
+        if lhs.lhs != rhs.lhs { return false }
+        if lhs.rhs != rhs.rhs { return false }
+        return true
+    case let (.div(lhs), .div(rhs)):
+        if lhs.lhs != rhs.lhs { return false }
+        if lhs.rhs != rhs.rhs { return false }
+        return true
+    case let (.fneg(lhs), .fneg(rhs)):
+        return lhs == rhs
+    case let (.fadd(lhs), .fadd(rhs)):
+        if lhs.lhs != rhs.lhs { return false }
+        if lhs.rhs != rhs.rhs { return false }
+        return true
+    case let (.fsub(lhs), .fsub(rhs)):
+        if lhs.lhs != rhs.lhs { return false }
+        if lhs.rhs != rhs.rhs { return false }
+        return true
+    case let (.fmul(lhs), .fmul(rhs)):
+        if lhs.lhs != rhs.lhs { return false }
+        if lhs.rhs != rhs.rhs { return false }
+        return true
+    case let (.fdiv(lhs), .fdiv(rhs)):
+        if lhs.lhs != rhs.lhs { return false }
+        if lhs.rhs != rhs.rhs { return false }
+        return true
+    case let (.ifEq(lhs), .ifEq(rhs)):
+        if lhs.lhs != rhs.lhs { return false }
+        if lhs.rhs != rhs.rhs { return false }
+        if lhs.ifTrue != rhs.ifTrue { return false }
+        if lhs.ifFalse != rhs.ifFalse { return false }
+        return true
+    case let (.ifLE(lhs), .ifLE(rhs)):
+        if lhs.lhs != rhs.lhs { return false }
+        if lhs.rhs != rhs.rhs { return false }
+        if lhs.ifTrue != rhs.ifTrue { return false }
+        if lhs.ifFalse != rhs.ifFalse { return false }
+        return true
+    case let (.let(lhs), .let(rhs)):
+        if lhs.name != rhs.name { return false }
+        if lhs.bind != rhs.bind { return false }
+        if lhs.body != rhs.body { return false }
+        return true
+    case let (.var(lhs), .var(rhs)):
+        return lhs == rhs
+    case let (.letRec(lhs), .letRec(rhs)):
+        if lhs.funcDef != rhs.funcDef { return false }
+        if lhs.body != rhs.body { return false }
+        return true
+    case let (.app(lhs), .app(rhs)):
+        if lhs.function != rhs.function { return false }
+        if lhs.args != rhs.args { return false }
+        return true
+    case let (.tuple(lhs), .tuple(rhs)):
+        return lhs == rhs
+    case let (.letTuple(lhs), .letTuple(rhs)):
+        if lhs.vars != rhs.vars { return false }
+        if lhs.binding != rhs.binding { return false }
+        if lhs.body != rhs.body { return false }
+        return true
+    case let (.array(lhs), .array(rhs)):
+        if lhs.size != rhs.size { return false }
+        if lhs.element != rhs.element { return false }
+        return true
+    case let (.get(lhs), .get(rhs)):
+        if lhs.array != rhs.array { return false }
+        if lhs.index != rhs.index { return false }
+        return true
+    case let (.put(lhs), .put(rhs)):
+        if lhs.array != rhs.array { return false }
+        if lhs.index != rhs.index { return false }
+        if lhs.value != rhs.value { return false }
+        return true
+    case let (.extArray(lhs), .extArray(rhs)):
+        return lhs == rhs
+    case let (.extFunApp(lhs), .extFunApp(rhs)):
+        if lhs.function != rhs.function { return false }
+        if lhs.args != rhs.args { return false }
+        return true
+    default: return false
+    }
+}
+
 // MARK: - Type AutoEquatable
 
 extension Type: Equatable {}
@@ -894,7 +1583,7 @@ extension Expr: Hashable {
     public var hashValue: Int {
         switch self {
         case .unit:
-            return 1.hashValue
+            return combineHashes([1])
         case let .bool(data):
             return combineHashes([2, data.hashValue])
         case let .int(data):
@@ -951,19 +1640,82 @@ extension Expr: Hashable {
     }
 }
 
+// MARK: - NormalizedExpr AutoHashable
+
+extension NormalizedExpr: Hashable {
+    public var hashValue: Int {
+        switch self {
+        case .unit:
+            return 1.hashValue
+        case let .int(data):
+            return combineHashes([2, data.hashValue])
+        case let .float(data):
+            return combineHashes([3, data.hashValue])
+        case let .not(data):
+            return combineHashes([4, data.hashValue])
+        case let .neg(data):
+            return combineHashes([5, data.hashValue])
+        case let .add(data):
+            return combineHashes([6, data.lhs.hashValue, data.rhs.hashValue])
+        case let .sub(data):
+            return combineHashes([7, data.lhs.hashValue, data.rhs.hashValue])
+        case let .mul(data):
+            return combineHashes([8, data.lhs.hashValue, data.rhs.hashValue])
+        case let .div(data):
+            return combineHashes([9, data.lhs.hashValue, data.rhs.hashValue])
+        case let .fneg(data):
+            return combineHashes([10, data.hashValue])
+        case let .fadd(data):
+            return combineHashes([11, data.lhs.hashValue, data.rhs.hashValue])
+        case let .fsub(data):
+            return combineHashes([12, data.lhs.hashValue, data.rhs.hashValue])
+        case let .fmul(data):
+            return combineHashes([13, data.lhs.hashValue, data.rhs.hashValue])
+        case let .fdiv(data):
+            return combineHashes([14, data.lhs.hashValue, data.rhs.hashValue])
+        case let .ifEq(data):
+            return combineHashes([15, data.lhs.hashValue, data.rhs.hashValue, data.ifTrue.hashValue, data.ifFalse.hashValue])
+        case let .ifLE(data):
+            return combineHashes([16, data.lhs.hashValue, data.rhs.hashValue, data.ifTrue.hashValue, data.ifFalse.hashValue])
+        case let .let(data):
+            return combineHashes([17, data.name.hashValue, data.bind.hashValue, data.body.hashValue])
+        case let .var(data):
+            return combineHashes([18, data.hashValue])
+        case let .letRec(data):
+            return combineHashes([19, data.funcDef.hashValue, data.body.hashValue])
+        case let .app(data):
+            return combineHashes([20, data.function.hashValue, data.args.hashValue])
+        case let .tuple(data):
+            return combineHashes([21, data.hashValue])
+        case let .letTuple(data):
+            return combineHashes([22, data.vars.hashValue, data.binding.hashValue, data.body.hashValue])
+        case let .array(data):
+            return combineHashes([23, data.size.hashValue, data.element.hashValue])
+        case let .get(data):
+            return combineHashes([24, data.array.hashValue, data.index.hashValue])
+        case let .put(data):
+            return combineHashes([25, data.array.hashValue, data.index.hashValue, data.value.hashValue])
+        case let .extArray(data):
+            return combineHashes([26, data.hashValue])
+        case let .extFunApp(data):
+            return combineHashes([27, data.function.hashValue, data.args.hashValue])
+        }
+    }
+}
+
 // MARK: - Type AutoHashable
 
 extension Type: Hashable {
     public var hashValue: Int {
         switch self {
         case .unit:
-            return 1.hashValue
+            return combineHashes([1])
         case .int:
-            return 2.hashValue
+            return combineHashes([2])
         case .float:
-            return 3.hashValue
+            return combineHashes([3])
         case .bool:
-            return 4.hashValue
+            return combineHashes([4])
         case let .func(data):
             return combineHashes([5, data.args.hashValue, data.ret.hashValue])
         case let .tuple(data):
