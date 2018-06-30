@@ -1104,7 +1104,7 @@ public extension NormalizedExpr {
     public struct PutNormalizedExpr {
         public let array: Var
         public let index: Var
-        public let value: NormalizedExpr
+        public let value: Var
     }
 
     public var asPut: PutNormalizedExpr? {

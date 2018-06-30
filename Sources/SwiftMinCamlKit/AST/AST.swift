@@ -125,7 +125,7 @@ public indirect enum NormalizedExpr: AutoHashable, AutoEquatable, AutoEnum {
     case letTuple(vars: [TypedVar], binding: Var, body: NormalizedExpr)
     case array(size: Var, element: Var)
     case get(array: Var, index: Var)
-    case put(array: Var, index: Var, value: NormalizedExpr)
+    case put(array: Var, index: Var, value: Var)
     case extArray(elements: [Var])
     case extFunApp(function: ID, args: [Var])
 }

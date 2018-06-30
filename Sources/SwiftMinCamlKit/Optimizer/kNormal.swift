@@ -115,7 +115,13 @@ extension Optimizer {
         case .get(let array, let index):
             fatalError()
         case .put(let array, let index, let value):
-            fatalError()
+            return insertLet(kNormal(env, array)) { arr in
+                insertLet(kNormal(env, index)) { ind in
+                    insertLet(kNormal(env, value)) { val in
+                        (.put(array: arr, index: ind, value: val), .unit)
+                    }
+                }
+            }
         }
     }
     
