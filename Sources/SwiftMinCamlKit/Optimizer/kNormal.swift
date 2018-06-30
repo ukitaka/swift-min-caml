@@ -105,7 +105,25 @@ extension Optimizer {
             let (bie, _) = kNormal(env, funcDef.body)
             return (.letRec(funcDef: NormalizedFuncDef(name: funcDef.name, args: funcDef.args, body: bie), body: boe), bot)
         case .app(let function, let args):
-            fatalError()
+            let (fe, ft) = kNormal(env, function)
+            guard let funcType = ft.asFunc else {
+                fatalError("\(ft) is not a function type.")
+            }
+            return insertLet((fe, ft)) { f in
+                func bind(xs: [Var]) -> ([Expr]) -> (NormalizedExpr, Type) {
+                    return { es in
+                        guard let first = es.first else {
+                            return (.app(function: f, args: xs), funcType.ret)
+                        }
+                        var es = es
+                        es.removeFirst()
+                        return self.insertLet(self.kNormal(env, first)) { x in
+                            return bind(xs: xs + [x])(es)
+                        }
+                    }
+                }
+                return bind(xs: [])(args)
+            }
         case .tuple(let elements):
             func bind(xs: [Var], ts: [Type]) -> (([Expr]) -> (NormalizedExpr, Type)) {
                 return { es in
