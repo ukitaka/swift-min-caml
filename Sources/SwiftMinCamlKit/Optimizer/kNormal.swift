@@ -83,11 +83,18 @@ extension Optimizer {
                 }
             }
         case .if(let cond, let ifTrue, let ifFalse):
-            fatalError()
+            return kNormal(env, .if(cond: .eq(lhs: cond, rhs: .bool(false)), ifTrue: ifFalse, ifFalse: ifTrue))
         case .let(let name, let bind, let body):
-            fatalError()
+            let (bie, bit) = kNormal(env, bind)
+            var env = env
+            env.updateValue(bit, forKey: name.name)
+            let (boe, bot) = kNormal(env, body)
+            return (.let(name: name, bind: bie, body: boe), bot)
         case .var(let name):
-            fatalError()
+            guard let type = env[name] else {
+                fatalError("Unknown variable \(name)")
+            }
+            return (.var(name: name), type)
         case .letRec(let funcDef, let body):
             fatalError()
         case .app(let function, let args):
