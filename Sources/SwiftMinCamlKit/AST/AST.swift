@@ -17,6 +17,13 @@ public extension Tagged where Tag == IDTag, RawValue == String {
     static func fromString(_ str: String) -> ID {
         return Var(stringLiteral: str)
     }
+    
+    private static var varCounter: Int = 0
+
+    static func tmpVar() -> Var {
+        defer { varCounter += 1 }
+        return Var(rawValue: "tmp_var\(varCounter)")
+    }
 }
 
 /// TypeVar
@@ -101,17 +108,17 @@ public indirect enum NormalizedExpr: AutoHashable, AutoEquatable, AutoEnum {
     case fsub(lhs: Var, rhs: Var)   // -
     case fmul(lhs: Var, rhs: Var)   // *
     case fdiv(lhs: Var, rhs: Var)   // /
-    case ifEq(lhs: Var, rhs: Var, ifTrue:Expr, ifFalse:Expr) // if `lhs` == `rhs` then `ifTrue` else `ifFalse`
-    case ifLE(lhs: Var, rhs: Var, ifTrue:Expr, ifFalse:Expr) // if `lhs` <= `rhs` then `ifTrue` else `ifFalse`
-    case `let`(name: TypedVar, bind: Expr, body: Expr)
+    case ifEq(lhs: Var, rhs: Var, ifTrue:NormalizedExpr, ifFalse:NormalizedExpr) // if `lhs` == `rhs` then `ifTrue` else `ifFalse`
+    case ifLE(lhs: Var, rhs: Var, ifTrue:NormalizedExpr, ifFalse:NormalizedExpr) // if `lhs` <= `rhs` then `ifTrue` else `ifFalse`
+    case `let`(name: TypedVar, bind: NormalizedExpr, body: NormalizedExpr)
     case `var`(name: Var)
-    case letRec(funcDef: FuncDef, body: Expr)
+    case letRec(funcDef: FuncDef, body: NormalizedExpr)
     case app(function: ID, args: [Var])
     case tuple(elements: [Var])
-    case letTuple(vars: [TypedVar], binding: Var, body: Expr)
+    case letTuple(vars: [TypedVar], binding: Var, body: NormalizedExpr)
     case array(size: Var, element: Var)
     case get(array: Var, index: Var)
-    case put(array: Var, index: Var, value: Expr)
+    case put(array: Var, index: Var, value: NormalizedExpr)
     case extArray(elements: [Var])
     case extFunApp(function: ID, args: [Var])
 }

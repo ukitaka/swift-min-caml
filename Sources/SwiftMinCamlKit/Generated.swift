@@ -868,8 +868,8 @@ public extension NormalizedExpr {
     public struct IfEqNormalizedExpr {
         public let lhs: Var
         public let rhs: Var
-        public let ifTrue: Expr
-        public let ifFalse: Expr
+        public let ifTrue: NormalizedExpr
+        public let ifFalse: NormalizedExpr
     }
 
     public var asIfEq: IfEqNormalizedExpr? {
@@ -896,8 +896,8 @@ public extension NormalizedExpr {
     public struct IfLENormalizedExpr {
         public let lhs: Var
         public let rhs: Var
-        public let ifTrue: Expr
-        public let ifFalse: Expr
+        public let ifTrue: NormalizedExpr
+        public let ifFalse: NormalizedExpr
     }
 
     public var asIfLE: IfLENormalizedExpr? {
@@ -923,8 +923,8 @@ public extension NormalizedExpr {
 
     public struct LetNormalizedExpr {
         public let name: TypedVar
-        public let bind: Expr
-        public let body: Expr
+        public let bind: NormalizedExpr
+        public let body: NormalizedExpr
     }
 
     public var asLet: LetNormalizedExpr? {
@@ -965,7 +965,7 @@ public extension NormalizedExpr {
 
     public struct LetRecNormalizedExpr {
         public let funcDef: FuncDef
-        public let body: Expr
+        public let body: NormalizedExpr
     }
 
     public var asLetRec: LetRecNormalizedExpr? {
@@ -1030,7 +1030,7 @@ public extension NormalizedExpr {
     public struct LetTupleNormalizedExpr {
         public let vars: [TypedVar]
         public let binding: Var
-        public let body: Expr
+        public let body: NormalizedExpr
     }
 
     public var asLetTuple: LetTupleNormalizedExpr? {
@@ -1104,7 +1104,7 @@ public extension NormalizedExpr {
     public struct PutNormalizedExpr {
         public let array: Var
         public let index: Var
-        public let value: Expr
+        public let value: NormalizedExpr
     }
 
     public var asPut: PutNormalizedExpr? {
