@@ -179,8 +179,14 @@ enum Typing {
             }
             let (s2, _) = typeInfer(env: env, expr: index, preferredType: .int)
             return (s1.merging(other: s2), el)
-        case .put:
-            fatalError("not implemented yet")
+        case let .put(array, index, value):
+            let (s1, t1) = typeInfer(env: env, expr: array)
+            guard let el = t1.asArray else {
+                fatalError("\(t1) is not a array type.")
+            }
+            let (s2, _) = typeInfer(env: env, expr: index, preferredType: .int)
+            let (s3, _) = typeInfer(env: env, expr: value, preferredType: el)
+            return (s1.merging(other: s2).merging(other: s3), .unit)
         }
     }
 }
