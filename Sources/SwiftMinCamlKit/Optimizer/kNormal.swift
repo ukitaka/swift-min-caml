@@ -111,7 +111,12 @@ extension Optimizer {
         case .letTuple(let vars, let binding, let body):
             fatalError()
         case .array(let size, let element):
-            fatalError()
+            return insertLet(kNormal(env, size)) { s in
+                let (ee, et) = kNormal(env, element)
+                return insertLet((ee, et)) { e in
+                    fatalError("FIXME: Call external function")
+                }
+            }
         case .get(let array, let index):
             let (ae, at) = kNormal(env, array)
             guard let elt = at.asArray else {
