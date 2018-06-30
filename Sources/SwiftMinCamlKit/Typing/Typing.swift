@@ -168,8 +168,10 @@ enum Typing {
             let (bos, bot) = typeInfer(env: env, expr: body)
             let s = bis.merging(other: bos).merging(other: varsSub)
             return (s, bot.apply(s))
-        case .array:
-            fatalError("not implemented yet")
+        case let .array(size, element):
+            let (s1, _) = typeInfer(env: env, expr: size, preferredType: .int)
+            let (s2, t2) = typeInfer(env: env, expr: element)
+            return (s1.merging(other: s2), .array(element: t2))
         case .get:
             fatalError("not implemented yet")
         case .put:

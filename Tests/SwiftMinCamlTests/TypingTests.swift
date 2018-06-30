@@ -71,4 +71,10 @@ class TypingTests: XCTestCase {
         XCTAssertEqual(typedExpr.asLetTuple?.vars.first?.type, .int)
         XCTAssertEqual(typedExpr.asLetTuple?.vars.last?.type, .float)
     }
+    
+    func testArray() {
+        let expr = Expr.array(size: .int(10), element: .int(0))
+        let (_, type) = Typing.type(env: [:], expr: expr)
+        XCTAssertEqual(type, .array(element: .int))
+    }
 }
