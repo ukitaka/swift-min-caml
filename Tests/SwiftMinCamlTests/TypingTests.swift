@@ -53,6 +53,6 @@ class TypingTests: XCTestCase {
         let (checkedExpr, type) = Typing.type(env: [:], expr: expr)
         XCTAssertEqual(type, .int)
         XCTAssertEqual(checkedExpr.asLetRec?.funcDef.args.first?.type, .int)
-        XCTAssertEqual(checkedExpr.asLetRec?.funcDef.name.type, .int)
+        XCTAssertEqual(checkedExpr.asLetRec?.funcDef.name.type, Type.func(args: [.int], ret: .int))
     }
 }

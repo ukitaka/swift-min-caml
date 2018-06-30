@@ -134,8 +134,9 @@ enum Typing {
             }
             let (s0, retType) = typeInfer(env: env1, expr: funcDef.body)
             let s1 = s0.merging(other: mostGeneralUnifier(name.type, .func(args: funcDef.args.map { $0.type }, ret: retType)))
+            let argTypes = funcDef.apply(s1).args.map { $0.type }
             var env2 = env
-            env2.updateValue(retType, forKey: name.name)
+            env2.updateValue(.func(args: argTypes, ret: retType), forKey: name.name)
             let (bos, bot) = typeInfer(env: env2, expr: body.apply(s1))
             let s2 = s1.merging(other: bos).merging(other: Substitution([name.type: retType]))
             return (s2, bot.apply(s2))
