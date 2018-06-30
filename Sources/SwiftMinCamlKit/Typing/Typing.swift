@@ -153,8 +153,21 @@ enum Typing {
             let s = results.map { $0.0 }.reduce(Substitution(), Substitution.merging)
             let type = Type.tuple(elements: results.map { $0.1 }).apply(s)
             return (s, type)
-        case .letTuple:
-            fatalError("not implemented yet")
+        case let .letTuple(vars, bind, body):
+            let (bis, bit) = typeInfer(env: env, expr: bind)
+            var env = env
+            var varsSub = Substitution()
+            guard let tupleType = bit.apply(bis).asTuple, vars.count == tupleType.count else {
+                fatalError("\(bind) is not a tuple type.")
+            }
+            for (v, t) in zip(vars, tupleType)  {
+                precondition(!t.isTypeVar, "\(t) is a type variable.")
+                env.updateValue(t, forKey: v.name)
+                varsSub = varsSub.merging(other: Substitution([v.type: t]))
+            }
+            let (bos, bot) = typeInfer(env: env, expr: body)
+            let s = bis.merging(other: bos).merging(other: varsSub)
+            return (s, bot.apply(s))
         case .array:
             fatalError("not implemented yet")
         case .get:

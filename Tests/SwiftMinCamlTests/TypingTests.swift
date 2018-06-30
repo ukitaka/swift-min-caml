@@ -61,4 +61,14 @@ class TypingTests: XCTestCase {
         let (_, type) = Typing.type(env: [:], expr: tuple)
         XCTAssertEqual(type, .tuple(elements: [.int, .bool, .float]))
     }
+    
+    func testLetTuple() {
+        let expr = Expr.letTuple(vars: [TypedVar(name: "a"), TypedVar(name: "b"), TypedVar(name: "c")],
+                                 binding: Expr.tuple(elements: [.int(1), .bool(true), .float(4.2)]),
+                                 body: Expr.var(name: "a"))
+        let (typedExpr, type) = Typing.type(env: [:], expr: expr)
+        XCTAssertEqual(type, .int)
+        XCTAssertEqual(typedExpr.asLetTuple?.vars.first?.type, .int)
+        XCTAssertEqual(typedExpr.asLetTuple?.vars.last?.type, .float)
+    }
 }
