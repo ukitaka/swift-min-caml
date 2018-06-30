@@ -148,8 +148,11 @@ enum Typing {
                 .map(mostGeneralUnifier)
                 .reduce(Substitution(), Substitution.merging)
             return (s1.merging(other: s2).merging(other: s3), funcType.ret)
-        case .tuple:
-            fatalError("not implemented yet")
+        case let .tuple(elements):
+            let results = elements.map { arg in typeInfer(env: env, expr: arg) }
+            let s = results.map { $0.0 }.reduce(Substitution(), Substitution.merging)
+            let type = Type.tuple(elements: results.map { $0.1 }).apply(s)
+            return (s, type)
         case .letTuple:
             fatalError("not implemented yet")
         case .array:

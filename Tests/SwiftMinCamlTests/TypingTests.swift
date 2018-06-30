@@ -55,4 +55,10 @@ class TypingTests: XCTestCase {
         XCTAssertEqual(checkedExpr.asLetRec?.funcDef.args.first?.type, .int)
         XCTAssertEqual(checkedExpr.asLetRec?.funcDef.name.type, Type.func(args: [.int], ret: .int))
     }
+    
+    func testTuple() {
+        let tuple = Expr.tuple(elements: [.int(1), .bool(true), .float(4.2)])
+        let (_, type) = Typing.type(env: [:], expr: tuple)
+        XCTAssertEqual(type, .tuple(elements: [.int, .bool, .float]))
+    }
 }
