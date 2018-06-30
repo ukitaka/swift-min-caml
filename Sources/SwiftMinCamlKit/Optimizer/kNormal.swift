@@ -107,7 +107,20 @@ extension Optimizer {
         case .app(let function, let args):
             fatalError()
         case .tuple(let elements):
-            fatalError()
+            func bind(xs: [Var], ts: [Type]) -> (([Expr]) -> (NormalizedExpr, Type)) {
+                return { es in
+                    guard let first = es.first else {
+                        return (.tuple(elements: xs), .tuple(elements: ts))
+                    }
+                    var es = es
+                    es.removeFirst()
+                    let (e1, t1) = self.kNormal(env, first)
+                    return self.insertLet((e1, t1)) { x in
+                        bind(xs: xs + [x], ts: ts + [t1])(es)
+                    }
+                }
+            }
+            return bind(xs: [], ts: [])(elements)
         case .letTuple(let vars, let binding, let body):
             return insertLet(kNormal(env, binding)) { bie in
                 var env = env
@@ -144,7 +157,7 @@ extension Optimizer {
             }
         }
     }
-    
+            
     private func insertLet(_ e: (expr: NormalizedExpr, type: Type), _ k: (Var) -> (NormalizedExpr, Type)) -> (NormalizedExpr, Type) {
         switch e.expr {
         case let .var(name: name):
