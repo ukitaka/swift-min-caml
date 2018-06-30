@@ -113,7 +113,15 @@ extension Optimizer {
         case .array(let size, let element):
             fatalError()
         case .get(let array, let index):
-            fatalError()
+            let (ae, at) = kNormal(env, array)
+            guard let elt = at.asArray else {
+                fatalError("\(ae) is not an array.")
+            }
+            return insertLet((ae, at)) { x in
+                insertLet(kNormal(env, index)) { y in
+                    return (.get(array: x, index: y), elt)
+                }
+            }
         case .put(let array, let index, let value):
             return insertLet(kNormal(env, array)) { arr in
                 insertLet(kNormal(env, index)) { ind in
