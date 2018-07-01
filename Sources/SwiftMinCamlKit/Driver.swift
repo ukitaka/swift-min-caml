@@ -18,7 +18,9 @@ public struct Driver {
         let expr = try! parser.endParsing()
         let (checkedExpr, _) = Typing.type(expr: expr)
         let (normalizedExpr, _) = Optimizer.kNormal([:], checkedExpr)
+        let optimizedExpr = Optimizer.alpha([:],  normalizedExpr)
         print(normalizedExpr)
+        print(optimizedExpr)
         let output = CodeGen().gen(expr: checkedExpr)
         return output
     }
