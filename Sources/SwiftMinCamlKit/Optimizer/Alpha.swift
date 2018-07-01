@@ -50,7 +50,7 @@ extension Optimizer {
                 body: alpha(bodyEnv, funcDef.body))
             return .letRec(funcDef: newFuncDef , body: alpha(env, body))
         case .app(let function, let args):
-            fatalError("Not implemented yet")
+            return .app(function: find(function, env), args: args.map { find($0, env) })
         case .tuple(let elements):
             fatalError("Not implemented yet")
         case .letTuple(let vars, let binding, let body):
