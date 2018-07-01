@@ -6,13 +6,11 @@
 //
 
 extension Optimizer {
-    private typealias Env = [Var: Var]
-
-    private static func find(_ x: Var, _ env: Env) -> Var {
+    private static func find(_ x: Var, _ env: [Var: Var]) -> Var {
         return env[x] ?? x
     }
 
-    static func alpha(_ env: Env, _ expr: NormalizedExpr) -> NormalizedExpr {
+    static func alpha(_ env: [Var: Var], _ expr: NormalizedExpr) -> NormalizedExpr {
         switch expr {
         case .unit, .int, .float:
             return expr

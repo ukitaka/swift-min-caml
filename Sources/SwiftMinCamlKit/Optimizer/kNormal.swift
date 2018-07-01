@@ -6,7 +6,7 @@
 //
 
 extension Optimizer {
-    static func kNormal(_ env: Env, _ expr: Expr) -> (NormalizedExpr, Type) {
+    static func kNormal(_ env: [Var: Type], _ expr: Expr) -> (NormalizedExpr, Type) {
         switch expr {
         case .unit:
             return (.unit, .unit)

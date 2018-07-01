@@ -5,11 +5,11 @@
 //  Created by Yuki Takahashi on 2018/06/21.
 //
 
-typealias Env = [Var: Type]
-
 enum Typing {
-    static func type(env: Env, expr: Expr) -> (Expr, Type) {
-        let (substitution, type) = typeInfer(env: env, expr: expr)
+    private typealias Env = [Var: Type]
+
+    static func type(expr: Expr) -> (Expr, Type) {
+        let (substitution, type) = typeInfer(env: [:], expr: expr)
         return (expr.apply(substitution), type.apply(substitution))
     }
     
