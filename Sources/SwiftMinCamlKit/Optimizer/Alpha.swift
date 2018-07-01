@@ -6,47 +6,49 @@
 //
 
 extension Optimizer {
-    private static func find(_ x: Var, _ env: [Var: Var]) -> Var {
-        return env[x] ?? x
-    }
-
     static func alpha(_ env: [Var: Var], _ expr: NormalizedExpr) -> NormalizedExpr {
         switch expr {
         case .unit, .int, .float:
             return expr
         case .neg(let op):
-            return .neg(op: find(op, env))
+            return .neg(op: env.find(op))
         case .add(let lhs, let rhs):
-            return .add(lhs: find(lhs, env), rhs: find(rhs, env))
+            return .add(lhs: env.find(lhs), rhs: env.find(rhs))
         case .sub(let lhs, let rhs):
-            return .sub(lhs: find(lhs, env), rhs: find(rhs, env))
+            return .sub(lhs: env.find(lhs), rhs: env.find(rhs))
         case .mul(let lhs, let rhs):
-            return .mul(lhs: find(lhs, env), rhs: find(rhs, env))
+            return .mul(lhs: env.find(lhs), rhs: env.find(rhs))
         case .div(let lhs, let rhs):
-            return .div(lhs: find(lhs, env), rhs: find(rhs, env))
+            return .div(lhs: env.find(lhs), rhs: env.find(rhs))
         case .fneg(let op):
             return .fneg(op: find(op, env))
         case .fadd(let lhs, let rhs):
-            return .fadd(lhs: find(lhs, env), rhs: find(rhs, env))
+            return .fadd(lhs: env.find(lhs), rhs: env.find(rhs))
         case .fsub(let lhs, let rhs):
-            return .fsub(lhs: find(lhs, env), rhs: find(rhs, env))
+            return .fsub(lhs: env.find(lhs), rhs: env.find(rhs))
         case .fmul(let lhs, let rhs):
-            return .fmul(lhs: find(lhs, env), rhs: find(rhs, env))
+            return .fmul(lhs: env.find(lhs), rhs: env.find(rhs))
         case .fdiv(let lhs, let rhs):
-            return .fdiv(lhs: find(lhs, env), rhs: find(rhs, env))
+            return .fdiv(lhs: env.find(lhs), rhs: env.find(rhs))
         case .ifEq(let lhs, let rhs, let ifTrue, let ifFalse):
-            return .ifEq(lhs: find(lhs, env), rhs: find(rhs, env), ifTrue: alpha(env, ifTrue), ifFalse: alpha(env, ifFalse))
+            return .ifEq(lhs: env.find(lhs), rhs: env.find(rhs), ifTrue: alpha(env, ifTrue), ifFalse: alpha(env, ifFalse))
         case .ifLE(let lhs, let rhs, let ifTrue, let ifFalse):
-            return .ifLE(lhs: find(lhs, env), rhs: find(rhs, env), ifTrue: alpha(env, ifTrue), ifFalse: alpha(env, ifFalse))
+            return .ifLE(lhs: env.find(lhs), rhs: env.find(rhs), ifTrue: alpha(env, ifTrue), ifFalse: alpha(env, ifFalse))
         case .let(let name, let bind, let body):
             let newName = Var.tmpVar()
-            var bodyEnv = env
-            bodyEnv.updateValue(newName, forKey: name.name)
-            return .let(name: TypedVar(name: newName, type: name.type), bind: alpha(env, bind), body: alpha(bodyEnv, body))
+            return .let(name: TypedVar(name: newName, type: name.type),
+                        bind: alpha(env, bind),
+                        body: alpha(env.adding(key: newName, value: name.name), body))
         case .var(let name):
-            fatalError("Not implemented yet")
+            return .var(name: env.find(name))
         case .letRec(let funcDef, let body):
-            fatalError("Not implemented yet")
+            let env = env.adding(key: funcDef.name.name, value: Var.tmpVar())
+            let bodyEnv = env.adding(funcDef.args.map { ($0.name, Var.tmpVar()) })
+            let newFuncDef = NormalizedFuncDef(
+                name: funcDef.name.alpha(env: env),
+                args: funcDef.args.map { arg in arg.alpha(env: bodyEnv) },
+                body: alpha(bodyEnv, funcDef.body))
+            return .letRec(funcDef: newFuncDef , body: alpha(env, body))
         case .app(let function, let args):
             fatalError("Not implemented yet")
         case .tuple(let elements):
@@ -66,4 +68,24 @@ extension Optimizer {
         }
     }
     
+}
+
+private extension Dictionary where Key == Var, Value == Var {
+    func find(_ x: Var) -> Var {
+        return self[x] ?? x
+    }
+}
+
+private func find(_ x: Var, _ env: [Var: Var]) -> Var {
+    return env[x] ?? x
+}
+
+private extension TypedVar {
+    func with(newName: Var) -> TypedVar {
+        return TypedVar(name: newName, type: self.type)
+    }
+    
+    func alpha(env: [Var: Var]) -> TypedVar {
+        return TypedVar(name: env.find(self.name), type: self.type)
+    }
 }

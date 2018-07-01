@@ -13,4 +13,12 @@ extension Dictionary {
         d[key] = value
         return d
     }
+    
+    func adding(_ values: [(Key, Value)]) -> Dictionary<Key, Value> {
+        var d = self
+        for (k, v) in values {
+            d[k] = v
+        }
+        return d
+    }
 }
