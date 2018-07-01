@@ -54,7 +54,11 @@ extension Optimizer {
         case .tuple(let elements):
             fatalError("Not implemented yet")
         case .letTuple(let vars, let binding, let body):
-            fatalError("Not implemented yet")
+            let names = vars.map { $0.name }
+            let env2 = env.adding(names.map { ($0, Var.tmpVar()) })
+            return .letTuple(vars: vars.map { $0.with(newName: env2.find($0.name)) },
+                             binding: env.find(binding),
+                             body: alpha(env2, body))
         case .array(let size, let element):
             fatalError("Not implemented yet")
         case .get(let array, let index):

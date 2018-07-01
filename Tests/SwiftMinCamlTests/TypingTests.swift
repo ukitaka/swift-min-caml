@@ -12,13 +12,13 @@ class TypingTests: XCTestCase {
     func testType1() {
         let expr = Expr.add(lhs: .int(1),
                             rhs: .add(lhs: .int(2), rhs: .int(3)))
-        let (_, type) = Typing.type(env: [:], expr: expr)
+        let (_, type) = Typing.type(expr: expr)
         XCTAssertEqual(type, .int)
     }
 
     func testType2() {
         let expr = Expr.let(name: TypedVar(name: "x"), bind: .int(1), body: .add(lhs: .int(1), rhs: .int(2)))
-        let (checkedExpr, type) = Typing.type(env: [:], expr: expr)
+        let (checkedExpr, type) = Typing.type(expr: expr)
         XCTAssertEqual(type, .int)
         XCTAssertEqual(checkedExpr.asLet?.name.type, .int)
     }
@@ -32,7 +32,7 @@ class TypingTests: XCTestCase {
         )
         let funcDef = FuncDef(name: TypedVar(name: "isZero"), args: [TypedVar(name: "n")], body: body)
         let expr = Expr.letRec(funcDef: funcDef, body: .int(1))
-        let (checkedExpr, type) = Typing.type(env: [:], expr: expr)
+        let (checkedExpr, type) = Typing.type(expr: expr)
         XCTAssertEqual(type, .int)
         XCTAssertEqual(checkedExpr.asLetRec?.funcDef.args.first?.type, .int)
         XCTAssertEqual(checkedExpr.asLetRec?.funcDef.name.type, Type.func(args: [.int], ret: .bool))
@@ -50,7 +50,7 @@ class TypingTests: XCTestCase {
         let funcDef = FuncDef(name: TypedVar(name: "fac", type: funcType), args: [TypedVar(name: "n")], body: body)
         let expr = Expr.letRec(funcDef: funcDef, body: .app(function: .var(name: "fac"), args: [.int(8)]))
         print(expr)
-        let (checkedExpr, type) = Typing.type(env: [:], expr: expr)
+        let (checkedExpr, type) = Typing.type(expr: expr)
         XCTAssertEqual(type, .int)
         XCTAssertEqual(checkedExpr.asLetRec?.funcDef.args.first?.type, .int)
         XCTAssertEqual(checkedExpr.asLetRec?.funcDef.name.type, Type.func(args: [.int], ret: .int))
@@ -58,7 +58,7 @@ class TypingTests: XCTestCase {
     
     func testTuple() {
         let tuple = Expr.tuple(elements: [.int(1), .bool(true), .float(4.2)])
-        let (_, type) = Typing.type(env: [:], expr: tuple)
+        let (_, type) = Typing.type(expr: tuple)
         XCTAssertEqual(type, .tuple(elements: [.int, .bool, .float]))
     }
     
@@ -66,7 +66,7 @@ class TypingTests: XCTestCase {
         let expr = Expr.letTuple(vars: [TypedVar(name: "a"), TypedVar(name: "b"), TypedVar(name: "c")],
                                  binding: Expr.tuple(elements: [.int(1), .bool(true), .float(4.2)]),
                                  body: Expr.var(name: "a"))
-        let (typedExpr, type) = Typing.type(env: [:], expr: expr)
+        let (typedExpr, type) = Typing.type(expr: expr)
         XCTAssertEqual(type, .int)
         XCTAssertEqual(typedExpr.asLetTuple?.vars.first?.type, .int)
         XCTAssertEqual(typedExpr.asLetTuple?.vars.last?.type, .float)
@@ -74,21 +74,21 @@ class TypingTests: XCTestCase {
     
     func testArray() {
         let expr = Expr.array(size: .int(10), element: .int(0))
-        let (_, type) = Typing.type(env: [:], expr: expr)
+        let (_, type) = Typing.type(expr: expr)
         XCTAssertEqual(type, .array(element: .int))
     }
     
     func testGet() {
         let arr = Expr.array(size: .int(10), element: .int(0))
         let expr = Expr.get(array: arr, index: .int(4))
-        let (_, type) = Typing.type(env: [:], expr: expr)
+        let (_, type) = Typing.type(expr: expr)
         XCTAssertEqual(type, .int)
     }
     
     func testPut() {
         let arr = Expr.array(size: .int(10), element: .int(0))
         let expr = Expr.put(array: arr, index: .int(4), value: .int(5))
-        let (_, type) = Typing.type(env: [:], expr: expr)
+        let (_, type) = Typing.type(expr: expr)
         XCTAssertEqual(type, .unit)
     }
 }
