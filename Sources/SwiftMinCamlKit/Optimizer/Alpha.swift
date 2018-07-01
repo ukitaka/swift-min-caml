@@ -52,7 +52,7 @@ extension Optimizer {
         case .app(let function, let args):
             return .app(function: find(function, env), args: args.map { find($0, env) })
         case .tuple(let elements):
-            fatalError("Not implemented yet")
+            return .tuple(elements: elements.map { find($0, env) })
         case .letTuple(let vars, let binding, let body):
             let names = vars.map { $0.name }
             let env2 = env.adding(names.map { ($0, Var.tmpVar()) })
@@ -60,14 +60,14 @@ extension Optimizer {
                              binding: env.find(binding),
                              body: alpha(env2, body))
         case .array(let size, let element):
-            fatalError("Not implemented yet")
+            return .array(size: find(size, env), element: find(element, env))
         case .get(let array, let index):
-            fatalError("Not implemented yet")
+            return .get(array: find(array, env), index: find(index, env))
         case .put(let array, let index, let value):
+            return .put(array: find(array, env), index: find(index, env), value: find(value, env))
+        case .extArray: // .extArray(let elements):
             fatalError("Not implemented yet")
-        case .extArray(let elements):
-            fatalError("Not implemented yet")
-        case .extFunApp(let function, let args):
+        case .extFunApp: // .extFunApp(let function, let args):
             fatalError("Not implemented yet")
         }
     }
