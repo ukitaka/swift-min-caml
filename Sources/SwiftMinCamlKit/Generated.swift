@@ -618,22 +618,6 @@ public extension NormalizedExpr {
         }
     }
 
-    public var isNot: Bool {
-        switch self {
-        case .not: return true
-        default: return false
-        }
-    }
-
-    public var asNot: Var? {
-        switch self {
-        case let .not(op):
-            return op
-        default:
-            return nil
-        }
-    }
-
     public var isNeg: Bool {
         switch self {
         case .neg: return true
@@ -1402,8 +1386,6 @@ public func == (lhs: NormalizedExpr, rhs: NormalizedExpr) -> Bool {
         return lhs == rhs
     case let (.float(lhs), .float(rhs)):
         return lhs == rhs
-    case let (.not(lhs), .not(rhs)):
-        return lhs == rhs
     case let (.neg(lhs), .neg(rhs)):
         return lhs == rhs
     case let (.add(lhs), .add(rhs)):
@@ -1651,54 +1633,52 @@ extension NormalizedExpr: Hashable {
             return combineHashes([2, data.hashValue])
         case let .float(data):
             return combineHashes([3, data.hashValue])
-        case let .not(data):
-            return combineHashes([4, data.hashValue])
         case let .neg(data):
-            return combineHashes([5, data.hashValue])
+            return combineHashes([4, data.hashValue])
         case let .add(data):
-            return combineHashes([6, data.lhs.hashValue, data.rhs.hashValue])
+            return combineHashes([5, data.lhs.hashValue, data.rhs.hashValue])
         case let .sub(data):
-            return combineHashes([7, data.lhs.hashValue, data.rhs.hashValue])
+            return combineHashes([6, data.lhs.hashValue, data.rhs.hashValue])
         case let .mul(data):
-            return combineHashes([8, data.lhs.hashValue, data.rhs.hashValue])
+            return combineHashes([7, data.lhs.hashValue, data.rhs.hashValue])
         case let .div(data):
-            return combineHashes([9, data.lhs.hashValue, data.rhs.hashValue])
+            return combineHashes([8, data.lhs.hashValue, data.rhs.hashValue])
         case let .fneg(data):
-            return combineHashes([10, data.hashValue])
+            return combineHashes([9, data.hashValue])
         case let .fadd(data):
-            return combineHashes([11, data.lhs.hashValue, data.rhs.hashValue])
+            return combineHashes([10, data.lhs.hashValue, data.rhs.hashValue])
         case let .fsub(data):
-            return combineHashes([12, data.lhs.hashValue, data.rhs.hashValue])
+            return combineHashes([11, data.lhs.hashValue, data.rhs.hashValue])
         case let .fmul(data):
-            return combineHashes([13, data.lhs.hashValue, data.rhs.hashValue])
+            return combineHashes([12, data.lhs.hashValue, data.rhs.hashValue])
         case let .fdiv(data):
-            return combineHashes([14, data.lhs.hashValue, data.rhs.hashValue])
+            return combineHashes([13, data.lhs.hashValue, data.rhs.hashValue])
         case let .ifEq(data):
-            return combineHashes([15, data.lhs.hashValue, data.rhs.hashValue, data.ifTrue.hashValue, data.ifFalse.hashValue])
+            return combineHashes([14, data.lhs.hashValue, data.rhs.hashValue, data.ifTrue.hashValue, data.ifFalse.hashValue])
         case let .ifLE(data):
-            return combineHashes([16, data.lhs.hashValue, data.rhs.hashValue, data.ifTrue.hashValue, data.ifFalse.hashValue])
+            return combineHashes([15, data.lhs.hashValue, data.rhs.hashValue, data.ifTrue.hashValue, data.ifFalse.hashValue])
         case let .let(data):
-            return combineHashes([17, data.name.hashValue, data.bind.hashValue, data.body.hashValue])
+            return combineHashes([16, data.name.hashValue, data.bind.hashValue, data.body.hashValue])
         case let .var(data):
-            return combineHashes([18, data.hashValue])
+            return combineHashes([17, data.hashValue])
         case let .letRec(data):
-            return combineHashes([19, data.funcDef.hashValue, data.body.hashValue])
+            return combineHashes([18, data.funcDef.hashValue, data.body.hashValue])
         case let .app(data):
-            return combineHashes([20, data.function.hashValue, data.args.hashValue])
+            return combineHashes([19, data.function.hashValue, data.args.hashValue])
         case let .tuple(data):
-            return combineHashes([21, data.hashValue])
+            return combineHashes([20, data.hashValue])
         case let .letTuple(data):
-            return combineHashes([22, data.vars.hashValue, data.binding.hashValue, data.body.hashValue])
+            return combineHashes([21, data.vars.hashValue, data.binding.hashValue, data.body.hashValue])
         case let .array(data):
-            return combineHashes([23, data.size.hashValue, data.element.hashValue])
+            return combineHashes([22, data.size.hashValue, data.element.hashValue])
         case let .get(data):
-            return combineHashes([24, data.array.hashValue, data.index.hashValue])
+            return combineHashes([23, data.array.hashValue, data.index.hashValue])
         case let .put(data):
-            return combineHashes([25, data.array.hashValue, data.index.hashValue, data.value.hashValue])
+            return combineHashes([24, data.array.hashValue, data.index.hashValue, data.value.hashValue])
         case let .extArray(data):
-            return combineHashes([26, data.hashValue])
+            return combineHashes([25, data.hashValue])
         case let .extFunApp(data):
-            return combineHashes([27, data.function.hashValue, data.args.hashValue])
+            return combineHashes([26, data.function.hashValue, data.args.hashValue])
         }
     }
 }

@@ -104,7 +104,6 @@ public indirect enum NormalizedExpr: AutoHashable, AutoEquatable, AutoEnum {
     case unit
     case int(Int)
     case float(Double)
-    case not(op: Var)               // !
     case neg(op: Var)               // unary -
     case add(lhs: Var, rhs: Var)    // +
     case sub(lhs: Var, rhs: Var)    // -
