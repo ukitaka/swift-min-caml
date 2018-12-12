@@ -14,7 +14,6 @@ let package = Package(
             targets: ["SwiftMinCamlKit"]),
     ],
     dependencies: [
-        .package(url: "git@github.com:davedufresne/SwiftParsec.git", from: "3.0.0"),
         .package(url: "git@github.com:pointfreeco/swift-tagged.git", from: "0.1.0"),
         .package(url: "git@github.com:thoughtbot/Curry.git", from: "4.0.1"),
         .package(url: "git@github.com:ukitaka/citron.git", from: "0.0.1"),
@@ -25,7 +24,7 @@ let package = Package(
             dependencies: ["SwiftMinCamlKit"]),
         .target(
             name: "SwiftMinCamlKit",
-            dependencies: ["CitronKit", "SwiftParsec", "Tagged", "Curry"]),
+            dependencies: ["CitronKit", "Tagged", "Curry"]),
         .testTarget(
             name: "SwiftMinCamlTests",
             dependencies: ["SwiftMinCamlKit"]),
